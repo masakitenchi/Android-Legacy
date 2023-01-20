@@ -1,0 +1,2 @@
+E:\CACHE\Androids\obj\Release\Androids.csproj.AssemblyReference.cache
+E:\CACHE\Androids\obj\Release\Androids.csproj.CoreCompileInputs.cache

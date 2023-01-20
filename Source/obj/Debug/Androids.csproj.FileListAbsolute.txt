@@ -1,0 +1,8 @@
+E:\CACHE\Androids\obj\Debug\Androids.csproj.CoreCompileInputs.cache
+E:\CACHE\Androids\bin\Debug\Androids.dll
+E:\CACHE\Androids\bin\Debug\Androids.pdb
+E:\CACHE\Androids\obj\Debug\Androids.dll
+E:\CACHE\Androids\obj\Debug\Androids.pdb
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.pdb
+E:\CACHE\Androids\obj\Debug\Androids.csproj.AssemblyReference.cache
