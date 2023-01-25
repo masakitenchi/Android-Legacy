@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.Gizmo_EnergySourceFueled
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -28,8 +28,8 @@ namespace Androids
       Rect overRect = new Rect(topLeft.x, topLeft.y, this.GetWidth(maxWidth), 75f);
       Find.WindowStack.ImmediateWindow(984689, overRect, WindowLayer.GameUI, (Action) (() =>
       {
-        Rect rect1 = overRect.AtZero().ContractedBy(6f);
-        Rect rect2 = rect1 with
+        Rect rect1;
+        Rect rect2 = (rect1 = overRect.AtZero().ContractedBy(6f)) with
         {
           height = overRect.height / 2f
         };

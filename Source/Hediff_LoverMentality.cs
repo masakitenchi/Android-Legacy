@@ -1,67 +1,71 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.Hediff_LoverMentality
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace Androids
 {
-  public class Hediff_LoverMentality : HediffWithComps, IExtraGizmos
-  {
-    public Pawn loverToChase;
-
-    public override void ExposeData()
+    public class Hediff_LoverMentality : HediffWithComps, IExtraGizmos
     {
-      base.ExposeData();
-      Scribe_References.Look<Pawn>(ref this.loverToChase, "loverToChase");
-    }
+        public Pawn loverToChase;
 
-    public override void Tick()
-    {
-      base.Tick();
-      if (this.loverToChase == null || !this.loverToChase.Dead && !this.loverToChase.Destroyed)
-        return;
-      this.SetNewLover((Pawn) null);
-    }
-
-    public void SetNewLover(Pawn newLover)
-    {
-      if (this.loverToChase == newLover)
-        return;
-      this.loverToChase = newLover;
-    }
-
-    public IEnumerable<Gizmo> GetGizmosExtra()
-    {
-      Command_Action commandAction = new Command_Action();
-      commandAction.defaultLabel = (string) "AndroidGizmoLoverMentalityLabel".Translate();
-      commandAction.defaultDesc = (string) "AndroidGizmoLoverMentalityDescription".Translate();
-      commandAction.icon = (Texture) ContentFinder<Texture2D>.Get("Icons/Upgrades/love-mystery");
-      commandAction.Order = -97f;
-      commandAction.action = (Action) (() =>
-      {
-        List<FloatMenuOption> options = new List<FloatMenuOption>();
-        foreach (Pawn colonistsAndPrisoner in this.pawn.Map.mapPawns.FreeColonistsAndPrisoners)
+        public override void ExposeData()
         {
-          Pawn targetPawn = colonistsAndPrisoner;
-          FloatMenuOption floatMenuOption = new FloatMenuOption(targetPawn.LabelCap, (Action) (() =>
-          {
-            this.SetNewLover(targetPawn);
-            FleckMaker.ThrowMetaIcon(this.pawn.Position, this.pawn.Map, FleckDefOf.Heart);
-          }));
-          options.Add(floatMenuOption);
+            base.ExposeData();
+            Scribe_References.Look<Pawn>(ref this.loverToChase, "loverToChase");
         }
-        FloatMenuOption floatMenuOption1 = new FloatMenuOption((string) "AndroidNone".Translate(), (Action) (() => this.SetNewLover((Pawn) null)));
-        options.Add(floatMenuOption1);
-        Find.WindowStack.Add((Window) new FloatMenu(options));
-      });
-      yield return (Gizmo) commandAction;
+
+        public override void Tick()
+        {
+            base.Tick();
+            if (this.loverToChase == null || !this.loverToChase.Dead && !this.loverToChase.Destroyed)
+                return;
+            this.SetNewLover((Pawn)null);
+        }
+
+        public void SetNewLover(Pawn newLover)
+        {
+            if (this.loverToChase == newLover)
+                return;
+            this.loverToChase = newLover;
+        }
+
+        public IEnumerable<Gizmo> GetGizmosExtra()
+        {
+            yield return new Command_Action
+            {
+                defaultLabel = "AndroidGizmoLoverMentalityLabel".Translate(),
+                defaultDesc = "AndroidGizmoLoverMentalityDescription".Translate(),
+                icon = ContentFinder<Texture2D>.Get("Icons/Upgrades/love-mystery"),
+                Order = -97f,
+                action = delegate
+                {
+                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    foreach (Pawn targetPawn in pawn.Map.mapPawns.FreeColonistsAndPrisoners)
+                    {
+                        FloatMenuOption item = new FloatMenuOption(targetPawn.LabelCap, delegate
+                        {
+                            SetNewLover(targetPawn);
+                            FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, FleckDefOf.Heart);
+                        });
+                        list.Add(item);
+                    }
+                    FloatMenuOption item2 = new FloatMenuOption("AndroidNone".Translate(), delegate
+                    {
+                        SetNewLover(null);
+                    });
+                    list.Add(item2);
+                    FloatMenu window = new FloatMenu(list);
+                    Find.WindowStack.Add(window);
+                }
+            };
+        }
     }
-  }
 }

@@ -1,11 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.DeathActionWorker_Droid
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
 using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace Androids
@@ -23,17 +24,17 @@ namespace Androids
       bool flag2 = firstHediffOfDef != null && (double) firstHediffOfDef.Severity >= 1.0;
       if (firstHediffOfDef != null || !flag1)
       {
-        float radius = AndroidsModSettings.Instance.androidExplosionRadius * comp.energy;
+        float num = AndroidsModSettings.Instance.androidExplosionRadius * comp.energy;
         if (flag2)
-          radius *= 2f;
-        if ((double) radius >= 1.0)
-          GenExplosion.DoExplosion(corpse.Position, corpse.Map, radius, RimWorld.DamageDefOf.Bomb, (Thing) corpse.InnerPawn);
+          num *= 2f;
+        if ((double) num >= 1.0)
+          GenExplosion.DoExplosion(corpse.Position, corpse.Map, num, RimWorld.DamageDefOf.Bomb, (Thing) corpse.InnerPawn, -1, -1f, (SoundDef) null, (ThingDef) null, (ThingDef) null, (Thing) null, (ThingDef) null, 0.0f, 1, null, false, (ThingDef) null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>) null);
       }
       if (corpse.Destroyed)
         return;
       ButcherUtility.SpawnDrops(corpse.InnerPawn, corpse.Position, corpse.Map);
       if (corpse.InnerPawn.apparel != null)
-        corpse.InnerPawn.apparel.DropAll(corpse.PositionHeld);
+        corpse.InnerPawn.apparel.DropAll(corpse.PositionHeld, true, true);
       corpse.Destroy(DestroyMode.Vanish);
     }
   }

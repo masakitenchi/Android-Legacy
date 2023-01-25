@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.PawnCrafterProperties
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -32,8 +32,8 @@ namespace Androids
     public List<SkillRequirement> skills = new List<SkillRequirement>();
     public int defaultSkillLevel = 6;
     public SoundDef craftingSound;
-    public bool customOrderProcessor = false;
-    public bool customCraftingTime = false;
+    public bool customOrderProcessor;
+    public bool customCraftingTime;
 
     public float ResourceTicks() => (float) Math.Ceiling((double) this.ticksToCraft / (double) this.resourceTick);
   }

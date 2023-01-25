@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.JobGiver_GetEnergy
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -28,7 +28,11 @@ namespace Androids
       if (pawn.Downed)
         return (Job) null;
       Need_Energy need = pawn.needs.TryGetNeed<Need_Energy>();
-      if (need == null || (double) need.CurLevelPercentage >= (double) Need_Energy.rechargePercentage || Find.TickManager.TicksGame < this.GetLastTryTick(pawn) + 2500)
+      if (need == null)
+        return (Job) null;
+      if ((double) need.CurLevelPercentage >= (double) Need_Energy.rechargePercentage)
+        return (Job) null;
+      if (Find.TickManager.TicksGame < this.GetLastTryTick(pawn) + 2500)
         return (Job) null;
       this.SetLastTryTick(pawn, Find.TickManager.TicksGame);
       Thing targetA = EnergyNeedUtility.ClosestPowerSource(pawn);
@@ -48,28 +52,19 @@ namespace Androids
         }
       }
       Pawn_CarryTracker carryTracker = pawn.carryTracker;
-      Thing carriedThing = new Thing();
-      int num1;
       if (carryTracker != null)
       {
-        carriedThing = carryTracker.CarriedThing;
+        Thing carriedThing = carryTracker.CarriedThing;
         if (carriedThing != null)
         {
           EnergySourceComp comp = carriedThing.TryGetComp<EnergySourceComp>();
-          if (comp != null)
-          {
-            num1 = comp.EnergyProps.isConsumable ? 1 : 0;
-            goto label_22;
-          }
+          if (comp != null && comp.EnergyProps.isConsumable && carriedThing.stackCount > 0)
+            return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(carriedThing))
+            {
+              count = carriedThing.stackCount
+            };
         }
       }
-      num1 = 0;
-label_22:
-      if (num1 != 0 && carriedThing.stackCount > 0)
-        return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(carriedThing))
-        {
-          count = carriedThing.stackCount
-        };
       Pawn_InventoryTracker inventory = pawn.inventory;
       if (inventory != null && inventory.innerContainer.Any<Thing>((Func<Thing, bool>) (thing =>
       {
@@ -85,11 +80,11 @@ label_22:
         if (thing1 != null)
         {
           EnergySourceComp comp = thing1.TryGetComp<EnergySourceComp>();
-          int num2 = Math.Min((int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) comp.EnergyProps.energyWhenConsumed), thing1.stackCount);
-          if (num2 > 0)
+          int num = Math.Min((int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) comp.EnergyProps.energyWhenConsumed), thing1.stackCount);
+          if (num > 0)
             return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(thing1))
             {
-              count = num2
+              count = num
             };
         }
       }
@@ -99,11 +94,11 @@ label_22:
         EnergySourceComp comp = thing2.TryGetComp<EnergySourceComp>();
         if (comp != null)
         {
-          int num3 = (int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) comp.EnergyProps.energyWhenConsumed);
-          if (num3 > 0)
+          int num = (int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) comp.EnergyProps.energyWhenConsumed);
+          if (num > 0)
             return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(thing2))
             {
-              count = num3
+              count = num
             };
         }
       }

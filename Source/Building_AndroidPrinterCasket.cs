@@ -15,91 +15,90 @@ using Verse.Sound;
 
 namespace Androids
 {
-  public class Building_AndroidPrinterCasket : Building_Casket, ISuspendableThingHolder
-  {
-    public bool IsContentsSuspended => true;
-    public override bool TryAcceptThing(Thing thing, bool allowSpecialEffects = true)
+    public class Building_AndroidPrinterCasket : Building_Casket, ISuspendableThingHolder
     {
-      if (!base.TryAcceptThing(thing, allowSpecialEffects))
-        return false;
-      if (allowSpecialEffects)
-        SoundDefOf.CryptosleepCasket_Accept.PlayOneShot((SoundInfo) new TargetInfo(this.Position, this.Map));
-      return true;
-    }
-
-    public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
-    {
-      Building_AndroidPrinterCasket dest = this;
-      foreach (FloatMenuOption floatMenuOption in base.GetFloatMenuOptions(myPawn))
-        yield return floatMenuOption;
-      if (dest.innerContainer.Count == 0 && myPawn.IsAndroid())
-      {
-        if (!myPawn.CanReach((LocalTargetInfo) (Thing) dest, PathEndMode.InteractionCell, Danger.Deadly))
+        public bool IsContentsSuspended => (this as Building_AndroidPrinter).printerStatus == CrafterStatus.Crafting;
+        public override bool TryAcceptThing(Thing thing, bool allowSpecialEffects = true)
         {
-          yield return new FloatMenuOption((string) "CannotUseNoPath".Translate(), (Action) null);
+            if (!base.TryAcceptThing(thing, allowSpecialEffects))
+                return false;
+            if (allowSpecialEffects)
+                SoundDefOf.CryptosleepCasket_Accept.PlayOneShot((SoundInfo)new TargetInfo(this.Position, this.Map));
+            return true;
         }
-        else
+
+        public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
         {
-          JobDef jobDef = DefDatabase<JobDef>.GetNamedSilentFail("EnterAndroidPrinterCasket");
-          yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption((string) "EnterAndroidPrinter".Translate(), (Action) (() => myPawn.jobs.TryTakeOrderedJob(JobMaker.MakeJob(jobDef, (LocalTargetInfo) (Thing) this)))), myPawn, (LocalTargetInfo) (Thing) dest, "ReservedBy");
+            Building_AndroidPrinterCasket dest = this;
+            foreach (FloatMenuOption floatMenuOption in base.GetFloatMenuOptions(myPawn))
+                yield return floatMenuOption;
+            if (dest.innerContainer.Count == 0 && myPawn.IsAndroid())
+            {
+                if (!myPawn.CanReach((LocalTargetInfo)(Thing)dest, PathEndMode.InteractionCell, Danger.Deadly))
+                {
+                    yield return new FloatMenuOption((string)"CannotUseNoPath".Translate(), (Action)null);
+                }
+                else
+                {
+                    JobDef jobDef = DefDatabase<JobDef>.GetNamedSilentFail("EnterAndroidPrinterCasket");
+                    yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption((string)"EnterAndroidPrinter".Translate(), (Action)(() => myPawn.jobs.TryTakeOrderedJob(JobMaker.MakeJob(jobDef, (LocalTargetInfo)(Thing)this)))), myPawn, (LocalTargetInfo)(Thing)dest, "ReservedBy");
+                }
+            }
         }
-      }
-    }
 
-    public override IEnumerable<Gizmo> GetGizmos()
-    {
-      Building_AndroidPrinterCasket androidPrinterCasket = this;
-      foreach (Gizmo gizmo in base.GetGizmos())
-        yield return gizmo;
-      CrafterStatus printerStatus = (androidPrinterCasket as Building_AndroidPrinter).printerStatus;
-      bool flag = printerStatus == CrafterStatus.Idle || printerStatus == CrafterStatus.Finished;
-      if (((base.Faction != Faction.OfPlayer || androidPrinterCasket.innerContainer.Count <= 0 ? 0 : (androidPrinterCasket.def.building.isPlayerEjectable ? 1 : 0)) & (flag ? 1 : 0)) != 0)
-      {
-        Command_Action commandAction = new Command_Action();
-        commandAction.action = new Action(((Building_Casket) androidPrinterCasket).EjectContents);
-        commandAction.defaultLabel = (string) "AndroidPrinterEject".Translate();
-        commandAction.defaultDesc = (string) "AndroidPrinterEjectDesc".Translate();
-        if (androidPrinterCasket.innerContainer.Count == 0)
-          commandAction.Disable((string) "CommandPodEjectFailEmpty".Translate());
-        commandAction.hotKey = KeyBindingDefOf.Misc1;
-        commandAction.icon = (Texture) ContentFinder<Texture2D>.Get("UI/Commands/PodEject");
-        yield return (Gizmo) commandAction;
-      }
-    }
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            Building_AndroidPrinterCasket androidPrinterCasket = this;
+            foreach (Gizmo gizmo in base.GetGizmos())
+                yield return gizmo;
+            CrafterStatus printerStatus = (androidPrinterCasket as Building_AndroidPrinter).printerStatus;
+            bool flag = printerStatus == CrafterStatus.Idle || printerStatus == CrafterStatus.Finished;
+            if (base.Faction == Faction.OfPlayer && androidPrinterCasket.innerContainer.Count > 0 && androidPrinterCasket.def.building.isPlayerEjectable && flag)
+            {
+                Command_Action commandAction = new Command_Action();
+                commandAction.action = new Action(((Building_Casket)androidPrinterCasket).EjectContents);
+                commandAction.defaultLabel = (string)"AndroidPrinterEject".Translate();
+                commandAction.defaultDesc = (string)"AndroidPrinterEjectDesc".Translate();
+                if (androidPrinterCasket.innerContainer.Count == 0)
+                    commandAction.Disable((string)"CommandPodEjectFailEmpty".Translate());
+                commandAction.hotKey = KeyBindingDefOf.Misc1;
+                commandAction.icon = (Texture)ContentFinder<Texture2D>.Get("UI/Commands/PodEject");
+                yield return (Gizmo)commandAction;
+            }
+        }
 
-    public override void Open()
-    {
-      CrafterStatus printerStatus = (this as Building_AndroidPrinter).printerStatus;
-      if ((printerStatus == CrafterStatus.Idle ? 1 : (printerStatus == CrafterStatus.Finished ? 1 : 0)) == 0)
-        return;
-      base.Open();
-    }
+        public override void Open()
+        {
+            CrafterStatus printerStatus = (this as Building_AndroidPrinter).printerStatus;
+            if (printerStatus != CrafterStatus.Idle && printerStatus != CrafterStatus.Finished) return;
+            base.Open();
+        }
 
-    public override void EjectContents()
-    {
-      Find.WindowStack.TryRemove(typeof (CustomizeAndroidWindow), false);
-      foreach (Thing thing in (IEnumerable<Thing>) this.innerContainer)
-      {
-        if (thing is Pawn pawn)
-          PawnComponentsUtility.AddComponentsForSpawn(pawn);
-      }
-      if (!this.Destroyed)
-        SoundDefOf.CryptosleepCasket_Eject.PlayOneShot(SoundInfo.InMap(new TargetInfo(this.Position, this.Map)));
-      base.EjectContents();
-    }
+        public override void EjectContents()
+        {
+            Find.WindowStack.TryRemove(typeof(CustomizeAndroidWindow), false);
+            foreach (Thing thing in (IEnumerable<Thing>)this.innerContainer)
+            {
+                if (thing is Pawn pawn)
+                    PawnComponentsUtility.AddComponentsForSpawn(pawn);
+            }
+            if (!this.Destroyed)
+                SoundDefOf.CryptosleepCasket_Eject.PlayOneShot(SoundInfo.InMap(new TargetInfo(this.Position, this.Map)));
+            base.EjectContents();
+        }
 
-    public static Building_AndroidPrinterCasket FindCryptosleepCasketFor(
-      Pawn p,
-      Pawn traveler,
-      bool ignoreOtherReservations = false)
-    {
-      foreach (ThingDef singleDef in DefDatabase<ThingDef>.AllDefs.Where<ThingDef>((Func<ThingDef, bool>) (def => typeof (Building_AndroidPrinterCasket).IsAssignableFrom(def.thingClass))))
-      {
-        Building_AndroidPrinterCasket cryptosleepCasketFor = (Building_AndroidPrinterCasket) GenClosest.ClosestThingReachable(p.Position, p.Map, ThingRequest.ForDef(singleDef), PathEndMode.InteractionCell, TraverseParms.For(traveler), validator: ((Predicate<Thing>) (x => !((Building_Casket) x).HasAnyContents && traveler.CanReserve((LocalTargetInfo) x, ignoreOtherReservations: ignoreOtherReservations))));
-        if (cryptosleepCasketFor != null)
-          return cryptosleepCasketFor;
-      }
-      return (Building_AndroidPrinterCasket) null;
+        public static Building_AndroidPrinterCasket FindCryptosleepCasketFor(
+          Pawn p,
+          Pawn traveler,
+          bool ignoreOtherReservations = false)
+        {
+            foreach (ThingDef singleDef in DefDatabase<ThingDef>.AllDefs.Where<ThingDef>((Func<ThingDef, bool>)(def => typeof(Building_AndroidPrinterCasket).IsAssignableFrom(def.thingClass))))
+            {
+                Building_AndroidPrinterCasket cryptosleepCasketFor = (Building_AndroidPrinterCasket)GenClosest.ClosestThingReachable(p.Position, p.Map, ThingRequest.ForDef(singleDef), PathEndMode.InteractionCell, TraverseParms.For(traveler), validator: ((Predicate<Thing>)(x => !((Building_Casket)x).HasAnyContents && traveler.CanReserve((LocalTargetInfo)x, ignoreOtherReservations: ignoreOtherReservations))));
+                if (cryptosleepCasketFor != null)
+                    return cryptosleepCasketFor;
+            }
+            return (Building_AndroidPrinterCasket)null;
+        }
     }
-  }
 }

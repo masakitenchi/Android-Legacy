@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.EnergyTrackerComp
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
 using System;
@@ -39,40 +39,37 @@ namespace Androids
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
+      EnergyTrackerComp energyTrackerComp = this;
       if (Prefs.DevMode && DebugSettings.godMode)
       {
-        Command_Action gizmo1 = new Command_Action();
-        gizmo1.defaultLabel = "DEBUG: Set Energy to 100%";
-        gizmo1.action = (Action) (() => this.energyNeed.CurLevelPercentage = 1f);
-        yield return (Gizmo) gizmo1;
-        gizmo1 = (Command_Action) null;
-        Command_Action gizmo2 = new Command_Action();
-        gizmo2.defaultLabel = "DEBUG: Set Energy to 50%";
-        gizmo2.action = (Action) (() => this.energyNeed.CurLevelPercentage = 0.5f);
-        yield return (Gizmo) gizmo2;
-        gizmo2 = (Command_Action) null;
-        Command_Action gizmo3 = new Command_Action();
-        gizmo3.defaultLabel = "DEBUG: Set Energy to 20%";
-        gizmo3.action = (Action) (() => this.energyNeed.CurLevelPercentage = 0.2f);
-        yield return (Gizmo) gizmo3;
-        gizmo3 = (Command_Action) null;
+        Command_Action commandAction1 = new Command_Action();
+        commandAction1.defaultLabel = "DEBUG: Set Energy to 100%";
+        commandAction1.action = (Action) (() => this.energyNeed.CurLevelPercentage = 1f);
+        yield return (Gizmo) commandAction1;
+        Command_Action commandAction2 = new Command_Action();
+        commandAction2.defaultLabel = "DEBUG: Set Energy to 50%";
+        commandAction2.action = (Action) (() => this.energyNeed.CurLevelPercentage = 0.5f);
+        yield return (Gizmo) commandAction2;
+        Command_Action commandAction3 = new Command_Action();
+        commandAction3.defaultLabel = "DEBUG: Set Energy to 20%";
+        commandAction3.action = (Action) (() => this.energyNeed.CurLevelPercentage = 0.2f);
+        yield return (Gizmo) commandAction3;
       }
-      Pawn pawn = this.parent as Pawn;
+      Pawn pawn = energyTrackerComp.parent as Pawn;
       if (AndroidsModSettings.Instance.androidExplodesOnDeath && pawn != null && pawn.IsColonistPlayerControlled && pawn.def.HasModExtension<MechanicalPawnProperties>())
       {
-        Command_Action gizmo = new Command_Action();
-        gizmo.defaultLabel = (string) "AndroidGizmoSelfDetonationLabel".Translate();
-        gizmo.defaultDesc = (string) "AndroidGizmoSelfDetonationDescription".Translate();
-        gizmo.icon = (Texture) ContentFinder<Texture2D>.Get("UI/Commands/Detonate");
-        gizmo.action = (Action) (() =>
+        Command_Action commandAction = new Command_Action();
+        commandAction.defaultLabel = (string) "AndroidGizmoSelfDetonationLabel".Translate();
+        commandAction.defaultDesc = (string) "AndroidGizmoSelfDetonationDescription".Translate();
+        commandAction.icon = (Texture) ContentFinder<Texture2D>.Get("UI/Commands/Detonate");
+        commandAction.action = (Action) (() =>
         {
           if (AndroidsModSettings.Instance.droidDetonationConfirmation)
             Find.WindowStack.Add((Window) Dialog_MessageBox.CreateConfirmation("AndroidSelfDetonationConfirmationDialogText".Translate((NamedArgument) pawn.Name.ToStringFull), (Action) (() => HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjOverheating, 1.1f)), true, (string) "AndroidGizmoSelfDetonationLabel".Translate()));
           else
             HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjOverheating, 1.1f);
         });
-        yield return (Gizmo) gizmo;
-        gizmo = (Command_Action) null;
+        yield return (Gizmo) commandAction;
       }
     }
   }

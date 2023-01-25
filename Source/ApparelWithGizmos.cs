@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.ApparelWithGizmos
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System.Collections.Generic;
@@ -14,25 +14,25 @@ namespace Androids
   {
     public override IEnumerable<Gizmo> GetWornGizmos()
     {
-      foreach (ThingComp comp in this.AllComps)
+      foreach (ThingComp allComp in this.AllComps)
       {
-        foreach (Gizmo gizmo in comp.CompGetGizmosExtra())
+        foreach (Gizmo gizmo in allComp.CompGetGizmosExtra())
           yield return gizmo;
       }
     }
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-      foreach (StatDrawEntry entry in base.SpecialDisplayStats())
-        yield return entry;
-      foreach (ThingComp comp in this.AllComps)
+      ApparelWithGizmos apparelWithGizmos = this;
+      foreach (StatDrawEntry statDrawEntry in base.SpecialDisplayStats())
+        yield return statDrawEntry;
+      foreach (ThingComp allComp in apparelWithGizmos.AllComps)
       {
-        if (comp is IExtraDisplayStats displayStat)
+        if (allComp is IExtraDisplayStats extraDisplayStats)
         {
-          foreach (StatDrawEntry entry in displayStat.SpecialDisplayStats())
-            yield return entry;
+          foreach (StatDrawEntry specialDisplayStat in extraDisplayStats.SpecialDisplayStats())
+            yield return specialDisplayStat;
         }
-        displayStat = (IExtraDisplayStats) null;
       }
     }
   }

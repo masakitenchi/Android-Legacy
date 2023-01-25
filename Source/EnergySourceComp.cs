@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.EnergySourceComp
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using System;
 using System.Collections.Generic;
@@ -31,23 +31,20 @@ namespace Androids
 
     public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
     {
-      Need_Energy energyNeed = selPawn.needs.TryGetNeed<Need_Energy>();
-      if (this.EnergyProps.isConsumable && energyNeed != null)
+      EnergySourceComp energySourceComp = this;
+      Need_Energy need = selPawn.needs.TryGetNeed<Need_Energy>();
+      if (energySourceComp.EnergyProps.isConsumable && need != null)
       {
-        int thingCount = (int) Math.Ceiling(((double) energyNeed.MaxLevel - (double) energyNeed.CurLevel) / (double) this.EnergyProps.energyWhenConsumed);
+        int thingCount = (int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) energySourceComp.EnergyProps.energyWhenConsumed);
         if (thingCount > 0)
-        {
-          FloatMenuOption floatMenuOption = new FloatMenuOption((string) "AndroidConsumeEnergySource".Translate((NamedArgument) this.parent.LabelCap), (Action) (() =>
+          yield return new FloatMenuOption((string) "AndroidConsumeEnergySource".Translate((NamedArgument) energySourceComp.parent.LabelCap), (Action) (() =>
           {
             Pawn_JobTracker jobs = selPawn.jobs;
             Job job = new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo((Thing) this.parent));
             job.count = thingCount;
             JobTag? tag = new JobTag?(JobTag.Misc);
             jobs.TryTakeOrderedJob(job, tag);
-          }), revalidateClickTarget: ((Thing) this.parent));
-          yield return floatMenuOption;
-          floatMenuOption = (FloatMenuOption) null;
-        }
+          }), revalidateClickTarget: ((Thing) energySourceComp.parent));
       }
     }
   }

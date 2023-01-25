@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.RaceUtility
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
 using System;
@@ -31,11 +31,8 @@ namespace Androids
             ThingDef_AlienRace alienDef = allDef;
             PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault<PawnKindDef>((Func<PawnKindDef, bool>) (def => def.race == alienDef));
             if (pawnKindDef != null)
-            {
-                            RaceUtility.alienRaceKindsint.Add(pawnKindDef);
-            }
+              RaceUtility.alienRaceKindsint.Add(pawnKindDef);
           }
-
           RaceUtility.alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>) (def => def.race.defName == "Human"));
           RaceUtility.alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>) (def => def.race.HasModExtension<MechanicalPawnProperties>()));
           foreach (Def allDef in DefDatabase<ThingDef>.AllDefs)

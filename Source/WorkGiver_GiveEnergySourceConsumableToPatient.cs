@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.WorkGiver_GiveEnergySourceConsumableToPatient
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -14,7 +14,7 @@ namespace Androids
 {
   public class WorkGiver_GiveEnergySourceConsumableToPatient : WorkGiver_Scanner
   {
-    public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.Pawn);
+    public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.BuildingFrame);
 
     public override PathEndMode PathEndMode => PathEndMode.Touch;
 
@@ -32,7 +32,7 @@ namespace Androids
         Faction faction = pawn1.Faction;
         nullable = faction != null ? new bool?(!faction.IsPlayer) : new bool?();
       }
-      if ((nullable ?? true ) != false || !pawn1.Downed || !HealthAIUtility.ShouldSeekMedicalRest(pawn1))
+      if ((nullable ?? true) != false || !pawn1.Downed || !HealthAIUtility.ShouldSeekMedicalRest(pawn1))
         return false;
       Need_Energy need = pawn1.needs.TryGetNeed<Need_Energy>();
       if (need == null || !forced && (double) need.CurLevelPercentage > 0.5)
@@ -62,25 +62,16 @@ namespace Androids
     public Thing TryFindBestEnergySource(Pawn pawn)
     {
       Pawn_CarryTracker carryTracker = pawn.carryTracker;
-      Thing carriedThing = new Thing();
-      int num;
       if (carryTracker != null)
       {
-        carriedThing = carryTracker.CarriedThing;
+        Thing carriedThing = carryTracker.CarriedThing;
         if (carriedThing != null)
         {
           EnergySourceComp comp = carriedThing.TryGetComp<EnergySourceComp>();
-          if (comp != null)
-          {
-            num = comp.EnergyProps.isConsumable ? 1 : 0;
-            goto label_5;
-          }
+          if (comp != null && comp.EnergyProps.isConsumable && carriedThing.stackCount > 0)
+            return carryTracker.CarriedThing;
         }
       }
-      num = 0;
-label_5:
-      if (num != 0 && carriedThing.stackCount > 0)
-        return carryTracker.CarriedThing;
       Pawn_InventoryTracker inventory = pawn.inventory;
       if (inventory != null)
       {

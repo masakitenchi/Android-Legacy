@@ -1,2 +1,6 @@
-E:\CACHE\Androids\obj\Release\Androids.csproj.AssemblyReference.cache
-E:\CACHE\Androids\obj\Release\Androids.csproj.CoreCompileInputs.cache
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.pdb
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Source\obj\Release\Androids.csproj.AssemblyReference.cache
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Source\obj\Release\Androids.csproj.CoreCompileInputs.cache
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Source\obj\Release\Androids.dll
+D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Source\obj\Release\Androids.pdb

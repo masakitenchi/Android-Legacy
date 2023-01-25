@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.UpgradeCommand_Skin
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
 using RimWorld;
@@ -45,14 +45,11 @@ namespace Androids
     {
       base.Undo();
       AlienPartGenerator.AlienComp comp = this.customizationWindow.newAndroid.TryGetComp<AlienPartGenerator.AlienComp>();
-      if (comp != null)
-      {
-        comp.ColorChannels["skin"].first = this.originalSkinColor;
-        comp.ColorChannels["skin"].second = this.originalSkinColorTwo;
-        this.customizationWindow.refreshAndroidPortrait = true;
-      }
-      else
-        Log.Error("alienComp is null! Impossible to alter skin color without it.");
+      if (comp == null)
+        return;
+      comp.ColorChannels["skin"].first = this.originalSkinColor;
+      comp.ColorChannels["skin"].second = this.originalSkinColorTwo;
+      this.customizationWindow.refreshAndroidPortrait = true;
     }
   }
 }

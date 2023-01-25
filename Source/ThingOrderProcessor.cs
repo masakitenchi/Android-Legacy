@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.ThingOrderProcessor
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System.Collections.Generic;
@@ -26,40 +26,38 @@ namespace Androids
       this.storageSettings = storageSettings;
     }
 
-    public IEnumerable<ThingOrderRequest> PendingRequests()
+    public IEnumerable<ThingOrderRequest> PendingRequests(ThingOwner things)
     {
-      foreach (ThingOrderRequest idealRequest in this.requestedItems)
+      this.thingHolder = things;
+      foreach (ThingOrderRequest requestedItem in this.requestedItems)
       {
-        if (idealRequest.nutrition)
+        if (requestedItem.nutrition)
         {
-          float totalNutrition = this.CountNutrition();
-          if ((double) totalNutrition < (double) idealRequest.amount)
-          {
-            ThingOrderRequest request = new ThingOrderRequest();
-            request.nutrition = true;
-            request.amount = idealRequest.amount - totalNutrition;
-            request.thingFilter = this.storageSettings.filter;
-            yield return request;
-            request = (ThingOrderRequest) null;
-          }
+          float num = this.CountNutrition(things);
+          if ((double) num < (double) requestedItem.amount)
+            yield return new ThingOrderRequest()
+            {
+              nutrition = true,
+              amount = requestedItem.amount - num,
+              thingFilter = this.storageSettings.filter
+            };
         }
         else
         {
-          float totalItemCount = (float) this.thingHolder.TotalStackCountOfDef(idealRequest.thingDef);
-          if ((double) totalItemCount < (double) idealRequest.amount)
-          {
-            ThingOrderRequest request = new ThingOrderRequest();
-            request.thingDef = idealRequest.thingDef;
-            request.amount = idealRequest.amount - totalItemCount;
-            yield return request;
-            request = (ThingOrderRequest) null;
-          }
+          float num = (float) this.thingHolder.TotalStackCountOfDef(requestedItem.thingDef);
+          if ((double) num < (double) requestedItem.amount)
+            yield return new ThingOrderRequest()
+            {
+              thingDef = requestedItem.thingDef,
+              amount = requestedItem.amount - num
+            };
         }
       }
     }
 
-    public float CountNutrition()
+    public float CountNutrition(ThingOwner things)
     {
+      this.thingHolder = things;
       float num1 = 0.0f;
       foreach (Thing thing in (IEnumerable<Thing>) this.thingHolder)
       {

@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.Hediff_BlackBox
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using System;
 using System.Collections.Generic;
@@ -11,27 +11,35 @@ using Verse;
 
 namespace Androids
 {
-  public class Hediff_BlackBox : HediffWithComps, IExtraGizmos
-  {
-    public override void Notify_PawnDied()
+    public class Hediff_BlackBox : HediffWithComps, IExtraGizmos
     {
-      base.Notify_PawnDied();
-      if (this.pawn.Corpse == null)
-        return;
-      GenExplosion.DoExplosion(this.pawn.Corpse.Position, this.pawn.Corpse.Map, 50f, RimWorld.DamageDefOf.Bomb, (Thing) null, 500, 15f);
-    }
+        public override void Notify_PawnDied()
+        {
+            base.Notify_PawnDied();
+            if (this.pawn.Corpse == null)
+                return;
+            GenExplosion.DoExplosion(this.pawn.Corpse.Position, this.pawn.Corpse.Map, 50f, RimWorld.DamageDefOf.Bomb, (Thing)null, 500, 15f, (SoundDef)null, (ThingDef)null, (ThingDef)null, (Thing)null, (ThingDef)null, 0.0f, 1, null, false, (ThingDef)null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>)null);
+        }
 
-    public IEnumerable<Gizmo> GetGizmosExtra()
-    {
-      Command_Action commandAction = new Command_Action();
-      commandAction.defaultLabel = (string) "AndroidGizmoDetonateBlackBoxLabel".Translate();
-      commandAction.defaultDesc = (string) "AndroidGizmoDetonateBlackBoxDescription".Translate();
-      commandAction.icon = (Texture) ContentFinder<Texture2D>.Get("Icons/Upgrades/BlackBoxIcon");
-      commandAction.Order = -97f;
-      commandAction.action = (Action) (() => Find.WindowStack.Add((Window) Dialog_MessageBox.CreateConfirmation("AndroidSelfDetonationConfirmationDialogText".Translate((NamedArgument) this.pawn.Name.ToStringFull), (Action) (() => this.pawn.Kill(null)), true, (string) "AndroidGizmoSelfDetonationLabel".Translate())));
-      yield return (Gizmo) commandAction;
-    }
+        public IEnumerable<Gizmo> GetGizmosExtra()
+        {
+            yield return new Command_Action
+            {
+                defaultLabel = "AndroidGizmoDetonateBlackBoxLabel".Translate(),
+                defaultDesc = "AndroidGizmoDetonateBlackBoxDescription".Translate(),
+                icon = ContentFinder<Texture2D>.Get("Icons/Upgrades/BlackBoxIcon"),
+                Order = -97f,
+                action = delegate
+                {
+                    Dialog_MessageBox window = Dialog_MessageBox.CreateConfirmation("AndroidSelfDetonationConfirmationDialogText".Translate(pawn.Name.ToStringFull), delegate
+                    {
+                        pawn.Kill(null, null);
+                    }, destructive: true, "AndroidGizmoSelfDetonationLabel".Translate());
+                    Find.WindowStack.Add(window);
+                }
+            };
+        }
 
-    public override string TipStringExtra => (string) "AndroidHediffBlackBox".Translate();
-  }
+        public override string TipStringExtra => (string)"AndroidHediffBlackBox".Translate();
+    }
 }
