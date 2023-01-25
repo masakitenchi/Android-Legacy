@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.Need_Energy
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
 using RimWorld;
@@ -34,14 +34,13 @@ namespace Androids
 
     public override void SetInitialLevel() => this.CurLevel = this.MaxLevel;
 
-    public override void DrawOnGUI(
+    public virtual void DrawOnGUI(
       Rect rect,
       int maxThresholdMarkers = 2147483647,
       float customMargin = -1f,
       bool drawArrows = true,
       bool doTooltip = true,
-      Rect? rectForTooltip = null,
-      bool drawLabel = true)
+      Rect? rectForTooltip = null)
     {
       if (this.threshPercents == null)
         this.threshPercents = new List<float>();
@@ -59,7 +58,7 @@ namespace Androids
         this.threshPercents.Add(0.5f);
         this.threshPercents.Add(0.2f);
       }
-      base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip);
+      base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip, new Rect?());
     }
 
     public override void NeedInterval()
@@ -117,12 +116,11 @@ namespace Androids
       }
       else if (this.pawn.health.hediffSet.HasHediff(HediffDefOf.ChjPowerShortage))
         this.pawn.health.RemoveHediff(this.pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjPowerShortage));
-      if ((double) this.CurLevel <= 0.0)
-      {
-        Hediff hediff = HediffMaker.MakeHediff(HediffDefOf.ChjPowerFailure, this.pawn);
-        this.pawn.health.AddHediff(hediff);
-        this.pawn.Kill(null, exactCulprit: hediff);
-      }
+      if ((double) this.CurLevel > 0.0)
+        return;
+      Hediff hediff = HediffMaker.MakeHediff(HediffDefOf.ChjPowerFailure, this.pawn);
+      this.pawn.health.AddHediff(hediff);
+      this.pawn.Kill(null,exactCulprit: hediff);
     }
   }
 }

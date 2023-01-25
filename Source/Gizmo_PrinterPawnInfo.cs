@@ -1,10 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.Gizmo_PrinterPawnInfo
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -30,8 +31,11 @@ namespace Androids
       GizmoResult gizmoResult = base.GizmoOnGUI(topLeft, maxWidth, parms);
       float width = this.GetWidth(maxWidth);
       Rect rect = new Rect(topLeft.x + 10f, topLeft.y, width - 40f, width - 20f);
-      Vector2 size = new Vector2(width - 20f, width);
-      GUI.DrawTexture(new Rect(rect.x, rect.y, size.x, size.y), (Texture) PortraitsCache.Get(this.printer.PawnBeingCrafted(), size, Rot4.South));
+      Vector2 vector2 = new Vector2(width - 20f, width);
+      RenderTexture image = PortraitsCache.Get(this.printer.PawnBeingCrafted(), vector2, Rot4.South, new Vector3(), 1f, true, true, true, true, (Dictionary<Apparel, Color>) null, new Color?(), false);
+      if (!((Object) image != (Object) null))
+        return gizmoResult;
+      GUI.DrawTexture(new Rect(rect.x, rect.y, vector2.x, vector2.y), (Texture) image);
       return gizmoResult;
     }
 

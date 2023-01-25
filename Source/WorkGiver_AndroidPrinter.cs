@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.WorkGiver_AndroidPrinter
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -22,7 +22,7 @@ namespace Androids
     {
       if (!(t is Building_AndroidPrinter androidPrinter) || androidPrinter.printerStatus != CrafterStatus.Filling || t.IsForbidden(pawn) || !pawn.CanReserveAndReach((LocalTargetInfo) t, PathEndMode.Touch, pawn.NormalMaxDanger(), ignoreOtherReservations: forced) || pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null)
         return false;
-      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests();
+      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests(androidPrinter.GetDirectlyHeldThings());
       bool flag = false;
       if (thingOrderRequests != null)
       {
@@ -41,7 +41,7 @@ namespace Androids
     public override Job JobOnThing(Pawn pawn, Thing printerThing, bool forced = false)
     {
       Building_AndroidPrinter androidPrinter = printerThing as Building_AndroidPrinter;
-      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests();
+      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests(androidPrinter.GetDirectlyHeldThings());
       if (thingOrderRequests != null)
       {
         foreach (ThingOrderRequest request in thingOrderRequests)

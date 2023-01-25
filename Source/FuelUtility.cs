@@ -1,11 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.FuelUtility
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
+using System.Linq;
 using Verse;
 using Verse.AI;
 
@@ -21,20 +22,17 @@ namespace Androids
 
     public static Thing FueledEnergySourceNeedRefilling(Pawn pawn)
     {
-      Apparel apparel = new Apparel();
-      int num;
       if (pawn.apparel != null)
       {
-        apparel = pawn.apparel.WornApparel.FirstOrDefault<Apparel>((Predicate<Apparel>) (ap =>
+        Apparel apparel = pawn.apparel.WornApparel.FirstOrDefault<Apparel>((Func<Apparel, bool>) (ap =>
         {
           EnergySource_Fueled comp = ap.TryGetComp<EnergySource_Fueled>();
           return comp != null && (double) comp.MissingFuelPercentage > (double) FuelUtility.autoRefillThreshhold;
         }));
-        num = apparel != null ? 1 : 0;
+        if (apparel != null)
+          return (Thing) apparel;
       }
-      else
-        num = 0;
-      return num != 0 ? (Thing) apparel : (Thing) null;
+      return (Thing) null;
     }
   }
 }

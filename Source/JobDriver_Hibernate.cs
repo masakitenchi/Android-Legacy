@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.JobDriver_Hibernate
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -12,52 +12,57 @@ using Verse.AI;
 
 namespace Androids
 {
-  public class JobDriver_Hibernate : JobDriver
-  {
-    public CompPowerTrader powerTrader;
-
-    public Thing Target => this.TargetA.Thing;
-
-    public override bool TryMakePreToilReservations(bool errorOnFailed)
+    public class JobDriver_Hibernate : JobDriver
     {
-      if (!this.pawn.CanReserveAndReach((LocalTargetInfo) this.Target, PathEndMode.OnCell, Danger.Deadly))
-        return false;
-      this.pawn.Reserve((LocalTargetInfo) this.Target, this.job, errorOnFailed: errorOnFailed);
-      return true;
-    }
+        public CompPowerTrader powerTrader;
 
-    public override RandomSocialMode DesiredSocialMode() => RandomSocialMode.Off;
+        public Thing Target => this.TargetA.Thing;
 
-    protected override IEnumerable<Toil> MakeNewToils()
-    {
-      this.powerTrader = this.Target.TryGetComp<CompPowerTrader>();
-      this.FailOnDestroyedNullOrForbidden<JobDriver_Hibernate>(TargetIndex.A);
-      yield return Toils_Reserve.Reserve(TargetIndex.A);
-      yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell);
-      yield return new Toil()
-      {
-        initAction = (Action) (() => this.pawn.pather.StopDead()),
-        tickAction = (Action) (() =>
+        public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-          if (this.pawn.mindState.lastHarmTick - Find.TickManager.TicksGame >= -20)
-            this.EndJobWith(JobCondition.InterruptOptional);
-          if (Find.TickManager.TicksGame % 200 == 0)
-          {
-            foreach (IntVec3 c in this.pawn.CellsAdjacent8WayAndInside())
+            if (!this.pawn.CanReserveAndReach((LocalTargetInfo)this.Target, PathEndMode.OnCell, Danger.Deadly))
+                return false;
+            this.pawn.Reserve((LocalTargetInfo)this.Target, this.job, errorOnFailed: errorOnFailed);
+            return true;
+        }
+
+        public override RandomSocialMode DesiredSocialMode() => RandomSocialMode.Off;
+
+        protected override IEnumerable<Toil> MakeNewToils()
+        {
+            powerTrader = Target.TryGetComp<CompPowerTrader>();
+            this.FailOnDestroyedNullOrForbidden(TargetIndex.A);
+            yield return Toils_Reserve.Reserve(TargetIndex.A);
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell);
+            Toil toil = new Toil();
+            toil.initAction = delegate
             {
-              if (c.InBounds(this.pawn.Map) && c.GetFirstThing(this.pawn.Map, RimWorld.ThingDefOf.Fire) != null)
-              {
-                this.EndJobWith(JobCondition.InterruptOptional);
-                break;
-              }
-            }
-          }
-          if (this.powerTrader == null || this.powerTrader.PowerOn)
-            return;
-          this.EndJobWith(JobCondition.InterruptOptional);
-        }),
-        defaultCompleteMode = ToilCompleteMode.Never
-      };
+                pawn.pather.StopDead();
+            };
+            toil.tickAction = delegate
+            {
+                if (pawn.mindState.lastHarmTick - Find.TickManager.TicksGame >= -20)
+                {
+                    EndJobWith(JobCondition.InterruptOptional);
+                }
+                if (Find.TickManager.TicksGame % 200 == 0)
+                {
+                    foreach (IntVec3 item in pawn.CellsAdjacent8WayAndInside())
+                    {
+                        if (item.InBounds(pawn.Map) && item.GetFirstThing(pawn.Map, RimWorld.ThingDefOf.Fire) != null)
+                        {
+                            EndJobWith(JobCondition.InterruptOptional);
+                            break;
+                        }
+                    }
+                }
+                if (powerTrader != null && !powerTrader.PowerOn)
+                {
+                    EndJobWith(JobCondition.InterruptOptional);
+                }
+            };
+            toil.defaultCompleteMode = ToilCompleteMode.Never;
+            yield return toil;
+        }
     }
-  }
 }

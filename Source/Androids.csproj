@@ -1,20 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!--Project was exported from assembly: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll-->
+  <!--Project was exported from assembly: E:\CACHE\Androids-1.3hsk.dll-->
   <Import Project="packages\Krafs.Publicizer.2.1.0\build\Krafs.Publicizer.props" Condition="Exists('packages\Krafs.Publicizer.2.1.0\build\Krafs.Publicizer.props')" />
   <PropertyGroup>
+    <LangVersion>preview</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{93BF2348-CE57-4692-A32B-AAD76A207B1C}</ProjectGuid>
+    <ProjectGuid>{38D04926-FD6E-40B4-9129-97EEEAF57D68}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Androids</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>preview</LangVersion>
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>Androids</RootNamespace>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,9 +35,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Publicize Include="Assembly-CSharp:RimWorld.Pawn_StoryTracker" />
     <Reference Include="0Harmony">
       <HintPath>D:\SteamLibrary\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
@@ -52,6 +53,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
@@ -66,8 +71,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Building_AndroidPrinterCasket.cs" />
-    <Compile Include="JobDriver_EnterAndroidPrinterCasket.cs" />
     <Compile Include="JobDriver_FillAndroidPrinter.cs" />
     <Compile Include="JobDriver_Hibernate.cs" />
     <Compile Include="JobDriver_RechargeEnergy.cs" />
@@ -91,12 +94,14 @@
     <Compile Include="HediffApplication.cs" />
     <Compile Include="AndroidUpgradeGroupDef.cs" />
     <Compile Include="DroidCraftingDef.cs" />
+    <Compile Include="HediffGiver_Constant.cs" />
     <Compile Include="AndroidLikeHediff.cs" />
     <Compile Include="Hediff_BlackBox.cs" />
     <Compile Include="Hediff_LoverMentality.cs" />
     <Compile Include="Hediff_MechaniteHive.cs" />
     <Compile Include="Hediff_VanometricCell.cs" />
     <Compile Include="AndroidUpgradeHediffProperties.cs" />
+    <Compile Include="Building_AndroidPrinterCasket.cs" />
     <Compile Include="SexualizeAndroidRJW.cs" />
     <Compile Include="DroidSkill.cs" />
     <Compile Include="IExtraDisplayStats.cs" />
@@ -108,8 +113,10 @@
     <Compile Include="HibernationComp.cs" />
     <Compile Include="ApparelWithGizmos.cs" />
     <Compile Include="Building_CustomDroidCrafter.cs" />
+    <Compile Include="JobDriver_EnterAndroidPrinterCasket.cs" />
     <Compile Include="DroidRepairProperties.cs" />
     <Compile Include="DroidSpawnProperties.cs" />
+    <Compile Include="AndroidPawnProperties.cs" />
     <Compile Include="AndroidCustomizationTweaks.cs" />
     <Compile Include="Gizmo_EnergySourceFueled.cs" />
     <Compile Include="AndroidUtility.cs" />
@@ -120,6 +127,20 @@
     <Compile Include="EnergyNeedUtility.cs" />
     <Compile Include="ExtraRendering.cs" />
     <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="HealthCardUtility_DrawHediffListing.cs" />
+    <Compile Include="HealthCardUtility_DrawHediffRow.cs" />
+    <Compile Include="HealthCardUtility_GetTooltip.cs" />
+    <Compile Include="Corpse_GiveObservedThought_Patch.cs" />
+    <Compile Include="ThoughtUtility_GiveThoughtsForPawnExecuted_Patch.cs" />
+    <Compile Include="ThoughtUtility_GiveThoughtsForPawnOrganHarvested_P.cs" />
+    <Compile Include="Corpse_IngestibleNow_Patch.cs" />
+    <Compile Include="ThoughtWorker_Dark_CurrentStateInternal_Patch.cs" />
+    <Compile Include="ThoughtWorker_Expectations_CurrentStateInternal_Pa.cs" />
+    <Compile Include="PawnBreathMoteMaker_TryMakeBreathMote_Patch.cs" />
+    <Compile Include="IncidentWorker_DiseaseHuman_PotentialVictims_Patch.cs" />
+    <Compile Include="AddHediff_PatchPrefix.cs" />
+    <Compile Include="WorkGiver_Tend_HasJobOnThing_IgnoreMedPods.cs" />
+    <Compile Include="PotentialVictims_Patch.cs" />
     <Compile Include="HediffDefOf.cs" />
     <Compile Include="HediffGiver_Machine.cs" />
     <Compile Include="HediffGiver_Machinelike.cs" />

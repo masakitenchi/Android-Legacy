@@ -1,11 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.HediffGiver_MachineWearAndTear
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
 using System;
+using System.Linq;
 using Verse;
 
 namespace Androids
@@ -26,10 +27,10 @@ namespace Androids
       foreach (BodyPartDef bodyPartDef in this.partsToAffect)
       {
         BodyPartDef def = bodyPartDef;
-        BodyPartRecord bodyPart = pawn.RaceProps.body.AllParts.FirstOrDefault<BodyPartRecord>((Predicate<BodyPartRecord>) (part => part.def == def));
+        BodyPartRecord bodyPart = pawn.RaceProps.body.AllParts.FirstOrDefault<BodyPartRecord>((Func<BodyPartRecord, bool>) (part => part.def == def));
         if (bodyPart != null)
         {
-          Hediff hediff1 = pawn.health.hediffSet.hediffs.FirstOrDefault<Hediff>((Predicate<Hediff>) (partHediff => partHediff.Part == bodyPart && partHediff.def == this.hediff));
+          Hediff hediff1 = pawn.health.hediffSet.hediffs.FirstOrDefault<Hediff>((Func<Hediff, bool>) (partHediff => partHediff.Part == bodyPart && partHediff.def == this.hediff));
           if (hediff1 == null)
           {
             if (pawn.IsHashIntervalTick(this.CheckInterval) && Rand.Chance(this.chanceToContract))

@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Androids.WorkGiver_PawnCrafter
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
-// Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
+// MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
+// Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using RimWorld;
 using System;
@@ -14,7 +14,7 @@ namespace Androids
 {
   public class WorkGiver_PawnCrafter : WorkGiver_Scanner
   {
-    private PawnCrafterWorkgiverProperties intWorkGiverProperties = (PawnCrafterWorkgiverProperties) null;
+    private PawnCrafterWorkgiverProperties intWorkGiverProperties;
 
     public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForDef(this.WorkGiverProperties.defToScan);
 
@@ -34,7 +34,7 @@ namespace Androids
     {
       if (!(t is Building_PawnCrafter androidPrinter) || androidPrinter.crafterStatus != CrafterStatus.Filling || t.IsForbidden(pawn) || !pawn.CanReserveAndReach((LocalTargetInfo) t, PathEndMode.Touch, pawn.NormalMaxDanger(), ignoreOtherReservations: forced) || pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null)
         return false;
-      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests();
+      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests(androidPrinter.GetDirectlyHeldThings());
       bool flag = false;
       if (thingOrderRequests != null)
       {
@@ -53,7 +53,7 @@ namespace Androids
     public override Job JobOnThing(Pawn pawn, Thing crafterThing, bool forced = false)
     {
       Building_PawnCrafter androidPrinter = crafterThing as Building_PawnCrafter;
-      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests();
+      IEnumerable<ThingOrderRequest> thingOrderRequests = androidPrinter.orderProcessor.PendingRequests(androidPrinter.GetDirectlyHeldThings());
       if (thingOrderRequests != null)
       {
         foreach (ThingOrderRequest request in thingOrderRequests)
