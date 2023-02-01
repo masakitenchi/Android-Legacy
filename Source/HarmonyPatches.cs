@@ -313,7 +313,7 @@ namespace Androids
           Pawn healer,
           Pawn patient)
         {
-            if (!patient.def.HasModExtension<MechanicalPawnProperties>())
+            if (!patient.def.HasModExtension<MechanicalPawnProperties>()  && !patient.def.HasModExtension<AndroidPawnProperties>())
                 return true;
             Thing thing;
             if (patient.playerSettings == null || patient.playerSettings.medCare <= MedicalCareCategory.NoMeds)
@@ -338,7 +338,7 @@ namespace Androids
 
         public static bool Patch_Toils_Tend_FinalizeTend(ref Toil __result, Pawn patient)
         {
-            if (!patient.def.HasModExtension<MechanicalPawnProperties>())
+            if (!patient.def.HasModExtension<MechanicalPawnProperties>()  && !patient.def.HasModExtension<AndroidPawnProperties>())
                 return true;
             Toil toil = new Toil();
             toil.initAction = (Action)(() =>
