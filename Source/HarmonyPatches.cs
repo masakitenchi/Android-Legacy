@@ -20,11 +20,6 @@ using Verse.AI;
 
 namespace Androids
 {
-    [DefOf]
-    public static class AndroidBodyPartDefOf
-    {
-        public static BodyPartDef ArtificialAndroidBrain;
-    }
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
     {
@@ -186,8 +181,9 @@ namespace Androids
                 harmony.Patch(AccessTools.Method(type34, "CanBeUsedBy"), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallMechLinkPostfix")));
                 str = "CompUseEffect_InstallImplantMechlink.DoEffect";
                 System.Type type35 = typeof(CompUseEffect_InstallImplant);
-                //harmony.Patch(AccessTools.Method(type35, "DoEffect"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("InstallImplantTranspiler")));
-                harmony.Patch(AccessTools.Method(type35, "DoEffect"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("InstallImplantPrefix")));
+                harmony.Patch(AccessTools.Method(type35, "DoEffect"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("DoEffectPrefix")));
+                System.Type type36 = typeof(BodyDef);
+                harmony.Patch(AccessTools.Method(type36, "GetPartsWithDef"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetPartsPrefix")));
 
             }
             catch (Exception ex)
@@ -776,7 +772,7 @@ namespace Androids
             }
         }
 
-        public static bool InstallImplantPrefix(Pawn user, CompUseEffect_InstallImplant __instance)
+        public static bool DoEffectPrefix(Pawn user, CompUseEffect_InstallImplant __instance)
         {
             if (!user.IsAndroid())
                 return true;
@@ -796,27 +792,14 @@ namespace Androids
             }
             return false;
         }
-        /*public static IEnumerable<CodeInstruction> InstallImplantTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        {
-            Label continueIfNotAndroid = generator.DefineLabel();
-            Label bodyPartRecordNullCheck = generator.DefineLabel();
-            instructions.First(x => x.opcode == OpCodes.Ldloc_0).labels.Add(bodyPartRecordNullCheck);
-            instructions.First().labels.Add(continueIfNotAndroid);
-            yield return new CodeInstruction(OpCodes.Ldarg_1);
-            yield return new CodeInstruction(OpCodes.Callvirt,AccessTools.Method(typeof(RaceUtility),"IsAndroid"));
-            yield return new CodeInstruction(OpCodes.Brfalse_S,continueIfNotAndroid);
-            yield return new CodeInstruction(OpCodes.Ldarg_1);
-            yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HarmonyPatches), "GetArtificialBrain"));
-            yield return new CodeInstruction(OpCodes.Br_S, bodyPartRecordNullCheck);
-            foreach (CodeInstruction instruction in instructions)
-            {
-                yield return instruction;
-            }
-        }*/
 
-        /*public static BodyPartRecord GetArtificialBrain(Pawn user)
+        public static bool GetPartsPrefix(BodyDef __instance, ref BodyPartDef def)
         {
-            return user.RaceProps.body.GetPartsWithDef(AndroidBodyPartDefOf.ArtificialAndroidBrain).FirstOrFallback<BodyPartRecord>();
-        }*/
+            if (__instance.corePart.def == AndroidBodyPartDefOf.AndroidThorax && def == BodyPartDefOf.Brain)
+                def = AndroidBodyPartDefOf.ArtificialAndroidBrain;
+            return true;
+        }
+
+
     }
 }
