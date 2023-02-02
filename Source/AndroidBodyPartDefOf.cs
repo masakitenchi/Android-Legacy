@@ -11,7 +11,7 @@ namespace Androids
 
         static AndroidBodyPartDefOf()
         {
-            DefOfHelper.EnsureInitializedInCtor(typeof(BodyPartGroupDefOf));
+            DefOfHelper.EnsureInitializedInCtor(typeof(AndroidBodyPartDefOf));
         }
     }
     
