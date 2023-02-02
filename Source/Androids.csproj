@@ -28,8 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Deterministic>true</Deterministic>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
     <Optimize>true</Optimize>
     <OutputPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -37,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rd &quot;$(ProjectDir)\obj&quot; &quot;$(ProjectDir)\bin&quot; /S /Q" />
+  </Target>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>D:\SteamLibrary\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
@@ -71,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndroidBodyPartDefOf.cs" />
     <Compile Include="JobDriver_FillAndroidPrinter.cs" />
     <Compile Include="JobDriver_Hibernate.cs" />
     <Compile Include="JobDriver_RechargeEnergy.cs" />
