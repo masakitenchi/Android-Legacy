@@ -30,7 +30,7 @@ namespace Androids
                 foreach (HediffApplication hediff1 in this.def.hediffs)
                 {
                     //Log.Warning($"Hediff:{hediff1.def.defName}");
-                    foreach (BodyPartRecord notMissingPart in pawn.health.hediffSet.GetNotMissingParts(depth: BodyPartDepth.Outside))
+                    foreach (BodyPartRecord notMissingPart in pawn.health.hediffSet.GetNotMissingParts())
                     {
                         //Log.Warning($"Part:{notMissingPart}\nGroup:{string.Join("\n", notMissingPart.groups)}\nHediff1.group:{hediff1.group}");
                         if (notMissingPart.IsInGroup(hediff1.group) && notMissingPart.def == hediff1.part)
