@@ -6,8 +6,6 @@
 
 using Androids.Integration;
 using HarmonyLib;
-using System.Reflection.Emit;
-using Mono.Cecil.Cil;
 using RimWorld;
 using RimWorld.Planet;
 using System;
