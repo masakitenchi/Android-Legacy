@@ -182,7 +182,12 @@ namespace Androids
                 harmony.Patch(AccessTools.Method(type35, "DoEffect"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("DoEffectPrefix")));
                 System.Type type36 = typeof(BodyDef);
                 harmony.Patch(AccessTools.Method(type36, "GetPartsWithDef"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetPartsPrefix")));
-
+                str = "CompAbilityEffect_BloodfeederBite.Valid";
+                System.Type type37 = typeof(CompAbilityEffect_BloodfeederBite);
+                harmony.Patch(AccessTools.Method(type37, "Valid",new  Type[] {
+                    typeof(LocalTargetInfo),
+                        typeof(bool)
+                }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ValidPostfix")));
             }
             catch (Exception ex)
             {
@@ -798,6 +803,20 @@ namespace Androids
             return true;
         }
 
+        public static void ValidPostfix(CompAbilityEffect_BloodfeederBite __instance, ref bool __result, LocalTargetInfo target, bool throwMessages)
+        {
+            if (__instance.parent.def.HasModExtension<AbilityModExtension>() && target.Thing is Pawn p)
+            {
+                if(!__instance.parent.def.GetModExtension<AbilityModExtension>().canTargetAndroids && p.IsAndroid())
+                {
+                    if (throwMessages)
+                    {
+                        Messages.Message("MessageCantUseOnAndroid".Translate(__instance.parent.def.Named("ABILITY")), p, MessageTypeDefOf.RejectInput, historical: false);
+                    }
+                    __result = false;
+                }
+            }
+        }
 
     }
 }
