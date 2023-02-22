@@ -76,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ability\AbilityModExtension.cs" />
     <Compile Include="DefOf\AndroidBodyPartDefOf.cs" />
     <Compile Include="AI\JobDriver_FillAndroidPrinter.cs" />
     <Compile Include="AI\JobDriver_Hibernate.cs" />
