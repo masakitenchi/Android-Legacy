@@ -5,6 +5,7 @@
         <value>
             <li Class="Androids.AbilityModExtension">
                 <canTargetAndroids>false</canTargetAndroids>
+                <canTargetDroids>false</canTargetDroids>
             </li>
         </value>
     </Operation>
