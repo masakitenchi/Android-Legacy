@@ -814,6 +814,16 @@ namespace Androids
                         Messages.Message("MessageCantUseOnAndroid".Translate(__instance.parent.def.Named("ABILITY")), p, MessageTypeDefOf.RejectInput, historical: false);
                     }
                     __result = false;
+                    return;
+                }
+                if(!__instance.parent.def.GetModExtension<AbilityModExtension>().canTargetDroids && p.def.HasModExtension<MechanicalPawnProperties>())
+                {
+                    if (throwMessages)
+                    {
+                        Messages.Message("MessageCantUseOnDroid".Translate(__instance.parent.def.Named("ABILITY")), p, MessageTypeDefOf.RejectInput, historical: false);
+                    }
+                    __result = false;
+                    return;
                 }
             }
         }
