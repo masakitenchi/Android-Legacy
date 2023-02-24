@@ -8,7 +8,7 @@ namespace Androids
     {
         public static BodyPartDef AndroidThorax;
         public static BodyPartDef ArtificialAndroidBrain;
-
+        public static BodyPartDef AndroidFinger;
         static AndroidBodyPartDefOf()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(AndroidBodyPartDefOf));
