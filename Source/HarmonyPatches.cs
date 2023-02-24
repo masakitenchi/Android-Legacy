@@ -843,7 +843,7 @@ namespace Androids
         #region VPE
         public static IEnumerable<CodeInstruction> GetGizmoTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            File.WriteAllLines("E:\\before.txt",instructions.Select(x=>x.ToString()));
+            //File.WriteAllLines("E:\\before.txt",instructions.Select(x=>x.ToString()));
             List<CodeInstruction> instructions1 = instructions.ToList();
             int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
             if (ceq++ == -1)
@@ -858,7 +858,7 @@ namespace Androids
                 new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(AndroidBodyPartDefOf), "AndroidFinger")),
                 new CodeInstruction(OpCodes.Ceq)
             });
-            File.WriteAllLines("E:\\after.txt", instructions1.Select(x => x.ToString()));
+            //File.WriteAllLines("E:\\after.txt", instructions1.Select(x => x.ToString()));
             return instructions1;
         }
         /*return x.def == VPE_DefOf.Finger;
@@ -870,7 +870,7 @@ namespace Androids
         */
         public static IEnumerable<CodeInstruction> CastTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            File.WriteAllLines("E:\\beforecast.txt", instructions.Select(x => x.ToString()));
+            //File.WriteAllLines("E:\\beforecast.txt", instructions.Select(x => x.ToString()));
             List<CodeInstruction> instructions1 = instructions.ToList();
             int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
             if (ceq++ == -1)
@@ -885,7 +885,7 @@ namespace Androids
                 new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(AndroidBodyPartDefOf), "AndroidFinger")),
                 new CodeInstruction(OpCodes.Ceq)
             });
-            File.WriteAllLines("E:\\aftercast.txt", instructions1.Select(x => x.ToString()));
+            //File.WriteAllLines("E:\\aftercast.txt", instructions1.Select(x => x.ToString()));
             return instructions1;
         }
         #endregion VPE
