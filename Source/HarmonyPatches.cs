@@ -847,7 +847,10 @@ namespace Androids
             List<CodeInstruction> instructions1 = instructions.ToList();
             int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
             if (ceq++ == -1)
+            {
                 Log.Error("Old Transpiler");
+                return instructions;
+            }
             Label brtrue = generator.DefineLabel();
             instructions1[ceq].labels.Add(brtrue); // ret should get this label
             instructions1.InsertRange(ceq, new List<CodeInstruction>
@@ -874,7 +877,10 @@ namespace Androids
             List<CodeInstruction> instructions1 = instructions.ToList();
             int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
             if (ceq++ == -1)
+            {
                 Log.Error("Old Transpiler");
+                return instructions;
+            }
             Label brtrue = generator.DefineLabel();
             instructions1[ceq].labels.Add(brtrue); // ret should get this label
             instructions1.InsertRange(ceq, new List<CodeInstruction>
