@@ -4,3 +4,7 @@ Source export-ignore
 .gitattributes export-ignore
 LICENCE export-ignore
 README.md export-ignore
+.github export-ignore
+**/obj export-ignore
+**/.vs export-ignore
+**/.packages export-ignore
