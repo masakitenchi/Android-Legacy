@@ -198,6 +198,12 @@ namespace Androids
                     harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<Cast>b__1_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
                     harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<GetGizmo>b__0_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
                 }
+                str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
+                System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
+                harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_ThoughtWorker_LookChangeDesired"));
+                str = "Pawn_StyleTracker.CanDesireLookChange_getter";
+                Type type40 = typeof(Pawn_StyleTracker);
+                harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_CanDesireLookChange_getter"));
             }
             catch (Exception ex)
             {
@@ -776,6 +782,25 @@ namespace Androids
                 return;
             __result = false;
         }
+
+        #region Ideology
+        public static bool Patch_ThoughtWorker_LookChangeDesired(ref ThoughtState __result, Pawn p)
+        {
+            if(p.def.HasModExtension<MechanicalPawnProperties>())
+            {
+                __result = ThoughtState.Inactive;
+                return false;
+            }
+            return true;
+        }
+
+        public static void Patch_CanDesireLookChange_getter(ref bool __result, Pawn_StyleTracker __instance)
+        {
+            if (__instance.pawn.def.HasModExtension<MechanicalPawnProperties>())
+                __result = false;
+        }
+        #endregion
+
         #region Biotech
         public static void CanInstallMechLinkPostfix(Pawn p, ref bool __result, ref string failReason)
         {
