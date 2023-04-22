@@ -5,9 +5,11 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Verse;
 
 namespace Androids
@@ -18,7 +20,8 @@ namespace Androids
         static PostDefFixer()
         {
             int totalnum = default;
-            Log.Message("Androids: Fixing surgery recipes for Droids.");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Androids: Fixing surgery recipes for Droids.");
             foreach (RecipeDef allDef in DefDatabase<RecipeDef>.AllDefs)
             {
                 if (allDef.defName.StartsWith("Administer_"))
@@ -27,18 +30,23 @@ namespace Androids
                 }
             }
             if (totalnum > 0)
-                Log.Message("Androids: Removed '" + totalnum.ToString() + "' recipes for Droids.");
-            Log.Message("Androids: Fixing belts whitelist for AlienRace.ThingDef_AlienRace with defName='ChjBattleDroid'.");
+                sb.AppendLine("Androids: Removed '" + totalnum.ToString() + "' recipes for Droids.");
+            sb.AppendLine("Androids: Fixing belts whitelist for AlienRace.ThingDef_AlienRace with defName='ChjBattleDroid'.");
             List<ThingDef> whiteApparelList = ((ThingDef_AlienRace)ThingDef.Named("ChjBattleDroid")).alienRace.raceRestriction.whiteApparelList;
-            foreach (ThingDef allDef in DefDatabase<ThingDef>.AllDefs)
+            foreach (ThingDef allDef in DefDatabase<ThingDef>.AllDefs.Where
+                (x=>x.IsApparel && 
+                x.apparel.bodyPartGroups != null && 
+                x.apparel.bodyPartGroups.Count ==1 && 
+                x.apparel.bodyPartGroups.First<BodyPartGroupDef>().defName== "Waist"&& 
+                x.apparel.layers != null && 
+                x.apparel.layers.Count == 1 && 
+                x.apparel.layers.First<ApparelLayerDef>().defName == "Belt" && 
+                !whiteApparelList.Any<ThingDef>(i => i.defName == x.defName)))
             {
-                ThingDef thingDef = allDef;
-                if (thingDef.IsApparel && thingDef.apparel.bodyPartGroups != null && thingDef.apparel.bodyPartGroups.Count == 1 && thingDef.apparel.bodyPartGroups.First<BodyPartGroupDef>().defName == "Waist" && thingDef.apparel.layers != null && thingDef.apparel.layers.Count == 1 && thingDef.apparel.layers.First<ApparelLayerDef>().defName == "Belt" && !whiteApparelList.Any<ThingDef>((Predicate<ThingDef>)(item => item.defName == thingDef.defName)))
-                {
-                    Log.Message("Androids: Belt found and added: " + thingDef.defName);
-                    whiteApparelList.Add(thingDef);
-                }
+                sb.AppendLine($"Androids: Belt found and added: {allDef.defName}");
+                whiteApparelList.Add(allDef);
             }
+            Log.Message(sb.ToString());
         }
     }
 }

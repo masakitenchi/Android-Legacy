@@ -235,33 +235,33 @@ namespace Androids
                 this.RefreshPawn();
                 this.newTrait = (Trait)null;
             }
-            Rect rect1 = new Rect(inRect)
+            Rect pawnRect = new Rect(inRect)
             {
                 width = (CustomizeAndroidWindow.PawnPortraitSize.x + 16f),
                 height = (CustomizeAndroidWindow.PawnPortraitSize.y + 16f)
             }.CenteredOnXIn(inRect).CenteredOnYIn(inRect);
-            rect1.x += 16f;
-            rect1.y += 16f;
+            pawnRect.x += 16f;
+            pawnRect.y += 16f;
             if (this.newAndroid != null)
             {
-                Rect position = new Rect((float)((double)rect1.xMin + ((double)rect1.width - (double)CustomizeAndroidWindow.PawnPortraitSize.x) / 2.0 - 10.0), rect1.yMin + 20f, CustomizeAndroidWindow.PawnPortraitSize.x, CustomizeAndroidWindow.PawnPortraitSize.y);
-                GUI.DrawTexture(position, (Texture)PortraitsCache.Get(this.newAndroid, CustomizeAndroidWindow.PawnPortraitSize, Rot4.South, new Vector3(), 1f, true, true, true, true, (Dictionary<Apparel, Color>)null, new Color?(), false));
-                Widgets.InfoCardButton(position.xMax - 16f, position.y, (Thing)this.newAndroid);
+                Rect pawnRenderRect = new Rect((float)((double)pawnRect.xMin + ((double)pawnRect.width - (double)CustomizeAndroidWindow.PawnPortraitSize.x) / 2.0 - 10.0), pawnRect.yMin + 20f, CustomizeAndroidWindow.PawnPortraitSize.x, CustomizeAndroidWindow.PawnPortraitSize.y);
+                GUI.DrawTexture(pawnRenderRect, (Texture)PortraitsCache.Get(this.newAndroid, CustomizeAndroidWindow.PawnPortraitSize, Rot4.South, new Vector3(), 1f, true, true, true, true, (Dictionary<Apparel, Color>)null, new Color?(), false));
+                Widgets.InfoCardButton(pawnRenderRect.xMax - 16f, pawnRenderRect.y, (Thing)this.newAndroid);
                 Verse.Text.Font = GameFont.Medium;
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(new Rect(0.0f, 0.0f, inRect.width, 32f), "AndroidCustomization".Translate());
                 Verse.Text.Font = GameFont.Small;
                 Verse.Text.Anchor = TextAnchor.MiddleLeft;
-                float y1 = 32f;
-                Rect rect2 = new Rect(32f, y1, 240f, 24f);
+                float row = 32f;
+                Rect rowRect = new Rect(32f, row, 240f, 24f);
                 if (this.newAndroid.Name is NameTriple name)
                 {
-                    Rect rect3 = new Rect(rect2);
+                    Rect rect3 = new Rect(rowRect);
                     rect3.width *= 0.333f;
-                    Rect rect4 = new Rect(rect2);
+                    Rect rect4 = new Rect(rowRect);
                     rect4.width *= 0.333f;
                     rect4.x += rect4.width;
-                    Rect rect5 = new Rect(rect2);
+                    Rect rect5 = new Rect(rowRect);
                     rect5.width *= 0.333f;
                     rect5.x += rect4.width * 2f;
                     string first = name.First;
@@ -281,19 +281,20 @@ namespace Androids
                 }
                 else
                 {
-                    rect2.width = 999f;
+                    rowRect.width = 999f;
                     Verse.Text.Font = GameFont.Medium;
-                    Widgets.Label(rect2, this.newAndroid.Name.ToStringFull);
+                    Widgets.Label(rowRect, this.newAndroid.Name.ToStringFull);
                     Verse.Text.Font = GameFont.Small;
                 }
-                float num1 = (float)((double)rect1.x + (double)rect1.width + 16.0 + ((double)inRect.width - (double)CustomizeAndroidWindow.upgradesOffset));
-                Rect source1 = new Rect((float)((double)rect1.x + (double)rect1.width + 16.0), rect1.y, inRect.width - num1, 24f);
-                Rect rect6 = new Rect(source1);
-                rect6.width = rect6.height;
-                Widgets.DrawBoxSolid(rect6, this.newAndroid.story.HairColor);
-                Widgets.DrawBox(rect6);
-                Widgets.DrawHighlightIfMouseover(rect6);
-                if (Widgets.ButtonInvisible(rect6))
+                //Hair customization
+                float finalPawnCustomizationWidthOffset = (float)((double)pawnRect.x + (double)pawnRect.width + 16.0 + ((double)inRect.width - (double)CustomizeAndroidWindow.upgradesOffset));
+                Rect source1 = new Rect((float)((double)pawnRect.x + (double)pawnRect.width + 16.0), pawnRect.y, inRect.width - finalPawnCustomizationWidthOffset, 24f);
+                Rect hairColorRect = new Rect(source1);
+                hairColorRect.width = hairColorRect.height;
+                Widgets.DrawBoxSolid(hairColorRect, this.newAndroid.story.HairColor);
+                Widgets.DrawBox(hairColorRect);
+                Widgets.DrawHighlightIfMouseover(hairColorRect);
+                if (Widgets.ButtonInvisible(hairColorRect))
                 {
                     Func<Color, Action> func = (Func<Color, Action>)(color => (Action)(() =>
                   {
@@ -319,13 +320,13 @@ namespace Androids
                     }
                     Find.WindowStack.Add((Window)new FloatMenu(options));
                 }
-                Rect rect8 = new Rect(source1);
-                rect8.width -= rect6.width;
-                rect8.width -= 8f;
-                rect8.x = (float)((double)rect6.x + (double)rect6.width + 8.0);
-                if (Widgets.ButtonText(rect8, (string)(this.newAndroid?.story?.hairDef?.LabelCap ?? (TaggedString)"Bald"), true, true, true))
+                Rect hairTypeRect = new Rect(source1);
+                hairTypeRect.width -= hairColorRect.width;
+                hairTypeRect.width -= 8f;
+                hairTypeRect.x = (float)((double)hairColorRect.x + (double)hairColorRect.width + 8.0);
+                if (Widgets.ButtonText(hairTypeRect, (string)(this.newAndroid?.story?.hairDef?.LabelCap ?? (TaggedString)"Bald"), true, true, true))
                 {
-                    IEnumerable<HairDef> objects = DefDatabase<HairDef>.AllDefs.Where<HairDef>((Func<HairDef, bool>)(hairdef =>
+                    IEnumerable<HairDef> hairs = DefDatabase<HairDef>.AllDefs.Where<HairDef>((Func<HairDef, bool>)(hairdef =>
                    {
                        if (this.newAndroid.gender == Gender.Female && (hairdef.styleGender == StyleGender.Any || hairdef.styleGender == StyleGender.Female || hairdef.styleGender == StyleGender.FemaleUsually))
                            return true;
@@ -333,8 +334,8 @@ namespace Androids
                            return false;
                        return hairdef.styleGender == StyleGender.Any || hairdef.styleGender == StyleGender.Male || hairdef.styleGender == StyleGender.MaleUsually;
                    }));
-                    if (objects != null)
-                        FloatMenuUtility.MakeMenu<HairDef>(objects, (Func<HairDef, string>)(hairDef => (string)hairDef.LabelCap), (Func<HairDef, Action>)(hairDef => (Action)(() =>
+                    if (hairs != null)
+                        FloatMenuUtility.MakeMenu<HairDef>(hairs, (Func<HairDef, string>)(hairDef => (string)hairDef.LabelCap), (Func<HairDef, Action>)(hairDef => (Action)(() =>
                     {
                         this.newAndroid.story.hairDef = hairDef;
                         this.newAndroid.Drawer.renderer.graphics.ResolveAllGraphics();
@@ -344,7 +345,8 @@ namespace Androids
                         this.RefreshCosts();
                     })));
                 }
-                Rect rect9 = new Rect((float)((double)rect1.x + (double)rect1.width + 16.0), rect1.y + 32f, inRect.width - num1, 32f);
+                //Print button
+                Rect rect9 = new Rect((float)((double)pawnRect.x + (double)pawnRect.width + 16.0), pawnRect.y + 32f, inRect.width - finalPawnCustomizationWidthOffset, 32f);
                 Verse.Text.Font = GameFont.Medium;
                 string str1 = (string)"AndroidCustomizationPrint".Translate();
                 if (Widgets.ButtonText(rect9, str1, true, true, true))
@@ -360,7 +362,7 @@ namespace Androids
                 Verse.Text.Font = GameFont.Small;
                 if (RaceUtility.AlienRaceKinds.Count<PawnKindDef>() > 1)
                 {
-                    if (Widgets.ButtonText(new Rect(304f, y1, 240f, 24f), (string)this.currentPawnKindDef.race.LabelCap, true, true, true))
+                    if (Widgets.ButtonText(new Rect(304f, row, 240f, 24f), (string)this.currentPawnKindDef.race.LabelCap, true, true, true))
                         FloatMenuUtility.MakeMenu<PawnKindDef>(RaceUtility.AlienRaceKinds, (Func<PawnKindDef, string>)(raceKind => (string)raceKind.race.LabelCap), (Func<PawnKindDef, Action>)(raceKind => (Action)(() =>
                     {
                         this.currentPawnKindDef = raceKind;
@@ -371,9 +373,10 @@ namespace Androids
                         this.RefreshUpgrades();
                         this.RefreshCosts();
                     })));
-                    y1 += 26f;
+                    row += 26f;
                 }
-                Rect rect10 = new Rect(304f, y1, 120f, 24f);
+                //Generate new pawn
+                Rect rect10 = new Rect(304f, row, 120f, 24f);
                 if (this.androidPrinter.PawnInside == null)
                 {
                     if (this.currentPawnKindDef.race is ThingDef_AlienRace race && (double)race.alienRace.generalSettings.maleGenderProbability < 1.0 && Widgets.ButtonText(rect10, (string)"AndroidCustomizationRollFemale".Translate(), true, true, true))
@@ -384,7 +387,7 @@ namespace Androids
                         this.RefreshUpgrades();
                         this.RefreshCosts();
                     }
-                    rect10 = new Rect(424f, y1, 120f, 24f);
+                    rect10 = new Rect(424f, row, 120f, 24f);
                     if (Widgets.ButtonText(rect10, (string)"AndroidCustomizationRollMale".Translate(), true, true, true))
                     {
                         this.newAndroid.SetFactionDirect((Faction)null);
@@ -394,7 +397,7 @@ namespace Androids
                         this.RefreshCosts();
                     }
                 }
-                float y2 = y1 + 26f;
+                float y2 = row + 26f;
                 Rect rect11 = new Rect(32f, y2, 240f, 24f);
                 Widgets.DrawBox(rect11);
                 Widgets.DrawHighlightIfMouseover(rect11);
@@ -418,7 +421,7 @@ namespace Androids
 
                 //SkillUI
                 SkillUI.DrawSkillsOf(this.newAndroid, new Vector2(32f, y3 + 27f), SkillUI.SkillDrawMode.Gameplay, rect13);
-                float y4 = rect1.y + rect1.height;
+                float y4 = pawnRect.y + pawnRect.height;
                 float xMax = rect13.xMax;
                 Verse.Text.Anchor = TextAnchor.MiddleLeft;
                 Verse.Text.Font = GameFont.Medium;
@@ -872,7 +875,22 @@ namespace Androids
                 Gender? fixedGender = nullable;
                 FloatRange? excludeBiologicalAgeRange = new FloatRange?();
                 FloatRange? biologicalAgeRange = new FloatRange?();
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(currentPawnKindDef, faction, forceGenerateNewPawn: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 0.0f, allowGay: false, allowPregnant: true, allowAddictions: false, forceRedressWorldPawnIfFormerColonist: true, minChanceToRedressWorldPawn: minChanceToRedressWorldPawn, fixedBiologicalAge: fixedBiologicalAge, fixedChronologicalAge: fixedChronologicalAge, fixedGender: fixedGender, excludeBiologicalAgeRange: excludeBiologicalAgeRange, biologicalAgeRange: biologicalAgeRange));
+                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(
+                    currentPawnKindDef, 
+                    faction, 
+                    forceGenerateNewPawn: true, 
+                    canGeneratePawnRelations: false, 
+                    colonistRelationChanceFactor: 0.0f, 
+                    allowGay: false, 
+                    allowPregnant: false, 
+                    allowAddictions: false, 
+                    forceRedressWorldPawnIfFormerColonist: true, 
+                    minChanceToRedressWorldPawn: minChanceToRedressWorldPawn, 
+                    fixedBiologicalAge: fixedBiologicalAge, 
+                    fixedChronologicalAge: fixedChronologicalAge, 
+                    fixedGender: fixedGender, 
+                    excludeBiologicalAgeRange: excludeBiologicalAgeRange, 
+                    biologicalAgeRange: biologicalAgeRange));
                 HarmonyPatches.bypassGenerationOfUpgrades = false;
                 AndroidUtility.Androidify(pawn);
                 long num = 64800000;
@@ -893,7 +911,22 @@ namespace Androids
                 Gender? fixedGender = nullable1;
                 FloatRange? excludeBiologicalAgeRange = new FloatRange?();
                 FloatRange? biologicalAgeRange = new FloatRange?();
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(currentPawnKindDef, faction, forceGenerateNewPawn: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 0.0f, allowGay: false, allowPregnant: true, allowAddictions: false, forceRedressWorldPawnIfFormerColonist: true, minChanceToRedressWorldPawn: minChanceToRedressWorldPawn, fixedBiologicalAge: fixedBiologicalAge, fixedChronologicalAge: fixedChronologicalAge, fixedGender: fixedGender, excludeBiologicalAgeRange: excludeBiologicalAgeRange, biologicalAgeRange: biologicalAgeRange));
+                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(
+                    currentPawnKindDef, 
+                    faction, 
+                    forceGenerateNewPawn: true, 
+                    canGeneratePawnRelations: false,
+                    colonistRelationChanceFactor: 0.0f,
+                    allowGay: false,
+                    allowPregnant: false, 
+                    allowAddictions: false, 
+                    forceRedressWorldPawnIfFormerColonist: true, 
+                    minChanceToRedressWorldPawn: minChanceToRedressWorldPawn,
+                    fixedBiologicalAge: fixedBiologicalAge, 
+                    fixedChronologicalAge: fixedChronologicalAge,
+                    fixedGender: fixedGender, 
+                    excludeBiologicalAgeRange: excludeBiologicalAgeRange,
+                    biologicalAgeRange: biologicalAgeRange));
                 HarmonyPatches.bypassGenerationOfUpgrades = false;
             }
             pawn?.equipment.DestroyAllEquipment();
