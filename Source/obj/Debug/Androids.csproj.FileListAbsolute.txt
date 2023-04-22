@@ -1,7 +1,0 @@
-D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
-D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.pdb
-C:\Users\fucon\source\repos\Android-Legacy\Source\obj\Debug\Androids.csproj.AssemblyReference.cache
-C:\Users\fucon\source\repos\Android-Legacy\Source\obj\Debug\Androids.csproj.CoreCompileInputs.cache
-C:\Users\fucon\source\repos\Android-Legacy\Source\obj\Debug\Androids.csproj.CopyComplete
-C:\Users\fucon\source\repos\Android-Legacy\Source\obj\Debug\Androids.dll
-C:\Users\fucon\source\repos\Android-Legacy\Source\obj\Debug\Androids.pdb
