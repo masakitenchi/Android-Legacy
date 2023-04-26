@@ -15,11 +15,23 @@ using Verse.Sound;
 
 namespace Androids
 {
+    /// <summary>
+    /// Utility creating and modifying Droids.
+    /// </summary>
     public static class DroidUtility
     {
         private static List<Hediff> tmpHediffsToTend = new List<Hediff>();
         private static List<Hediff> tmpHediffs = new List<Hediff>();
+        private static readonly long ageInTicks = 64800000;
 
+        /// <summary>
+        /// Creates a Droid template.
+        /// </summary>
+        /// <param name="raceDef">ThingDef to use as race.</param>
+        /// <param name="pawnKindDef">PawnKindDef to use as kind.</param>
+        /// <param name="faction">Faction that owns this Droid.</param>
+        /// <param name="map">Map to spawn in.</param>
+        /// <returns>New Pawn if successful. Null if not.</returns>
         public static Pawn MakeDroidTemplate(
           PawnKindDef pawnKindDef,
           Faction faction,
@@ -30,45 +42,47 @@ namespace Androids
             Map map = (Map)null;
             if (tile > -1)
                 map = Current.Game?.FindMap(tile);
-            Pawn pawn1 = (Pawn)ThingMaker.MakeThing(pawnKindDef.race);
-            if (pawn1 == null)
+            //Why use MakeThing?
+            //Pawn pawnBeingCrafted = (Pawn)ThingMaker.MakeThing(pawnKindDef.race);
+            Pawn pawnBeingCrafted = PawnGenerator.GeneratePawn(new PawnGenerationRequest(pawnKindDef,
+                faction: faction,
+                forceGenerateNewPawn: true,
+                canGeneratePawnRelations: false,
+                mustBeCapableOfViolence: true,
+                fixedBiologicalAge: ageInTicks,
+                fixedChronologicalAge: ageInTicks,
+                forceNoIdeo: true,
+                fixedGender: Gender.Male
+                ));
+            if (pawnBeingCrafted == null)
                 return (Pawn)null;
-            pawn1.kindDef = pawnKindDef;
-            if (faction != null)
-                pawn1.SetFactionDirect(faction);
-            PawnComponentsUtility.CreateInitialComponents(pawn1);
-            pawn1.gender = Gender.Male;
-            pawn1.needs.SetInitialLevels();
-            long num1 = 64800000;
-            pawn1.ageTracker.AgeBiologicalTicks = num1;
-            pawn1.ageTracker.AgeChronologicalTicks = num1;
-            if (pawn1.RaceProps.Humanlike)
+            if (pawnBeingCrafted.RaceProps.Humanlike)
             {
                 DroidSpawnProperties spawnProperties = pawnKindDef.race.GetModExtension<DroidSpawnProperties>();
                 if (spawnProperties != null)
                 {
-                    pawn1.gender = spawnProperties.gender;
-                    pawn1.playerSettings.hostilityResponse = spawnProperties.hostileResponse;
+                    pawnBeingCrafted.gender = spawnProperties.gender;
+                    pawnBeingCrafted.playerSettings.hostilityResponse = spawnProperties.hostileResponse;
                 }
-                pawn1.style.beardDef = BeardDefOf.NoBeard;
-                pawn1.style.BodyTattoo = TattooDefOf.NoTattoo_Body;
-                pawn1.style.FaceTattoo = TattooDefOf.NoTattoo_Face;
-                int num2 = spawnProperties == null ? 0 : (spawnProperties.bodyType != null ? 1 : 0);
-                pawn1.story.bodyType = num2 == 0 ? BodyTypeDefOf.Thin : spawnProperties.bodyType;
+                pawnBeingCrafted.style.beardDef = BeardDefOf.NoBeard;
+                pawnBeingCrafted.style.BodyTattoo = TattooDefOf.NoTattoo_Body;
+                pawnBeingCrafted.style.FaceTattoo = TattooDefOf.NoTattoo_Face;
+                pawnBeingCrafted.story.bodyType = spawnProperties?.bodyType ?? BodyTypeDefOf.Thin;
                 if (spawnProperties != null && spawnProperties.headType != null)
-                    pawn1.story.headType = spawnProperties.headType;
-                PortraitsCache.SetDirty(pawn1);
-                BackstoryDef backstoryDef1 = spawnProperties == null || spawnProperties.backstory == null ? DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Where<BackstoryDef>((Func<BackstoryDef, bool>)(backstoryDef => backstoryDef.defName == "ChJAndroid_Droid")).First<BackstoryDef>() : DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Where<BackstoryDef>((Func<BackstoryDef, bool>)(backstoryDef => backstoryDef.defName == spawnProperties.backstory.defName)).First<BackstoryDef>();
-                pawn1.story.Childhood = backstoryDef1;
+                    pawnBeingCrafted.story.headType = spawnProperties.headType;
+                PortraitsCache.SetDirty(pawnBeingCrafted);
+                BackstoryDef backstoryDef1 = spawnProperties?.backstory ?? DefDatabase<BackstoryDef>.AllDefsListForReading.Find(backstoryDef => backstoryDef.defName == "ChJAndroid_Droid");
+                pawnBeingCrafted.story.Childhood = backstoryDef1;
+                //Currently Rewrote until here.
                 if (skills == null || skills.Count <= 0)
                 {
                     if (spawnProperties != null)
                     {
                         foreach (SkillDef skillDef in DefDatabase<SkillDef>.AllDefsListForReading)
-                            pawn1.skills.GetSkill(skillDef).Level = spawnProperties.defaultSkillLevel;
+                            pawnBeingCrafted.skills.GetSkill(skillDef).Level = spawnProperties.defaultSkillLevel;
                         foreach (DroidSkill skill1 in spawnProperties.skills)
                         {
-                            SkillRecord skill2 = pawn1.skills.GetSkill(skill1.def);
+                            SkillRecord skill2 = pawnBeingCrafted.skills.GetSkill(skill1.def);
                             if (skill2 != null)
                             {
                                 skill2.Level = skill1.level;
@@ -82,7 +96,7 @@ namespace Androids
                         for (int index = 0; index < defsListForReading.Count; ++index)
                         {
                             SkillDef skillDef = defsListForReading[index];
-                            SkillRecord skill = pawn1.skills.GetSkill(skillDef);
+                            SkillRecord skill = pawnBeingCrafted.skills.GetSkill(skillDef);
                             if (skillDef == SkillDefOf.Shooting || skillDef == SkillDefOf.Melee || skillDef == SkillDefOf.Mining || skillDef == SkillDefOf.Plants)
                             {
                                 skill.Level = 8;
@@ -102,15 +116,15 @@ namespace Androids
                     for (int index = 0; index < defsListForReading.Count; ++index)
                     {
                         SkillDef skillDef = defsListForReading[index];
-                        SkillRecord skill = pawn1.skills.GetSkill(skillDef);
+                        SkillRecord skill = pawnBeingCrafted.skills.GetSkill(skillDef);
                         SkillRequirement skillRequirement = skills.First<SkillRequirement>((Func<SkillRequirement, bool>)(sr => sr.skill == skillDef));
                         skill.Level = skillRequirement == null ? defaultSkillLevel : skillRequirement.minLevel;
                         skill.passion = Passion.None;
                     }
                 }
             }
-            if (pawn1.workSettings != null)
-                pawn1.workSettings.EnableAndInitialize();
+            if (pawnBeingCrafted.workSettings != null)
+                pawnBeingCrafted.workSettings.EnableAndInitialize();
             if (map != null && faction.IsPlayer)
             {
                 IEnumerable<Name> source = map.mapPawns.FreeColonists.Select<Pawn, Name>((Func<Pawn, Name>)(pawn => pawn.Name));
@@ -118,14 +132,14 @@ namespace Androids
                 {
                     int num4 = source.Count<Name>((Func<Name, bool>)(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower())));
                     string nickName = (string)(pawnKindDef.race.LabelCap + " ") + num4.ToString();
-                    pawn1.Name = (Name)DroidUtility.MakeDroidName(nickName);
+                    pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName(nickName);
                 }
                 else
-                    pawn1.Name = (Name)DroidUtility.MakeDroidName((string)null);
+                    pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName((string)null);
             }
             else
-                pawn1.Name = (Name)DroidUtility.MakeDroidName((string)null);
-            return pawn1;
+                pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName((string)null);
+            return pawnBeingCrafted;
         }
 
         public static float HairChoiceLikelihoodFor(HairDef hair, Pawn pawn)
