@@ -1,0 +1,69 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+    
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Get Dependency dlls
+      uses: actions/checkout@v2
+      with:
+        repository: Vanilla-Expanded/VanillaExpandedFramework
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
+        path: VanillaExpandedFramework
+    - name: test dir
+      run: dir
+    - name: Get Dependency dlls
+      uses: actions/checkout@v2
+      with:
+        repository: Vanilla-Expanded/VanillaPsycastsExpanded
+        path: VanillaPsycastsExpanded
+    
+    - name: test dir
+      run: dir
+    - name: Get Dependency dlls
+      uses: actions/checkout@v2
+      with:
+        repository: erdelf/AlienRaces
+        path: AlienRaces
+    
+    - name: test dir
+      run: dir
+        
+
+    #- name: Copy .dll
+    #  run: |
+    #    mkdir Source/libs
+    #  cp VanillaPsycastsExpanded/1.4/Assemblies/VanillaPsycastsExpanded.dll Android-Legacy/Source/libs
+      
+    - name: Copy .dll
+      run: |
+        dir
+        mkdir libs
+        cp VanillaExpandedFramework/1.4/Assemblies/VFECore.dll libs
+        cp VanillaPsycastsExpanded/1.4/Assemblies/VanillaPsycastsExpanded.dll libs
+        cp AlienRaces/1.4/Assemblies/AlienRace.dll libs
+        cd libs
+        dir
+        cd ../
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+      
+    - name: Test Run
+      run: |
+            cd Source
+            nuget restore Androids.csproj -SolutionDirectory ./Androids.sln
+            msbuild Androids.sln -p:Configuration=release -p:ReferencePath=../libs
