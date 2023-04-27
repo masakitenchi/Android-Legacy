@@ -224,25 +224,25 @@
 				  <li>13</li>
 				</growthAges>
 				<reproduction>
-				<femaleFertilityAgeFactor>
-				  <points>
-					<li>(14, 0)</li>
-					<li>(20, 1)</li>
-					<li>(500, 1)</li>
-					<li>(700, 0.5)</li>
-					<li>(800, 0.1)</li>
-					<li>(900, 0.02)</li>
-					<li>(1000, 0)</li>
-				  </points>
-				</femaleFertilityAgeFactor>
-				<maleFertilityAgeFactor>
-				  <points>
-					<li>(14, 0)</li>
-					<li>(18, 1)</li>
-					<li>(700, 1)</li>
-					<li>(1000, 0)</li>
-				  </points>
-				</maleFertilityAgeFactor>
+					<femaleFertilityAgeFactor>
+					  <points>
+						<li>(14, 0)</li>
+						<li>(20, 1)</li>
+						<li>(500, 1)</li>
+						<li>(700, 0.5)</li>
+						<li>(800, 0.1)</li>
+						<li>(900, 0.02)</li>
+						<li>(1000, 0)</li>
+					  </points>
+					</femaleFertilityAgeFactor>
+					<maleFertilityAgeFactor>
+					  <points>
+						<li>(14, 0)</li>
+						<li>(18, 1)</li>
+						<li>(700, 1)</li>
+						<li>(1000, 0)</li>
+					  </points>
+					</maleFertilityAgeFactor>
 				</reproduction>
 			</generalSettings>
 			<graphicPaths>
@@ -314,9 +314,9 @@
 				<relationChanceModifierSibling>0</relationChanceModifierSibling>
 				<relationChanceModifierSpouse>1</relationChanceModifierSpouse>
 			</relationSettings>
-			<!--<raceRestriction>
+			<raceRestriction>
 				<blackEndoCategories>
-				  <li>Melanin</li>
+				  <li>Head</li>
 				  <li>Ears</li>
 				  <li>Nose</li>
 				  <li>Jaw</li>
@@ -325,7 +325,7 @@
 				  <li>BodyType</li>
 				  <li>Voice</li>
 				</blackEndoCategories>
-			</raceRestriction>-->
+			</raceRestriction>
 		</alienRace>
 		<statBases>
 			<Mass>80</Mass>
@@ -514,6 +514,8 @@
 			<li MayRequire="Ludeon.RimWorld.Biotech">ReverseVasectomy</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">TubalLigation</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">ExtractOvum</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">ExtractHemogenPack</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">BloodTransfusion</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">ImplantXenogerm</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">ImplantIUD</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">RemoveIUD</li>
