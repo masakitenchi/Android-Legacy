@@ -1,2 +1,5 @@
-Source/.vs
-Source/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+**/.vs
+**/.packages
+**/packages
+**/obj
+**/bin
