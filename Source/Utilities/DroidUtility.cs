@@ -42,20 +42,17 @@ namespace Androids
             Map map = (Map)null;
             if (tile > -1)
                 map = Current.Game?.FindMap(tile);
-            //Why use MakeThing?
-            //Pawn pawnBeingCrafted = (Pawn)ThingMaker.MakeThing(pawnKindDef.race);
-            Pawn pawnBeingCrafted = PawnGenerator.GeneratePawn(new PawnGenerationRequest(pawnKindDef,
-                faction: faction,
-                forceGenerateNewPawn: true,
-                canGeneratePawnRelations: false,
-                mustBeCapableOfViolence: true,
-                fixedBiologicalAge: ageInTicks,
-                fixedChronologicalAge: ageInTicks,
-                forceNoIdeo: true,
-                fixedGender: Gender.Male
-                ));
+            Pawn pawnBeingCrafted = (Pawn)ThingMaker.MakeThing(pawnKindDef.race);
             if (pawnBeingCrafted == null)
                 return (Pawn)null;
+            pawnBeingCrafted.kindDef = pawnKindDef;
+            if (faction != null)
+                pawnBeingCrafted.SetFactionDirect(faction);
+            PawnComponentsUtility.CreateInitialComponents(pawnBeingCrafted);
+            pawnBeingCrafted.gender = Gender.Male;
+            pawnBeingCrafted.needs.SetInitialLevels();
+            pawnBeingCrafted.ageTracker.AgeBiologicalTicks = ageInTicks;
+            pawnBeingCrafted.ageTracker.AgeChronologicalTicks = ageInTicks;
             if (pawnBeingCrafted.RaceProps.Humanlike)
             {
                 DroidSpawnProperties spawnProperties = pawnKindDef.race.GetModExtension<DroidSpawnProperties>();
@@ -71,8 +68,7 @@ namespace Androids
                 if (spawnProperties != null && spawnProperties.headType != null)
                     pawnBeingCrafted.story.headType = spawnProperties.headType;
                 PortraitsCache.SetDirty(pawnBeingCrafted);
-                BackstoryDef backstoryDef1 = spawnProperties?.backstory ?? DefDatabase<BackstoryDef>.AllDefsListForReading.Find(backstoryDef => backstoryDef.defName == "ChJAndroid_Droid");
-                pawnBeingCrafted.story.Childhood = backstoryDef1;
+                pawnBeingCrafted.story.Childhood = spawnProperties?.backstory ?? DefDatabase<BackstoryDef>.AllDefsListForReading.Find(backstoryDef => backstoryDef.defName == "ChJAndroid_Droid");
                 //Currently Rewrote until here.
                 if (skills == null || skills.Count <= 0)
                 {
