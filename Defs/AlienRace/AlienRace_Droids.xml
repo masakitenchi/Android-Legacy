@@ -226,6 +226,7 @@
 		</relationSettings>
 		<raceRestriction>
 			<blackEndoCategories>
+				<li>HairColor</li>
 				<li>BodyType</li>
 				<li>Ears</li>
 				<li>Nose</li>
