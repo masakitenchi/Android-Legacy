@@ -129,14 +129,14 @@
 			</alienPartGenerator>
 			<growthAges Inherit="False"/>
 			<reproduction>
-			<maleFertilityAgeFactor>
-			  <points>
-				<li>(14, 0)</li>
-				<li>(200, 0)</li>
-				<li>(500, 0)</li>
-				<li>(1000, 0)</li>
-			  </points>
-			</maleFertilityAgeFactor>
+				<maleFertilityAgeFactor>
+				  <points>
+					<li>(14, 0)</li>
+					<li>(200, 0)</li>
+					<li>(500, 0)</li>
+					<li>(1000, 0)</li>
+				  </points>
+				</maleFertilityAgeFactor>
 			</reproduction>
 		</generalSettings>
 		<graphicPaths>
@@ -228,7 +228,6 @@
 			<blackEndoCategories>
 				<li>HairColor</li>
 				<li>BodyType</li>
-				<li>Melanin</li>
 				<li>Ears</li>
 				<li>Nose</li>
 				<li>Jaw</li>
@@ -498,21 +497,21 @@
 				<li>Buckler</li>
 				<li>MedievalShield</li>
 				<li>BallisticShield</li>
-				<li>CE_Apparel_TacVest</li>
+				<li>Apparel_TacVest</li>
 				<li>CE_Apparel_Backpack</li>
 				<li>CE_Apparel_TribalBackpack</li>
 			</whiteApparelList>
 			<blackEndoCategories>
-				<li>HairColor</li>
+			  <li>HairColor</li>
 				<li>BodyType</li>
-				<li>Melanin</li>
-				<li>Ears</li>
-				<li>Nose</li>
-				<li>Jaw</li>
-				<li>Hands</li>
-				<li>Headbone</li>
-				<li>Head</li>
-				<li>Voice</li>
+			  <li>Melanin</li>
+			  <li>Ears</li>
+			  <li>Nose</li>
+			  <li>Jaw</li>
+			  <li>Hands</li>
+			  <li>Headbone</li>
+			  <li>BodyType</li>
+			  <li>Voice</li>
 			</blackEndoCategories>
 		</raceRestriction>
 		<generalSettings>
@@ -631,14 +630,14 @@
 			</alienPartGenerator>
 			<growthAges Inherit="False"/>
 			<reproduction>
-			<maleFertilityAgeFactor>
-			  <points>
-				<li>(14, 0)</li>
-				<li>(200, 0)</li>
-				<li>(500, 0)</li>
-				<li>(1000, 0)</li>
-			  </points>
-			</maleFertilityAgeFactor>
+				<maleFertilityAgeFactor>
+				  <points>
+					<li>(14, 0)</li>
+					<li>(200, 0)</li>
+					<li>(500, 0)</li>
+					<li>(1000, 0)</li>
+				  </points>
+				</maleFertilityAgeFactor>
 			</reproduction>
 		</generalSettings>
 		<graphicPaths>
