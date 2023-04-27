@@ -10,17 +10,17 @@ using Verse;
 
 namespace Androids
 {
-  public class CompUseEffect_SpawnDroid : CompUseEffect_SpawnPawn
-  {
-    public override void DoSpawn(Pawn usedBy)
+    public class CompUseEffect_SpawnDroid : CompUseEffect_SpawnPawn
     {
-      Pawn pawn = DroidUtility.MakeDroidTemplate(this.SpawnerProps.pawnKind, this.GetFaction(), this.parent.Map.Tile);
-      if (pawn == null)
-        return;
-      GenPlace.TryPlaceThing((Thing) pawn, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
-      if (!this.SpawnerProps.sendMessage)
-        return;
-      Messages.Message((string) "AndroidSpawnedDroidMessageText".Translate((NamedArgument) pawn.Name.ToStringFull, (NamedArgument) usedBy.Name.ToStringFull), (LookTargets) new GlobalTargetInfo((Thing) pawn), MessageTypeDefOf.NeutralEvent);
+        public override void DoSpawn(Pawn usedBy)
+        {
+            Pawn pawn = DroidUtility.MakeDroidTemplate(this.SpawnerProps.pawnKind, this.GetFaction(), this.parent.Map.Tile);
+            if (pawn == null)
+                return;
+            GenSpawn.Spawn(pawn, this.parent.Position, this.parent.Map);
+            if (!this.SpawnerProps.sendMessage)
+                return;
+            Messages.Message((string)"AndroidSpawnedDroidMessageText".Translate((NamedArgument)pawn.Name.ToStringFull, (NamedArgument)usedBy.Name.ToStringFull), (LookTargets)new GlobalTargetInfo((Thing)pawn), MessageTypeDefOf.NeutralEvent);
+        }
     }
-  }
 }
