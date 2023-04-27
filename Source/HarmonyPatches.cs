@@ -10,9 +10,12 @@ using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
+using VanillaPsycastsExpanded;
 using Verse;
 using Verse.AI;
 
@@ -182,7 +185,25 @@ namespace Androids
                 harmony.Patch(AccessTools.Method(type35, "DoEffect"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("DoEffectPrefix")));
                 System.Type type36 = typeof(BodyDef);
                 harmony.Patch(AccessTools.Method(type36, "GetPartsWithDef"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetPartsPrefix")));
-
+                str = "CompAbilityEffect_BloodfeederBite.Valid";
+                System.Type type37 = typeof(CompAbilityEffect_BloodfeederBite);
+                harmony.Patch(AccessTools.Method(type37, "Valid", new Type[] {
+                    typeof(LocalTargetInfo),
+                        typeof(bool)
+                }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ValidPostfix")));
+                if (ModsConfig.IsActive("vanillaexpanded.vpsycastse"))
+                {
+                    str = "VanillaPsycastsExpanded.Ability_Resurrect.GetGizmo";
+                    Type type38 = typeof(VanillaPsycastsExpanded.Ability_Resurrect);
+                    harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<Cast>b__1_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
+                    harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<GetGizmo>b__0_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
+                }
+                str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
+                System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
+                harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_ThoughtWorker_LookChangeDesired"));
+                str = "Pawn_StyleTracker.CanDesireLookChange_getter";
+                Type type40 = typeof(Pawn_StyleTracker);
+                harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_CanDesireLookChange_getter"));
             }
             catch (Exception ex)
             {
@@ -761,6 +782,26 @@ namespace Androids
                 return;
             __result = false;
         }
+
+        #region Ideology
+        public static bool Patch_ThoughtWorker_LookChangeDesired(ref ThoughtState __result, Pawn p)
+        {
+            if(p.def.HasModExtension<MechanicalPawnProperties>())
+            {
+                __result = ThoughtState.Inactive;
+                return false;
+            }
+            return true;
+        }
+
+        public static void Patch_CanDesireLookChange_getter(ref bool __result, Pawn_StyleTracker __instance)
+        {
+            if (__instance.pawn.def.HasModExtension<MechanicalPawnProperties>())
+                __result = false;
+        }
+        #endregion
+
+        #region Biotech
         public static void CanInstallMechLinkPostfix(Pawn p, ref bool __result, ref string failReason)
         {
             if (!__result && p.IsAndroid())
@@ -798,6 +839,86 @@ namespace Androids
             return true;
         }
 
+        public static void ValidPostfix(CompAbilityEffect_BloodfeederBite __instance, ref bool __result, LocalTargetInfo target, bool throwMessages)
+        {
+            if (__instance.parent.def.HasModExtension<AbilityModExtension>() && target.Thing is Pawn p)
+            {
+                if (!__instance.parent.def.GetModExtension<AbilityModExtension>().canTargetAndroids && p.IsAndroid())
+                {
+                    if (throwMessages)
+                    {
+                        Messages.Message("MessageCantUseOnAndroid".Translate(__instance.parent.def.Named("ABILITY")), p, MessageTypeDefOf.RejectInput, historical: false);
+                    }
+                    __result = false;
+                    return;
+                }
+                if (!__instance.parent.def.GetModExtension<AbilityModExtension>().canTargetDroids && p.def.HasModExtension<MechanicalPawnProperties>())
+                {
+                    if (throwMessages)
+                    {
+                        Messages.Message("MessageCantUseOnDroid".Translate(__instance.parent.def.Named("ABILITY")), p, MessageTypeDefOf.RejectInput, historical: false);
+                    }
+                    __result = false;
+                    return;
+                }
+            }
+        }
+        #endregion Biotech
 
+        #region VPE
+        public static IEnumerable<CodeInstruction> GetGizmoTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            //File.WriteAllLines("E:\\before.txt",instructions.Select(x=>x.ToString()));
+            List<CodeInstruction> instructions1 = instructions.ToList();
+            int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
+            if (ceq++ == -1)
+            {
+                Log.Error("Old Transpiler");
+                return instructions;
+            }
+            Label brtrue = generator.DefineLabel();
+            instructions1[ceq].labels.Add(brtrue); // ret should get this label
+            instructions1.InsertRange(ceq, new List<CodeInstruction>
+            {
+                new CodeInstruction(OpCodes.Brtrue,brtrue),
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(BodyPartRecord), "def")),
+                new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(AndroidBodyPartDefOf), "AndroidFinger")),
+                new CodeInstruction(OpCodes.Ceq)
+            });
+            //File.WriteAllLines("E:\\after.txt", instructions1.Select(x => x.ToString()));
+            return instructions1;
+        }
+        /*return x.def == VPE_DefOf.Finger;
+	        IL_0000: ldarg.1
+	        IL_0001: ldfld class ['Assembly-CSharp']Verse.BodyPartDef ['Assembly-CSharp']Verse.BodyPartRecord::def
+	        IL_0006: ldsfld class ['Assembly-CSharp']Verse.BodyPartDef VanillaPsycastsExpanded.VPE_DefOf::Finger
+	        IL_000b: ceq
+	        IL_000d: ret
+        */
+        public static IEnumerable<CodeInstruction> CastTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            //File.WriteAllLines("E:\\beforecast.txt", instructions.Select(x => x.ToString()));
+            List<CodeInstruction> instructions1 = instructions.ToList();
+            int ceq = instructions1.FirstIndexOf(x => x.opcode == OpCodes.Ceq);
+            if (ceq++ == -1)
+            {
+                Log.Error("Old Transpiler");
+                return instructions;
+            }
+            Label brtrue = generator.DefineLabel();
+            instructions1[ceq].labels.Add(brtrue); // ret should get this label
+            instructions1.InsertRange(ceq, new List<CodeInstruction>
+            {
+                new CodeInstruction(OpCodes.Brtrue,brtrue),
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(BodyPartRecord), "def")),
+                new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(AndroidBodyPartDefOf), "AndroidFinger")),
+                new CodeInstruction(OpCodes.Ceq)
+            });
+            //File.WriteAllLines("E:\\aftercast.txt", instructions1.Select(x => x.ToString()));
+            return instructions1;
+        }
+        #endregion VPE
     }
 }
