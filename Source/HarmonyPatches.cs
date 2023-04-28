@@ -15,7 +15,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
-using VanillaPsycastsExpanded;
 using Verse;
 using Verse.AI;
 
@@ -194,9 +193,8 @@ namespace Androids
                 if (ModsConfig.IsActive("vanillaexpanded.vpsycastse"))
                 {
                     str = "VanillaPsycastsExpanded.Ability_Resurrect.GetGizmo";
-                    Type type38 = typeof(VanillaPsycastsExpanded.Ability_Resurrect);
-                    harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<Cast>b__1_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
-                    harmony.Patch(AccessTools.Method(AccessTools.Inner(type38, "<>c"), "<GetGizmo>b__0_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
+                    harmony.Patch(AccessTools.Method(AccessTools.Inner(AccessTools.TypeByName("VanillaPsycastsExpanded.Ability_Resurrect"), "<>c"), "<Cast>b__1_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
+                    harmony.Patch(AccessTools.Method(AccessTools.Inner(AccessTools.TypeByName("VanillaPsycastsExpanded.Ability_Resurrect"), "<>c"), "<GetGizmo>b__0_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
                 }
                 str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
                 System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
