@@ -190,18 +190,15 @@ namespace Androids
                     typeof(LocalTargetInfo),
                         typeof(bool)
                 }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ValidPostfix")));
-                if (ModsConfig.IsActive("vanillaexpanded.vpsycastse"))
-                {
-                    str = "VanillaPsycastsExpanded.Ability_Resurrect.GetGizmo";
-                    harmony.Patch(AccessTools.Method(AccessTools.Inner(AccessTools.TypeByName("VanillaPsycastsExpanded.Ability_Resurrect"), "<>c"), "<Cast>b__1_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
-                    harmony.Patch(AccessTools.Method(AccessTools.Inner(AccessTools.TypeByName("VanillaPsycastsExpanded.Ability_Resurrect"), "<>c"), "<GetGizmo>b__0_0"), transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetGizmoTranspiler")));
-                }
                 str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
                 System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
                 harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_ThoughtWorker_LookChangeDesired"));
                 str = "Pawn_StyleTracker.CanDesireLookChange_getter";
                 Type type40 = typeof(Pawn_StyleTracker);
                 harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_CanDesireLookChange_getter"));
+                Type type41 = typeof(ITab_Pawn_Visitor);
+                str = "ITab_Pawn_Visitor.<>c__DisplayClass7_0.<FillTab>g__CanUsePrisonerInteractionMode|0";
+                harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass7_0"), x=> x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
             }
             catch (Exception ex)
             {
@@ -860,6 +857,16 @@ namespace Androids
                     return;
                 }
             }
+        }
+
+        public static bool CanUsePrisonerInteractionMode_Prefix(ref bool __result, Pawn pawn, PrisonerInteractionModeDef mode)
+        {
+            if(pawn.def.HasModExtension<AndroidPawnProperties>() && (mode == PrisonerInteractionModeDefOf.Bloodfeed || mode == PrisonerInteractionModeDefOf.HemogenFarm))
+            {
+                __result = false;
+                return false;
+            }
+            return true;
         }
         #endregion Biotech
 
