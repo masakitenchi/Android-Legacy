@@ -28,7 +28,7 @@ namespace Androids
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.AppendLine((string) "AndroidMarketValueStatPartLabel".Translate());
       foreach (Hediff hediff in hediffList)
-        stringBuilder.AppendLine("    " + hediff.LabelCap + ": +" + string.Format(this.parentStat.formatString, (object) (float) Math.Ceiling((double) PriceUtility.PawnQualityPriceFactor(thing) * (double) this.CalculateMarketValueFromHediff(hediff, thing.RaceProps.baseBodySize))));
+        stringBuilder.AppendLine("    " + hediff.LabelCap + ": +" + ((float) Math.Ceiling(PriceUtility.PawnQualityPriceFactor(thing) * CalculateMarketValueFromHediff(hediff, thing.RaceProps.baseBodySize))).ToStringByStyle(parentStat.toStringStyle));
       return stringBuilder.ToString();
     }
 
