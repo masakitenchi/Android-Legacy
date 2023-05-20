@@ -30,7 +30,7 @@ namespace Androids
         Building_AndroidPrinterCasket pod = (Building_AndroidPrinterCasket) actor.CurJob.targetA.Thing;
         Action confirmedAct = (Action) (() =>
         {
-          actor.DeSpawn(DestroyMode.Vanish);
+          actor.DeSpawnOrDeselect(DestroyMode.Vanish);
           pod.TryAcceptThing((Thing) actor, true);
         });
         if (pod.def.building.isPlayerEjectable)

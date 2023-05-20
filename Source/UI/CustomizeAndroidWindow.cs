@@ -17,6 +17,57 @@ namespace Androids
 {
     public class CustomizeAndroidWindow : Window
     {
+        #region private fields
+
+        private static readonly Vector2 PawnPortraitSize = new Vector2(100f, 140f);
+        private static readonly SimpleCurve LevelRandomCurve = new SimpleCurve()
+        {
+          {
+            new CurvePoint(0.0f, 0.0f),
+            true
+          },
+          {
+            new CurvePoint(0.5f, 150f),
+            true
+          },
+          {
+            new CurvePoint(4f, 150f),
+            true
+          },
+          {
+            new CurvePoint(5f, 25f),
+            true
+          },
+          {
+            new CurvePoint(10f, 5f),
+            true
+          },
+          {
+            new CurvePoint(15f, 0.0f),
+            true
+          }
+        };
+        private static readonly SimpleCurve LevelFinalAdjustmentCurve = new SimpleCurve()
+        {
+          {
+            new CurvePoint(0.0f, 0.0f),
+            true
+          },
+          {
+            new CurvePoint(10f, 10f),
+            true
+          },
+          {
+            new CurvePoint(20f, 16f),
+            true
+          },
+          {
+            new CurvePoint(27f, 20f),
+            true
+          }
+        };
+        #endregion
+
         public Building_AndroidPrinter androidPrinter;
         public Pawn newAndroid;
         public List<ThingOrderRequest> finalCalculatedPrintingCost = new List<ThingOrderRequest>();
@@ -36,74 +87,27 @@ namespace Androids
         public Color originalHairColor;
         public HairDef originalHairDef;
         public static readonly float upgradesOffset = 640f;
-        private static readonly Vector2 PawnPortraitSize = new Vector2(100f, 140f);
-        private static readonly SimpleCurve LevelRandomCurve = new SimpleCurve()
-    {
-      {
-        new CurvePoint(0.0f, 0.0f),
-        true
-      },
-      {
-        new CurvePoint(0.5f, 150f),
-        true
-      },
-      {
-        new CurvePoint(4f, 150f),
-        true
-      },
-      {
-        new CurvePoint(5f, 25f),
-        true
-      },
-      {
-        new CurvePoint(10f, 5f),
-        true
-      },
-      {
-        new CurvePoint(15f, 0.0f),
-        true
-      }
-    };
-        private static readonly SimpleCurve LevelFinalAdjustmentCurve = new SimpleCurve()
-    {
-      {
-        new CurvePoint(0.0f, 0.0f),
-        true
-      },
-      {
-        new CurvePoint(10f, 10f),
-        true
-      },
-      {
-        new CurvePoint(20f, 16f),
-        true
-      },
-      {
-        new CurvePoint(27f, 20f),
-        true
-      }
-    };
         public static List<Color> DefaultHairColors = new List<Color>((IEnumerable<Color>)new Color[13]
         {
-      new Color(0.17f, 0.17f, 0.17f, 1f),
-      new Color(0.02f, 0.02f, 0.02f, 1f),
-      new Color(0.9f, 0.9f, 0.9f, 1f),
-      new Color(0.51f, 0.25f, 0.25f, 1f),
-      new Color(1f, 0.66f, 0.32f, 1f),
-      new Color(0.0f, 0.5f, 1f, 1f),
-      new Color(1f, 0.0f, 0.5f, 1f),
-      new Color(1f, 0.0f, 0.0f, 1f),
-      new Color(0.0f, 1f, 0.0f, 1f),
-      new Color(0.0f, 1f, 1f, 1f),
-      new Color(0.78f, 0.78f, 0.78f, 1f),
-      new Color(0.92f, 0.92f, 0.29f, 1f),
-      new Color(0.63f, 0.28f, 0.64f, 1f)
+          new Color(0.17f, 0.17f, 0.17f, 1f),
+          new Color(0.02f, 0.02f, 0.02f, 1f),
+          new Color(0.9f, 0.9f, 0.9f, 1f),
+          new Color(0.51f, 0.25f, 0.25f, 1f),
+          new Color(1f, 0.66f, 0.32f, 1f),
+          new Color(0.0f, 0.5f, 1f, 1f),
+          new Color(1f, 0.0f, 0.5f, 1f),
+          new Color(1f, 0.0f, 0.0f, 1f),
+          new Color(0.0f, 1f, 0.0f, 1f),
+          new Color(0.0f, 1f, 1f, 1f),
+          new Color(0.78f, 0.78f, 0.78f, 1f),
+          new Color(0.92f, 0.92f, 0.29f, 1f),
+          new Color(0.63f, 0.28f, 0.64f, 1f)
         });
         public List<HediffDef> _pawnHediffs;
         public List<Trait> _pawnTraits;
         public bool IsUpgrade;
         public Pawn clonedPawn;
-
+        
         public override Vector2 InitialSize => new Vector2(898f, 608f);
 
         public IEnumerable<Color> HairColors
@@ -128,25 +132,33 @@ namespace Androids
             }
         }
 
-        public List<HediffDef> pawnHediffs()
+        public void UpgradePawnHediffs()
         {
+            /* if (!this.IsUpgrade)
+                 return (List<HediffDef>)null;
+             Pawn_HealthTracker health = this.newAndroid.health;
+             List<HediffDef> hediffDefList1;
+             if (health == null)
+             {
+                 hediffDefList1 = (List<HediffDef>)null;
+             }
+             else
+             {
+                 HediffSet hediffSet = health.hediffSet;
+                 hediffDefList1 = hediffSet != null ? hediffSet.hediffs.Select(hediff => hediff.def).ToList() : null;
+             }
+             List<HediffDef> hediffDefList2 = hediffDefList1;
+             if (this._pawnHediffs.NullOrEmpty())
+                 this._pawnHediffs = hediffDefList2;
+             return hediffDefList2;*/
             if (!this.IsUpgrade)
-                return (List<HediffDef>)null;
+                return;
+
             Pawn_HealthTracker health = this.newAndroid.health;
-            List<HediffDef> hediffDefList1;
-            if (health == null)
-            {
-                hediffDefList1 = (List<HediffDef>)null;
-            }
-            else
-            {
-                HediffSet hediffSet = health.hediffSet;
-                hediffDefList1 = hediffSet != null ? hediffSet.hediffs.Select<Hediff, HediffDef>((Func<Hediff, HediffDef>)(hediff => hediff.def)).ToList<HediffDef>() : (List<HediffDef>)null;
-            }
-            List<HediffDef> hediffDefList2 = hediffDefList1;
-            if (this._pawnHediffs.NullOrEmpty<HediffDef>())
-                this._pawnHediffs = hediffDefList2;
-            return hediffDefList2;
+            List<HediffDef> hediffDefList = health?.hediffSet?.hediffs.Select(hediff => hediff.def).ToList();
+
+            if (this._pawnHediffs.NullOrEmpty())
+                this._pawnHediffs = hediffDefList;
         }
 
         public List<Trait> pawnTraits(Pawn pawn)
@@ -161,9 +173,10 @@ namespace Androids
 
         public bool AlreadyUpgradedOnPawn(AndroidUpgradeDef upgrade)
         {
-            this.pawnHediffs();
-            List<HediffDef> pawnHediffs = this._pawnHediffs;
-            return !pawnHediffs.NullOrEmpty<HediffDef>() && pawnHediffs.Contains(upgrade.hediffToApply);
+            this.UpgradePawnHediffs();
+            /*List<HediffDef> pawnHediffs = this._pawnHediffs;
+            return !pawnHediffs.NullOrEmpty<HediffDef>() && pawnHediffs.Contains(upgrade.hediffToApply);*/
+            return _pawnHediffs?.Contains(upgrade.hediffToApply) ?? false;
         }
 
         public CustomizeAndroidWindow(Building_AndroidPrinter androidPrinter)
@@ -346,6 +359,7 @@ namespace Androids
                     })));
                 }
                 //Print button
+
                 Rect rect9 = new Rect((float)((double)pawnRect.x + (double)pawnRect.width + 16.0), pawnRect.y + 32f, inRect.width - finalPawnCustomizationWidthOffset, 32f);
                 Verse.Text.Font = GameFont.Medium;
                 string str1 = (string)"AndroidCustomizationPrint".Translate();
@@ -357,8 +371,10 @@ namespace Androids
                     this.androidPrinter.pawnToPrint = this.newAndroid;
                     this.androidPrinter.clonedPawnToPrint = this.clonedPawn;
                     this.androidPrinter.printerStatus = CrafterStatus.Filling;
+                    //this.androidPrinter.upgradesToApply;
                     this.Close();
                 }
+
                 Verse.Text.Font = GameFont.Small;
                 if (RaceUtility.AlienRaceKinds.Count<PawnKindDef>() > 1)
                 {
@@ -522,97 +538,108 @@ namespace Androids
                     this.RefreshPawn();
                 }
                 //Upgrades
-                float y8 = 32f;
-                float num6 = inRect.width - CustomizeAndroidWindow.upgradesOffset;
-                float height2 = 32f;
-                Rect rect22 = new Rect(CustomizeAndroidWindow.upgradesOffset, y8, num6, height2);
+                row = 32f;
+                float rowWidth = inRect.width - CustomizeAndroidWindow.upgradesOffset;
+                float rowHeight = 32f;
+                Rect upgradesRowRect = new Rect(CustomizeAndroidWindow.upgradesOffset, row, rowWidth, rowHeight);
                 Verse.Text.Font = GameFont.Medium;
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(rect22, "AndroidCustomizationUpgrades".Translate());
-                Widgets.DrawLineHorizontal(rect22.x, rect22.y + 32f, rect22.width);
+                Widgets.Label(upgradesRowRect, "AndroidCustomizationUpgrades".Translate());
+                Widgets.DrawLineHorizontal(upgradesRowRect.x, upgradesRowRect.y + 32f, upgradesRowRect.width);
                 Verse.Text.Font = GameFont.Small;
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
-                float y9 = y8 + 35f;
-                Rect upgradeSize = new Rect(0.0f, 0.0f, (float)AndroidCustomizationTweaks.upgradeBaseSize, (float)AndroidCustomizationTweaks.upgradeBaseSize);
-                int num7 = (int)Math.Floor((double)num6 / (double)upgradeSize.width);
-                Rect rect23 = new Rect(CustomizeAndroidWindow.upgradesOffset, y9, num6, inRect.height - height2);
-                float num8 = 0.0f;
+                row += 35f;
+                Rect upgradeSizeBase = new Rect(0.0f, 0.0f, AndroidCustomizationTweaks.upgradeBaseSize, AndroidCustomizationTweaks.upgradeBaseSize);
+                int itemsPerRow = (int)Math.Floor(rowWidth / upgradeSizeBase.width);
+
+
+                Rect outerUpgradesFrameRect = new Rect(CustomizeAndroidWindow.upgradesOffset, row, rowWidth, inRect.height - rowHeight);
+                float innerUpgradesHeight = 0.0f;
                 foreach (AndroidUpgradeGroupDef allDef in DefDatabase<AndroidUpgradeGroupDef>.AllDefs)
                 {
-                    num8 += allDef.calculateNeededHeight(upgradeSize, num6);
-                    num8 += 52f;
+                    innerUpgradesHeight += allDef.calculateNeededHeight(upgradeSizeBase, rowWidth);
+                    innerUpgradesHeight += 52f;
                 }
-                Widgets.BeginScrollView(rect23, ref this.upgradesScrollPosition, new Rect(rect23)
+
+                Rect innerUpgradesFrameRect = new Rect(outerUpgradesFrameRect);
+                innerUpgradesFrameRect.height = innerUpgradesHeight;
+
+                //upgradesScrollPosition
+                Widgets.BeginScrollView(outerUpgradesFrameRect, ref this.upgradesScrollPosition, innerUpgradesFrameRect);
+                foreach (AndroidUpgradeGroupDef androidUpgradeGroupDef in DefDatabase<AndroidUpgradeGroupDef>.AllDefs.OrderBy((upgradeGroup => upgradeGroup.orderID)))
                 {
-                    height = num8
-                });
-                foreach (AndroidUpgradeGroupDef androidUpgradeGroupDef in (IEnumerable<AndroidUpgradeGroupDef>)DefDatabase<AndroidUpgradeGroupDef>.AllDefs.OrderBy<AndroidUpgradeGroupDef, int>((Func<AndroidUpgradeGroupDef, int>)(upgradeGroup => upgradeGroup.orderID)))
-                {
-                    Rect rect24 = new Rect(rect22);
-                    rect24.y = y9;
-                    rect24.height = 22f;
-                    float num9 = y9 + 30f;
+                    Rect groupTitleRect = new Rect(upgradesRowRect);
+                    groupTitleRect.y = row;
+                    groupTitleRect.height = 22f;
+                    row += 30f;
                     Verse.Text.Anchor = TextAnchor.MiddleCenter;
-                    Widgets.DrawTitleBG(rect24);
-                    Widgets.Label(rect24, androidUpgradeGroupDef.label);
-                    Widgets.DrawLineHorizontal(rect24.x, rect24.y + 22f, rect24.width);
+                    Widgets.DrawTitleBG(groupTitleRect);
+                    Widgets.Label(groupTitleRect, androidUpgradeGroupDef.label);
+                    Widgets.DrawLineHorizontal(groupTitleRect.x, groupTitleRect.y + 22f, groupTitleRect.width);
                     Verse.Text.Anchor = TextAnchor.UpperLeft;
-                    float neededHeight = androidUpgradeGroupDef.calculateNeededHeight(upgradeSize, num6);
-                    int num10 = 0;
-                    float num11 = 0.0f;
-                    foreach (AndroidUpgradeDef androidUpgradeDef1 in (IEnumerable<AndroidUpgradeDef>)androidUpgradeGroupDef.Upgrades.OrderBy<AndroidUpgradeDef, int>((Func<AndroidUpgradeDef, int>)(upgradeSubGroup => upgradeSubGroup.orderID)))
+                    float neededHeight = androidUpgradeGroupDef.calculateNeededHeight(upgradeSizeBase, rowWidth);
+                    int upgradeItem = 0;
+                    float upgradeItemRow = 0.0f;
+                    foreach (AndroidUpgradeDef upgradeDef in androidUpgradeGroupDef.Upgrades.OrderBy((upgradeSubGroup => upgradeSubGroup.orderID)))
                     {
-                        AndroidUpgradeDef upgrade = androidUpgradeDef1;
-                        if (num10 >= num7)
+                        if (upgradeItem >= itemsPerRow)
                         {
-                            num10 = 0;
-                            num11 += upgradeSize.height;
+                            upgradeItem = 0;
+                            upgradeItemRow += upgradeSizeBase.height;
                         }
-                        Rect rect25 = new Rect(rect22.x + upgradeSize.width * (float)num10, num9 + num11, upgradeSize.width, upgradeSize.height);
+                        Rect upgradeItemRect = new Rect(upgradesRowRect.x + upgradeSizeBase.width * (float)upgradeItem, row + upgradeItemRow, upgradeSizeBase.width, upgradeSizeBase.height);
+
+                        //Button
                         bool needsFulfilled = false;
-                        if (Mouse.IsOver(rect25))
+                        if (Mouse.IsOver(upgradeItemRect))
                         {
-                            StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.AppendLine(upgrade.label);
-                            stringBuilder.AppendLine();
-                            stringBuilder.AppendLine(upgrade.description);
-                            stringBuilder.AppendLine();
-                            if (upgrade.hediffToApply != null && upgrade.hediffToApply.ConcreteExample != null)
+                            StringBuilder tooltip = new StringBuilder();
+                            tooltip.AppendLine(upgradeDef.label);
+                            tooltip.AppendLine();
+                            tooltip.AppendLine(upgradeDef.description);
+                            tooltip.AppendLine();
+                            if (upgradeDef.hediffToApply != null && upgradeDef.hediffToApply.ConcreteExample != null)
                             {
                                 //Using TipStringExtra will result in null reference hediff instance since there's no pawn have this hediff yet. Manually send null for Hediff instance solve this problem.
-                                foreach (StatDrawEntry item in HediffStatsUtility.SpecialDisplayStats(upgrade.hediffToApply.ConcreteExample.CurStage, null))
+                                foreach (StatDrawEntry item in HediffStatsUtility.SpecialDisplayStats(upgradeDef.hediffToApply.ConcreteExample.CurStage, null))
                                 {
                                     if (item.ShouldDisplay)
-                                        stringBuilder.AppendLine("  - " + item.LabelCap + ": " + item.ValueString);
+                                        tooltip.AppendLine("  - " + item.LabelCap + ": " + item.ValueString);
                                 }
                                 //stringBuilder.AppendLine(upgrade.hediffToApply.ConcreteExample.TipStringExtra.TrimEndNewlines());
-                                stringBuilder.AppendLine();
+                                tooltip.AppendLine();
                             }
-                            if (upgrade.newBodyType != null)
+                            if (upgradeDef.newBodyType != null)
                             {
-                                stringBuilder.AppendLine((string)"AndroidCustomizationChangeBodyType".Translate());
-                                stringBuilder.AppendLine();
+                                tooltip.AppendLine((string)"AndroidCustomizationChangeBodyType".Translate());
+                                tooltip.AppendLine();
                             }
-                            if (upgrade.changeSkinColor)
+                            if (upgradeDef.changeSkinColor)
                             {
-                                stringBuilder.AppendLine((string)"AndroidCustomizationChangeSkinColor".Translate());
-                                stringBuilder.AppendLine();
+                                tooltip.AppendLine((string)"AndroidCustomizationChangeSkinColor".Translate());
+                                tooltip.AppendLine();
                             }
-                            stringBuilder.AppendLine(this.androidPrinter.FormatIngredientCosts(out needsFulfilled, (IEnumerable<ThingOrderRequest>)upgrade.costList, false));
-                            stringBuilder.AppendLine((string)("AndroidCustomizationTimeCost".Translate() + ": " + upgrade.extraPrintingTime.ToStringTicksToPeriodVerbose()));
-                            if (upgrade.requiredResearch != null && !upgrade.requiredResearch.IsFinished)
+                            tooltip.AppendLine(this.androidPrinter.FormatIngredientCosts(out needsFulfilled, (IEnumerable<ThingOrderRequest>)upgradeDef.costList, false));
+                            tooltip.AppendLine((string)("AndroidCustomizationTimeCost".Translate() + ": " + upgradeDef.extraPrintingTime.ToStringTicksToPeriodVerbose()));
+                            if (upgradeDef.requiredResearch != null && !upgradeDef.requiredResearch.IsFinished)
                             {
-                                stringBuilder.AppendLine();
-                                stringBuilder.AppendLine((string)("AndroidCustomizationRequiredResearch".Translate() + ": " + upgrade.requiredResearch.LabelCap));
+                                tooltip.AppendLine();
+                                tooltip.AppendLine((string)("AndroidCustomizationRequiredResearch".Translate() + ": " + upgradeDef.requiredResearch.LabelCap));
                             }
-                            TooltipHandler.TipRegion(rect25, (TipSignal)stringBuilder.ToString());
+                            TooltipHandler.TipRegion(upgradeItemRect, (TipSignal)tooltip.ToString());
                         }
-                        bool flag = upgrade.requiredResearch == null ? this.appliedUpgradeCommands.Any<UpgradeCommand>((Predicate<UpgradeCommand>)(appUpgrade => appUpgrade.def != upgrade && appUpgrade.def.exclusivityGroups.Any<string>((Predicate<string>)(group => upgrade.exclusivityGroups.Contains(group))))) : !upgrade.requiredResearch.IsFinished || this.appliedUpgradeCommands.Any<UpgradeCommand>((Predicate<UpgradeCommand>)(appUpgrade => appUpgrade.def != upgrade && appUpgrade.def.exclusivityGroups.Any<string>((Predicate<string>)(group => upgrade.exclusivityGroups.Contains(group)))));
-                        if (this.AlreadyUpgradedOnPawn(upgrade))
+
+                        //(upgrade.requiredResearch != null && upgrade.requiredResearch.IsFinished)
+                        //Checks applied upgrades that disables this upgrade
+                        bool disabledUpgrade = upgradeDef.requiredResearch == null ?
+                            this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any<string>(group => upgradeDef.exclusivityGroups.Contains(group))) : !upgradeDef.requiredResearch.IsFinished || this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any<string>(group => upgradeDef.exclusivityGroups.Contains(group)));
+
+                        //Checks upgrades to disable when this upgrade is applied
+                        if (this.AlreadyUpgradedOnPawn(upgradeDef))
                         {
-                            foreach (AndroidUpgradeDef androidUpgradeDef2 in (IEnumerable<AndroidUpgradeDef>)androidUpgradeGroupDef.Upgrades.OrderBy<AndroidUpgradeDef, int>((Func<AndroidUpgradeDef, int>)(upgradeSubGroup => upgradeSubGroup.orderID)))
+                            foreach (AndroidUpgradeDef androidUpgradeDef2 in androidUpgradeGroupDef.Upgrades.OrderBy(upgradeSubGroup => upgradeSubGroup.orderID))
                             {
-                                if (androidUpgradeDef2 != upgrade && androidUpgradeDef2.exclusivityGroups.Any<string>((Predicate<string>)(group => upgrade.exclusivityGroups.Contains(group))))
+                                if (androidUpgradeDef2 != upgradeDef && androidUpgradeDef2.exclusivityGroups.Any(upgradeDef.exclusivityGroups.Contains))
                                 {
                                     if (!this.upgradedDefsToDisable.NullOrEmpty<AndroidUpgradeDef>())
                                     {
@@ -624,43 +651,45 @@ namespace Androids
                                 }
                             }
                         }
-                        if (!this.upgradedDefsToDisable.NullOrEmpty<AndroidUpgradeDef>() && this.upgradedDefsToDisable.Contains(upgrade))
-                            flag = true;
-                        if (flag)
+                        if (this.upgradedDefsToDisable?.Contains(upgradeDef) ?? false)
+                            disabledUpgrade = true;
+                        if (disabledUpgrade)
                         {
-                            Widgets.DrawRectFast(rect25, Color.red);
+                            Widgets.DrawRectFast(upgradeItemRect, Color.red);
                         }
                         else
                         {
-                            if (this.appliedUpgradeCommands.Any<UpgradeCommand>((Predicate<UpgradeCommand>)(upgradeCommand => upgradeCommand.def == upgrade)))
-                                Widgets.DrawRectFast(rect25, Color.white);
-                            if (this.AlreadyUpgradedOnPawn(upgrade))
-                                Widgets.DrawRectFast(rect25, Color.white);
+                            if (this.appliedUpgradeCommands.Any<UpgradeCommand>((Predicate<UpgradeCommand>)(upgradeCommand => upgradeCommand.def == upgradeDef)))
+                                Widgets.DrawRectFast(upgradeItemRect, Color.white);
+                            if (this.AlreadyUpgradedOnPawn(upgradeDef))
+                                Widgets.DrawRectFast(upgradeItemRect, Color.white);
                         }
-                        if (upgrade.iconTexturePath != null)
-                            Widgets.DrawTextureFitted(rect25.ContractedBy(3f), (Texture)ContentFinder<Texture2D>.Get(upgrade.iconTexturePath), 1f);
-                        Widgets.DrawHighlightIfMouseover(rect25);
-                        UpgradeCommand upgradeCommand1 = this.appliedUpgradeCommands.FirstOrDefault<UpgradeCommand>((Func<UpgradeCommand, bool>)(upgradeCommand => upgradeCommand.def == upgrade));
-                        if (!flag && Widgets.ButtonInvisible(rect25) && !this.AlreadyUpgradedOnPawn(upgrade))
+                        if (upgradeDef.iconTexturePath != null)
+                            Widgets.DrawTextureFitted(upgradeItemRect.ContractedBy(3f), (Texture)ContentFinder<Texture2D>.Get(upgradeDef.iconTexturePath), 1f);
+                        Widgets.DrawHighlightIfMouseover(upgradeItemRect);
+                        UpgradeCommand upgradeCommand1 = this.appliedUpgradeCommands.FirstOrDefault<UpgradeCommand>((Func<UpgradeCommand, bool>)(upgradeCommand => upgradeCommand.def == upgradeDef));
+                        if (!disabledUpgrade && Widgets.ButtonInvisible(upgradeItemRect) && !this.AlreadyUpgradedOnPawn(upgradeDef))
                         {
                             if (upgradeCommand1 != null)
                             {
                                 upgradeCommand1.Undo();
                                 this.appliedUpgradeCommands.Remove(upgradeCommand1);
+                                this.androidPrinter.upgradesToApply.Remove(upgradeDef);
                             }
                             else
                             {
-                                UpgradeCommand upgradeCommand2 = UpgradeMaker.Make(upgrade, this);
-                                upgradeCommand2.Apply();
+                                UpgradeCommand upgradeCommand2 = UpgradeMaker.Make(upgradeDef, this);
+                                this.androidPrinter.upgradesToApply.Add(upgradeDef);
+                                //upgradeCommand2.Apply();
                                 upgradeCommand2.Notify_UpgradeAdded();
                                 this.appliedUpgradeCommands.Add(upgradeCommand2);
                             }
                             this.RefreshCosts();
                         }
-                        upgradeCommand1?.ExtraOnGUI(rect25);
-                        ++num10;
+                        upgradeCommand1?.ExtraOnGUI(upgradeItemRect);
+                        ++upgradeItem;
                     }
-                    y9 = num9 + (neededHeight + 22f);
+                    row += (neededHeight + 22f);
                 }
                 Widgets.EndScrollView();
             }
@@ -876,20 +905,20 @@ namespace Androids
                 FloatRange? excludeBiologicalAgeRange = new FloatRange?();
                 FloatRange? biologicalAgeRange = new FloatRange?();
                 pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(
-                    currentPawnKindDef, 
-                    faction, 
-                    forceGenerateNewPawn: true, 
-                    canGeneratePawnRelations: false, 
-                    colonistRelationChanceFactor: 0.0f, 
-                    allowGay: false, 
-                    allowPregnant: false, 
-                    allowAddictions: false, 
-                    forceRedressWorldPawnIfFormerColonist: true, 
-                    minChanceToRedressWorldPawn: minChanceToRedressWorldPawn, 
-                    fixedBiologicalAge: fixedBiologicalAge, 
-                    fixedChronologicalAge: fixedChronologicalAge, 
-                    fixedGender: fixedGender, 
-                    excludeBiologicalAgeRange: excludeBiologicalAgeRange, 
+                    currentPawnKindDef,
+                    faction,
+                    forceGenerateNewPawn: true,
+                    canGeneratePawnRelations: false,
+                    colonistRelationChanceFactor: 0.0f,
+                    allowGay: false,
+                    allowPregnant: false,
+                    allowAddictions: false,
+                    forceRedressWorldPawnIfFormerColonist: true,
+                    minChanceToRedressWorldPawn: minChanceToRedressWorldPawn,
+                    fixedBiologicalAge: fixedBiologicalAge,
+                    fixedChronologicalAge: fixedChronologicalAge,
+                    fixedGender: fixedGender,
+                    excludeBiologicalAgeRange: excludeBiologicalAgeRange,
                     biologicalAgeRange: biologicalAgeRange));
                 HarmonyPatches.bypassGenerationOfUpgrades = false;
                 AndroidUtility.Androidify(pawn);
@@ -912,19 +941,19 @@ namespace Androids
                 FloatRange? excludeBiologicalAgeRange = new FloatRange?();
                 FloatRange? biologicalAgeRange = new FloatRange?();
                 pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(
-                    currentPawnKindDef, 
-                    faction, 
-                    forceGenerateNewPawn: true, 
+                    currentPawnKindDef,
+                    faction,
+                    forceGenerateNewPawn: true,
                     canGeneratePawnRelations: false,
                     colonistRelationChanceFactor: 0.0f,
                     allowGay: false,
-                    allowPregnant: false, 
-                    allowAddictions: false, 
-                    forceRedressWorldPawnIfFormerColonist: true, 
+                    allowPregnant: false,
+                    allowAddictions: false,
+                    forceRedressWorldPawnIfFormerColonist: true,
                     minChanceToRedressWorldPawn: minChanceToRedressWorldPawn,
-                    fixedBiologicalAge: fixedBiologicalAge, 
+                    fixedBiologicalAge: fixedBiologicalAge,
                     fixedChronologicalAge: fixedChronologicalAge,
-                    fixedGender: fixedGender, 
+                    fixedGender: fixedGender,
                     excludeBiologicalAgeRange: excludeBiologicalAgeRange,
                     biologicalAgeRange: biologicalAgeRange));
                 HarmonyPatches.bypassGenerationOfUpgrades = false;
