@@ -112,6 +112,7 @@
     <Compile Include="Utilities\EnergyNeedUtility.cs" />
     <Compile Include="Utilities\ExtraRendering.cs" />
     <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="Utilities\UpgradeUtility.cs" />
     <Compile Include="Workers\HealthCardUtility_DrawHediffListing.cs" />
     <Compile Include="Workers\HealthCardUtility_DrawHediffRow.cs" />
     <Compile Include="Workers\HealthCardUtility_GetTooltip.cs" />

@@ -21,22 +21,71 @@ namespace Androids
 	   IStoreSettingsParent,
 	  IPawnCrafter
 	{
-		public static float requestNutrition = 20f;
-		public static int requestPlasteel = 150;
-		public static int requestComponents = 20;
-		public ThingOwner ingredients;
-		public CrafterStatus printerStatus;
+        /// <summary>
+        /// Requested nutrition to print one Android.
+        /// </summary>
+        public static float requestNutrition = 20f;
+        /// <summary>
+        /// Requested Plasteel to print one Android.
+        /// </summary>
+        public static int requestPlasteel = 150;
+        /// <summary>
+        /// Requested Components to print one Android.
+        /// </summary>
+        public static int requestComponents = 20;
+
+
+        /// <summary>
+        /// Stored ingredients for use in producing one pawn.
+        /// </summary>
+        public ThingOwner ingredients;
+        /// <summary>
+        /// Printer state.
+        /// </summary>
+        public CrafterStatus printerStatus;
+        /// <summary>
+        /// Pawn to print.
+        /// </summary>
 		public Pawn pawnToPrint;
 		public Pawn clonedPawnToPrint;
+        /// <summary>
+        /// Class used to store the state of the order processor.
+        /// </summary>
 		public ThingOrderProcessor orderProcessor;
+        /// <summary>
+        /// Extra time cost set by the upgrades.
+        /// </summary>
 		public int extraTimeCost;
+        /// <summary>
+        /// Storage settings for what nutrition sources to use.
+        /// </summary>
 		public StorageSettings inputSettings;
+        /// <summary>
+        /// Sustained sound.
+        /// </summary>
 		private Sustainer soundSustainer;
+        /// <summary>
+        /// Power component.
+        /// </summary>
 		private CompPowerTrader powerComp;
+        /// <summary>
+        /// Flickable component.
+        /// </summary>
 		private CompFlickable flickableComp;
-		protected PawnCrafterProperties printerProperties;
+
+        /// <summary>
+        /// XML properties for the printer.
+        /// </summary>
+        protected PawnCrafterProperties printerProperties;
+        /// <summary>
+        /// Ticks left until pawn is finished printing.
+        /// </summary>
 		public int printingTicksLeft;
+        /// <summary>
+        /// Next resource drain trick-
+        /// </summary>
 		public int nextResourceTick;
+		public HashSet<AndroidUpgradeDef> upgradesToApply = new HashSet<AndroidUpgradeDef>();
 		/*
 		public bool needsSaved;
 		public float cachedNeedsFood;
@@ -116,6 +165,7 @@ namespace Androids
 			Scribe_Deep.Look<StorageSettings>(ref this.inputSettings, "inputSettings");
 			Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", (object)this.ingredients, (object)this.inputSettings);
 			Scribe_Values.Look<int>(ref this.extraTimeCost, "extraTimeCost");
+			Scribe_Collections.Look(ref this.upgradesToApply, "upgradesToApply", LookMode.Def);
 			/*
 			Scribe_Values.Look<bool>(ref this.needsSaved, "needsSaved");
 			Scribe_Values.Look<float>(ref this.cachedNeedsFood, "cachedNeedsFood");
@@ -133,7 +183,7 @@ namespace Androids
 				gizmos.Insert(0, (Gizmo)new Gizmo_PrinterPawnInfo((IPawnCrafter)this));
 			if (this.printerStatus != CrafterStatus.Finished)
 				gizmos.Insert(0, (Gizmo)new Gizmo_TogglePrinting((IPawnCrafter)this));
-			if (DebugSettings.godMode && this.pawnToPrint != null)
+			if (DebugSettings.godMode && this.upgradesToApply.Count > 0 && this.pawnToPrint != null)
 			{
 				List<Gizmo> gizmoList = gizmos;
 				Command_Action commandAction = new Command_Action();
@@ -260,13 +310,12 @@ namespace Androids
 				case CrafterStatus.Filling:
 					if (this.powerComp.PowerOn && Current.Game.tickManager.TicksGame % 300 == 0)
 						FleckMaker.ThrowSmoke(this.Position.ToVector3(), this.Map, 1f);
-					IEnumerable<ThingOrderRequest> source = this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings());
-					bool flag = source == null;
-					if (source != null && source.Count<ThingOrderRequest>() == 0)
-						flag = true;
-					if (!flag)
-						break;
-					this.StartPrinting();
+					IEnumerable<ThingOrderRequest> pendingRequests = this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings());
+					bool startPrinting = pendingRequests == null;
+					if (pendingRequests != null && pendingRequests.Count<ThingOrderRequest>() == 0)
+						startPrinting = true;
+					if (startPrinting)
+						this.StartPrinting();
 					break;
 				case CrafterStatus.Crafting:
 					if (!this.powerComp.PowerOn)
@@ -387,7 +436,8 @@ namespace Androids
 					if (this.pawnToPrint != null && this.clonedPawnToPrint != null)
 					{
 						ThingOwner directlyHeldThings = this.GetDirectlyHeldThings();
-						Pawn pawn = (Pawn)directlyHeldThings.Where<Thing>((Func<Thing, bool>)(p => p is Pawn)).FirstOrDefault<Thing>();
+						Pawn pawn = (Pawn)directlyHeldThings.FirstOrDefault(p => p is Pawn);
+						ApplyUpgrades(pawn);
 						//this.needsSaved = false;
 						foreach (Thing thing in (IEnumerable<Thing>)directlyHeldThings)
 						{
@@ -429,7 +479,17 @@ namespace Androids
 			}
 		}
 
-		public void AdjustPowerNeed()
+        void ApplyUpgrades(Pawn target)
+        {
+			HashSet<AndroidUpgradeDef> upgrades = new HashSet<AndroidUpgradeDef>(upgradesToApply);
+            foreach(var upgrade in upgrades)
+			{
+				UpgradeMaker.Make(upgrade).Apply(target);
+				upgradesToApply.Remove(upgrade);
+			}
+        }
+
+        public void AdjustPowerNeed()
 		{
 			if (this.flickableComp == null || this.flickableComp != null && this.flickableComp.SwitchIsOn)
 			{
