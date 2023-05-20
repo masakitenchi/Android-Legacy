@@ -24,6 +24,7 @@ namespace Androids
                 return false;
             if (allowSpecialEffects)
                 SoundDefOf.CryptosleepCasket_Accept.PlayOneShot((SoundInfo)new TargetInfo(this.Position, this.Map));
+            (this as Building_AndroidPrinter).pawnToPrint = thing as Pawn;
             return true;
         }
 
@@ -48,18 +49,17 @@ namespace Androids
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            Building_AndroidPrinterCasket androidPrinterCasket = this;
             foreach (Gizmo gizmo in base.GetGizmos())
                 yield return gizmo;
-            CrafterStatus printerStatus = (androidPrinterCasket as Building_AndroidPrinter).printerStatus;
+            CrafterStatus printerStatus = (this as Building_AndroidPrinter).printerStatus;
             bool flag = printerStatus == CrafterStatus.Idle || printerStatus == CrafterStatus.Finished;
-            if (base.Faction == Faction.OfPlayer && androidPrinterCasket.innerContainer.Count > 0 && androidPrinterCasket.def.building.isPlayerEjectable && flag)
+            if (base.Faction == Faction.OfPlayer && this.innerContainer.Count > 0 && this.def.building.isPlayerEjectable && flag)
             {
                 Command_Action commandAction = new Command_Action();
-                commandAction.action = new Action(((Building_Casket)androidPrinterCasket).EjectContents);
+                commandAction.action = new Action(((Building_Casket)this).EjectContents);
                 commandAction.defaultLabel = (string)"AndroidPrinterEject".Translate();
                 commandAction.defaultDesc = (string)"AndroidPrinterEjectDesc".Translate();
-                if (androidPrinterCasket.innerContainer.Count == 0)
+                if (this.innerContainer.Count == 0)
                     commandAction.Disable((string)"CommandPodEjectFailEmpty".Translate());
                 commandAction.hotKey = KeyBindingDefOf.Misc1;
                 commandAction.icon = (Texture)ContentFinder<Texture2D>.Get("UI/Commands/PodEject");
@@ -70,6 +70,7 @@ namespace Androids
         public override void Open()
         {
             CrafterStatus printerStatus = (this as Building_AndroidPrinter).printerStatus;
+            (this as Building_AndroidPrinter).upgradesToApply.Clear();
             if (printerStatus != CrafterStatus.Idle && printerStatus != CrafterStatus.Finished) return;
             base.Open();
         }
@@ -77,6 +78,7 @@ namespace Androids
         public override void EjectContents()
         {
             Find.WindowStack.TryRemove(typeof(CustomizeAndroidWindow), false);
+            (this as Building_AndroidPrinter).upgradesToApply.Clear();
             foreach (Thing thing in (IEnumerable<Thing>)this.innerContainer)
             {
                 if (thing is Pawn pawn)
