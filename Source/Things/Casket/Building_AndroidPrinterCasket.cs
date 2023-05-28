@@ -24,7 +24,6 @@ namespace Androids
                 return false;
             if (allowSpecialEffects)
                 SoundDefOf.CryptosleepCasket_Accept.PlayOneShot((SoundInfo)new TargetInfo(this.Position, this.Map));
-            (this as Building_AndroidPrinter).pawnToPrint = thing as Pawn;
             return true;
         }
 
@@ -70,7 +69,6 @@ namespace Androids
         public override void Open()
         {
             CrafterStatus printerStatus = (this as Building_AndroidPrinter).printerStatus;
-            (this as Building_AndroidPrinter).upgradesToApply.Clear();
             if (printerStatus != CrafterStatus.Idle && printerStatus != CrafterStatus.Finished) return;
             base.Open();
         }
