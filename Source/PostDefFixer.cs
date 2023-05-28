@@ -32,6 +32,7 @@ namespace Androids
             if (totalnum > 0)
                 sb.AppendLine("Androids: Removed '" + totalnum.ToString() + "' recipes for Droids.");
             sb.AppendLine("Androids: Fixing belts whitelist for AlienRace.ThingDef_AlienRace with defName='ChjBattleDroid'.");
+            sb.AppendLine("Androids: Belt found and added:");
             List<ThingDef> whiteApparelList = ((ThingDef_AlienRace)ThingDef.Named("ChjBattleDroid")).alienRace.raceRestriction.whiteApparelList;
             foreach (ThingDef allDef in DefDatabase<ThingDef>.AllDefs.Where
                 (x=>x.IsApparel && 
@@ -43,7 +44,7 @@ namespace Androids
                 x.apparel.layers.First<ApparelLayerDef>().defName == "Belt" && 
                 !whiteApparelList.Any<ThingDef>(i => i.defName == x.defName)))
             {
-                sb.AppendLine($"Androids: Belt found and added: {allDef.defName}");
+                sb.AppendLine($" - {allDef.defName}");
                 whiteApparelList.Add(allDef);
             }
             Log.Message(sb.ToString());
