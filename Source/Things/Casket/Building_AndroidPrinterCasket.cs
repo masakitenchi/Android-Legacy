@@ -55,7 +55,11 @@ namespace Androids
             if (base.Faction == Faction.OfPlayer && this.innerContainer.Count > 0 && this.def.building.isPlayerEjectable && flag)
             {
                 Command_Action commandAction = new Command_Action();
-                commandAction.action = new Action(((Building_Casket)this).EjectContents);
+                commandAction.action = () => {
+                    this.EjectContents();
+                    (this as Building_AndroidPrinter).pawnToPrint = null;
+                    (this as Building_AndroidPrinter).clonedPawnToPrint = null;
+                };
                 commandAction.defaultLabel = (string)"AndroidPrinterEject".Translate();
                 commandAction.defaultDesc = (string)"AndroidPrinterEjectDesc".Translate();
                 if (this.innerContainer.Count == 0)
