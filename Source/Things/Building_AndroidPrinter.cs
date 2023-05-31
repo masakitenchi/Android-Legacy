@@ -160,8 +160,10 @@ namespace Androids
 			Scribe_Values.Look<CrafterStatus>(ref this.printerStatus, "printerStatus");
 			Scribe_Values.Look<int>(ref this.printingTicksLeft, "printingTicksLeft");
 			Scribe_Values.Look<int>(ref this.nextResourceTick, "nextResourceTick");
-			Scribe_Deep.Look<Pawn>(ref this.pawnToPrint, "androidToPrint");
-			Scribe_Deep.Look<Pawn>(ref this.clonedPawnToPrint, "clonedPawnToPrint");
+			/*Scribe_Deep.Look<Pawn>(ref this.pawnToPrint, "androidToPrint");
+			Scribe_Deep.Look<Pawn>(ref this.clonedPawnToPrint, "clonedPawnToPrint");*/
+			Scribe_References.Look<Pawn>(ref this.pawnToPrint, "androidToPrint",true);
+			Scribe_References.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint", true); 
 			Scribe_Deep.Look<StorageSettings>(ref this.inputSettings, "inputSettings");
 			Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", (object)this.ingredients, (object)this.inputSettings);
 			Scribe_Values.Look<int>(ref this.extraTimeCost, "extraTimeCost");
