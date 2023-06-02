@@ -8,14 +8,16 @@ using Verse;
 
 namespace Androids
 {
-  public interface IPawnCrafter
-  {
-    Pawn PawnBeingCrafted();
+    public interface IPawnCrafter
+    {
+        Pawn PawnBeingCrafted { get; }
 
-    CrafterStatus PawnCrafterStatus();
+        //CrafterStatus PawnCrafterStatus();
 
-    void InitiatePawnCrafting();
+        CrafterStatus PrinterStatus { get; }
 
-    void StopPawnCrafting();
-  }
+        void InitiatePawnCrafting();
+
+        void StopPawnCrafting();
+    }
 }

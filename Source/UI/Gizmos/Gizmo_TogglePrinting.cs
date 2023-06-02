@@ -23,29 +23,29 @@ namespace Androids
     public Gizmo_TogglePrinting(IPawnCrafter printer)
     {
       this.printer = printer;
-      if (printer.PawnCrafterStatus() == CrafterStatus.Idle)
+      if (printer.PrinterStatus == CrafterStatus.Idle)
       {
-        this.defaultLabel = (string) this.labelStart.Translate();
-        this.defaultDesc = (string) this.descriptionStart.Translate();
-        this.icon = (Texture) Gizmo_TogglePrinting.startIcon;
+        defaultLabel = (string) labelStart.Translate();
+        defaultDesc = (string) descriptionStart.Translate();
+        icon = (Texture) Gizmo_TogglePrinting.startIcon;
       }
       else
       {
-        if (printer.PawnCrafterStatus() != CrafterStatus.Crafting && printer.PawnCrafterStatus() != CrafterStatus.Filling)
+        if (printer.PrinterStatus != CrafterStatus.Crafting && printer.PrinterStatus != CrafterStatus.Filling)
           return;
-        this.defaultLabel = (string) this.labelStop.Translate();
-        this.defaultDesc = (string) this.descriptionStop.Translate();
-        this.icon = (Texture) Gizmo_TogglePrinting.stopIcon;
+        defaultLabel = (string) labelStop.Translate();
+        defaultDesc = (string) descriptionStop.Translate();
+        icon = (Texture) Gizmo_TogglePrinting.stopIcon;
       }
     }
 
     public override void ProcessInput(Event ev)
     {
       base.ProcessInput(ev);
-      if (this.printer.PawnCrafterStatus() == CrafterStatus.Idle)
-        this.printer.InitiatePawnCrafting();
+      if (printer.PrinterStatus == CrafterStatus.Idle)
+        printer.InitiatePawnCrafting();
       else
-        this.printer.StopPawnCrafting();
+        printer.StopPawnCrafting();
     }
   }
 }
