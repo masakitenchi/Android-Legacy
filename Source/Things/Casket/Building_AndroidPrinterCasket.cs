@@ -15,9 +15,10 @@ using Verse.Sound;
 
 namespace Androids
 {
-    public class Building_AndroidPrinterCasket : Building_Casket, ISuspendableThingHolder
+    //Several months later, I don't see any reason this should be a standalone class since the actual printer only has Building_AndroidPrinter
+    /*public class Building_AndroidPrinterCasket : Building_Casket
     {
-        public bool IsContentsSuspended => (this as Building_AndroidPrinter).printerStatus == CrafterStatus.Crafting;
+        //public bool IsContentsSuspended => (this as Building_AndroidPrinter).printerStatus == CrafterStatus.Crafting;
         public override bool TryAcceptThing(Thing thing, bool allowSpecialEffects = true)
         {
             if (!base.TryAcceptThing(thing, allowSpecialEffects))
@@ -55,11 +56,7 @@ namespace Androids
             if (base.Faction == Faction.OfPlayer && this.innerContainer.Count > 0 && this.def.building.isPlayerEjectable && flag)
             {
                 Command_Action commandAction = new Command_Action();
-                commandAction.action = () => {
-                    this.EjectContents();
-                    (this as Building_AndroidPrinter).pawnToPrint = null;
-                    (this as Building_AndroidPrinter).clonedPawnToPrint = null;
-                };
+                commandAction.action = new Action(this.EjectContents);
                 commandAction.defaultLabel = (string)"AndroidPrinterEject".Translate();
                 commandAction.defaultDesc = (string)"AndroidPrinterEjectDesc".Translate();
                 if (this.innerContainer.Count == 0)
@@ -80,7 +77,6 @@ namespace Androids
         public override void EjectContents()
         {
             Find.WindowStack.TryRemove(typeof(CustomizeAndroidWindow), false);
-            (this as Building_AndroidPrinter).upgradesToApply.Clear();
             foreach (Thing thing in (IEnumerable<Thing>)this.innerContainer)
             {
                 if (thing is Pawn pawn)
@@ -104,5 +100,5 @@ namespace Androids
             }
             return (Building_AndroidPrinterCasket)null;
         }
-    }
+    }*/
 }

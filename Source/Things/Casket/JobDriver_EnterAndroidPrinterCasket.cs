@@ -27,7 +27,7 @@ namespace Androids
       enter.initAction = (Action) (() =>
       {
         Pawn actor = enter.actor;
-        Building_AndroidPrinterCasket pod = (Building_AndroidPrinterCasket) actor.CurJob.targetA.Thing;
+        Building_AndroidPrinter pod = (Building_AndroidPrinter) actor.CurJob.targetA.Thing;
         Action confirmedAct = (Action) (() =>
         {
           actor.DeSpawnOrDeselect(DestroyMode.Vanish);
