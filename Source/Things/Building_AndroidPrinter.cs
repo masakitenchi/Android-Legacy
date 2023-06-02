@@ -15,6 +15,7 @@ using Verse.Sound;
 
 namespace Androids
 {
+    [StaticConstructorOnStartup]
     public class Building_AndroidPrinter :
         Building_Casket,
         ISuspendableThingHolder,
