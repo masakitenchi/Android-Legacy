@@ -334,8 +334,8 @@ namespace Androids
 
         public StorageSettings GetParentStoreSettings() => this.def.building.fixedStorageSettings;
 
-        public Pawn PawnBeingCrafted() => this.pawnBeingCrafted;
+        public Pawn PawnBeingCrafted => this.pawnBeingCrafted;
 
-        public CrafterStatus PawnCrafterStatus() => this.crafterStatus;
+        public CrafterStatus PrinterStatus => this.crafterStatus;
     }
 }

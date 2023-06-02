@@ -9,11 +9,12 @@ using Verse;
 
 namespace Androids
 {
-  [DefOf]
-  public static class JobDefOf
-  {
-    public static JobDef ChJFillAndroidPrinter;
-    public static JobDef ChJAndroidRecharge;
-    public static JobDef ChJAndroidRechargeEnergyComp;
-  }
+    [DefOf]
+    public static class JobDefOf
+    {
+        public static JobDef ChJFillAndroidPrinter;
+        public static JobDef ChJAndroidRecharge;
+        public static JobDef ChJAndroidRechargeEnergyComp;
+        public static JobDef EnterAndroidPrinterCasket;
+    }
 }
