@@ -179,6 +179,8 @@ namespace Androids
             return _pawnHediffs?.Contains(upgrade.hediffToApply) ?? false;
         }
 
+        //Cannot even find a workshop version that has these lines of code
+        //Really don't know if it ever had the feature of "re-entering" printer
         public CustomizeAndroidWindow(Building_AndroidPrinter androidPrinter)
         {
             this.androidPrinter = androidPrinter;
@@ -193,6 +195,7 @@ namespace Androids
                 }
                 this.IsUpgrade = true;
                 this.newAndroid = sourcePawn;
+                this.androidPrinter.IsUpgrade = true;
             }
             else
             {

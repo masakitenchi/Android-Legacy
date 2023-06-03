@@ -51,6 +51,10 @@ namespace Androids
         /// </summary>
 		public Pawn pawnToPrint;
         public Pawn clonedPawnToPrint;
+
+        //Was trying to use this as an indicator to show if the pawn need deep-save.
+        internal bool IsUpgrade;
+
         /// <summary>
         /// Class used to store the state of the order processor.
         /// </summary>
@@ -100,6 +104,7 @@ namespace Androids
         #endregion
         #region Properties
         public bool StorageTabVisible => false;
+
 
         public bool IsContentsSuspended => this.printerStatus == CrafterStatus.Crafting;
         public Pawn PawnBeingCrafted => this.pawnToPrint;
@@ -165,10 +170,18 @@ namespace Androids
             Scribe_Values.Look<CrafterStatus>(ref this.printerStatus, "printerStatus");
             Scribe_Values.Look<int>(ref this.printingTicksLeft, "printingTicksLeft");
             Scribe_Values.Look<int>(ref this.nextResourceTick, "nextResourceTick");
-            /*Scribe_Deep.Look<Pawn>(ref this.pawnToPrint, "androidToPrint");
-			Scribe_Deep.Look<Pawn>(ref this.clonedPawnToPrint, "clonedPawnToPrint");*/
-            Scribe_References.Look<Pawn>(ref this.pawnToPrint, "androidToPrint", true);
-            Scribe_References.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint", true);
+            Scribe_Values.Look(ref IsUpgrade, "Upgrading", forceSave: true);
+            //Has Pawn inside => that pawn must be re-entering since de novo crafting doesn't generate pawn until print finishes
+            if(this.GetDirectlyHeldThings().Any(x => x is Pawn))
+            {
+                Scribe_References.Look(ref this.pawnToPrint, "androidToPrint", true);
+                Scribe_References.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint", true);
+            }
+            else
+            {
+                Scribe_Deep.Look(ref this.pawnToPrint, "androidToPrint");
+                Scribe_Deep.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint");
+            }
             Scribe_Deep.Look<StorageSettings>(ref this.inputSettings, "inputSettings");
             Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", (object)this.ingredients, (object)this.inputSettings);
             Scribe_Values.Look<int>(ref this.extraTimeCost, "extraTimeCost");
@@ -206,7 +219,11 @@ namespace Androids
                 {
                     defaultLabel = "DEBUG: Finish crafting.",
                     defaultDesc = "Finishes crafting the pawn.",
-                    action = () => this.printerStatus = CrafterStatus.Finished
+                    action = delegate()
+                    {
+                        this.printerStatus = CrafterStatus.Finished;
+                        this.GetDirectlyHeldThings().Clear();
+                    }
                 };
             }
         }
@@ -326,11 +343,15 @@ namespace Androids
                     if (this.powerComp.PowerOn && Current.Game.tickManager.TicksGame % 300 == 0)
                         FleckMaker.ThrowSmoke(this.Position.ToVector3(), this.Map, 1f);
                     IEnumerable<ThingOrderRequest> pendingRequests = this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings());
-                    bool startPrinting = pendingRequests == null;
+                    /*bool startPrinting = pendingRequests == null;
                     if (pendingRequests != null && pendingRequests.Count<ThingOrderRequest>() == 0)
                         startPrinting = true;
                     if (startPrinting)
+                        this.StartPrinting();*/
+                    if (pendingRequests == null || pendingRequests.Count<ThingOrderRequest>() == 0)
+                    {
                         this.StartPrinting();
+                    }
                     break;
                 case CrafterStatus.Crafting:
                     if (!this.powerComp.PowerOn)
@@ -349,40 +370,6 @@ namespace Androids
                             FleckMaker.ThrowMicroSparks(position.ToVector3() + new Vector3((float)Rand.Range(-1, 1), 0.0f, (float)Rand.Range(-1, 1)), this.Map);
                         }
                     }
-                    /*
-					if (!this.needsSaved)
-					{
-						Pawn pawnInside = this.PawnInside;
-						if (pawnInside != null)
-						{
-							this.cachedNeedsFood = pawnInside.needs.food.CurLevel;
-							this.cachedNeedsRest = pawnInside.needs.rest.CurLevel;
-							if (pawnInside.needs.joy != null)
-								this.cachedNeedsJoy = pawnInside.needs.joy.CurLevel;
-							if (pawnInside.needs.mood != null)
-								this.cachedNeedsMood = pawnInside.needs.mood.CurLevel;
-							if (pawnInside.needs.comfort != null)
-								this.cachedNeedsComfort = pawnInside.needs.comfort.CurLevel;
-						}
-						this.needsSaved = true;
-					}
-					
-					if (Current.Game.tickManager.TicksGame % 1500 == 0)
-					{
-						Pawn pawnInside = this.PawnInside;
-						if (pawnInside != null)
-						{
-							pawnInside.needs.food.CurLevel = this.cachedNeedsFood;
-							pawnInside.needs.rest.CurLevel = this.cachedNeedsRest;
-							if (pawnInside.needs.joy != null)
-								pawnInside.needs.joy.CurLevel = this.cachedNeedsJoy;
-							if (pawnInside.needs.mood != null)
-								pawnInside.needs.mood.CurLevel = this.cachedNeedsMood;
-							if (pawnInside.needs.comfort != null)
-								pawnInside.needs.comfort.CurLevel = this.cachedNeedsComfort;
-						}
-					}
-					*/
                     if (this.soundSustainer == null || this.soundSustainer.Ended)
                     {
                         SoundDef craftingSound = this.printerProperties.craftingSound;
@@ -448,6 +435,7 @@ namespace Androids
                     this.printerStatus = CrafterStatus.Finished;
                     break;
                 case CrafterStatus.Finished:
+                    //Upgrade
                     if (this.pawnToPrint != null && this.clonedPawnToPrint != null)
                     {
                         ThingOwner directlyHeldThings = this.GetDirectlyHeldThings();
@@ -456,14 +444,14 @@ namespace Androids
                         //this.needsSaved = false;
                         foreach (Thing thing in (IEnumerable<Thing>)directlyHeldThings)
                         {
-                            if (!(thing is Pawn))
+                            if (thing is not Pawn)
                                 thing.Destroy();
                         }
                         pawn.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
                         pawn.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
                         Find.LetterStack.ReceiveLetter((Letter)LetterMaker.MakeLetter("AndroidUpgradedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidUpgradedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)(Thing)this.pawnToPrint));
-                        this.pawnToPrint = (Pawn)null;
-                        this.clonedPawnToPrint = (Pawn)null;
+                        this.pawnToPrint = null;
+                        this.clonedPawnToPrint = null;
                         this.printerStatus = CrafterStatus.Idle;
                         this.extraTimeCost = 0;
                         this.orderProcessor.requestedItems.Clear();
@@ -471,9 +459,9 @@ namespace Androids
                     }
                     if (this.pawnToPrint == null)
                         break;
-                    foreach (Thing directlyHeldThing in (IEnumerable<Thing>)this.GetDirectlyHeldThings())
+                    foreach (Thing directlyHeldThing in this.GetDirectlyHeldThings())
                     {
-                        if (!(directlyHeldThing is Pawn))
+                        if (directlyHeldThing is not Pawn)
                             directlyHeldThing.Destroy();
                     }
                     FilthMaker.TryMakeFilth(this.InteractionCell, this.Map, RimWorld.ThingDefOf.Filth_Slime, 5, FilthSourceFlags.None);
@@ -481,7 +469,7 @@ namespace Androids
                     this.pawnToPrint.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
                     this.pawnToPrint.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
                     Find.LetterStack.ReceiveLetter((Letter)LetterMaker.MakeLetter("AndroidPrintedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidPrintedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)(Thing)this.pawnToPrint));
-                    this.pawnToPrint = (Pawn)null;
+                    this.pawnToPrint = null;
                     this.printerStatus = CrafterStatus.Idle;
                     this.extraTimeCost = 0;
                     this.orderProcessor.requestedItems.Clear();
@@ -494,7 +482,7 @@ namespace Androids
             }
         }
 
-        
+
 
         public void AdjustPowerNeed()
         {
@@ -537,17 +525,17 @@ namespace Androids
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
         {
-            foreach(var option in base.GetFloatMenuOptions(selPawn))
+            foreach (var option in base.GetFloatMenuOptions(selPawn))
                 yield return option;
-            if(this.innerContainer.Count == 0 && selPawn.IsAndroid())
+            if (this.innerContainer.Count == 0 && selPawn.IsAndroid())
             {
-                if(!selPawn.CanReach(this, Verse.AI.PathEndMode.InteractionCell, Danger.Deadly))
+                if (!selPawn.CanReach(this, Verse.AI.PathEndMode.InteractionCell, Danger.Deadly))
                 {
                     yield return new FloatMenuOption("CannotUseNoPath".Translate(), null);
                 }
                 else
                 {
-                    yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("EnterAndroidPrinter".Translate(), () => selPawn.jobs.TryTakeOrderedJob(JobMaker.MakeJob(JobDefOf.EnterAndroidPrinterCasket,this))),selPawn,this,"ReservedBy");
+                    yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("EnterAndroidPrinter".Translate(), () => selPawn.jobs.TryTakeOrderedJob(JobMaker.MakeJob(JobDefOf.EnterAndroidPrinterCasket, this))), selPawn, this, "ReservedBy");
                 }
             }
         }
@@ -561,7 +549,7 @@ namespace Androids
         public override void EjectContents()
         {
             Find.WindowStack.TryRemove(typeof(CustomizeAndroidWindow), false);
-            foreach(var thing in this.innerContainer)
+            foreach (var thing in this.innerContainer)
             {
                 if (thing is Pawn pawn)
                     PawnComponentsUtility.AddComponentsForSpawn(pawn);
