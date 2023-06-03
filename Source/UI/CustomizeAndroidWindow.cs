@@ -195,7 +195,6 @@ namespace Androids
                 }
                 this.IsUpgrade = true;
                 this.newAndroid = sourcePawn;
-                this.androidPrinter.IsUpgrade = true;
             }
             else
             {
