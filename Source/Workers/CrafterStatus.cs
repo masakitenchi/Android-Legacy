@@ -8,12 +8,11 @@ using System;
 
 namespace Androids
 {
-    [Flags]
     public enum CrafterStatus : byte
     {
-        Idle = 0,
-        Filling = 1,
-        Crafting = 2,
-        Finished = 4,
+        Idle,
+        Filling,
+        Crafting,
+        Finished
     }
 }
