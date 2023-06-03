@@ -166,7 +166,7 @@ namespace Androids
             Scribe_Values.Look<int>(ref this.printingTicksLeft, "printingTicksLeft");
             Scribe_Values.Look<int>(ref this.nextResourceTick, "nextResourceTick");
             //Has Pawn inside => that pawn must be re-entering since de novo crafting doesn't generate pawn until print finishes
-            if(this.GetDirectlyHeldThings().Any(x => x is Pawn))
+            if (this.GetDirectlyHeldThings().Any(x => x is Pawn))
             {
                 Scribe_References.Look(ref this.pawnToPrint, "androidToPrint", true);
                 Scribe_References.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint", true);
@@ -213,7 +213,7 @@ namespace Androids
                 {
                     defaultLabel = "DEBUG: Finish crafting.",
                     defaultDesc = "Finishes crafting the pawn.",
-                    action = delegate()
+                    action = delegate ()
                     {
                         this.printerStatus = CrafterStatus.Finished;
                         this.GetDirectlyHeldThings().Clear();
@@ -536,8 +536,9 @@ namespace Androids
 
         public override void Open()
         {
-            if (printerStatus != (CrafterStatus.Idle | CrafterStatus.Finished)) return;
+            if (printerStatus != CrafterStatus.Idle && printerStatus != CrafterStatus.Finished) return;
             base.Open();
+
         }
 
         public override void EjectContents()
