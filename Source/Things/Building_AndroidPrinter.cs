@@ -51,10 +51,6 @@ namespace Androids
         /// </summary>
 		public Pawn pawnToPrint;
         public Pawn clonedPawnToPrint;
-
-        //Was trying to use this as an indicator to show if the pawn need deep-save.
-        internal bool IsUpgrade;
-
         /// <summary>
         /// Class used to store the state of the order processor.
         /// </summary>
@@ -104,10 +100,9 @@ namespace Androids
         #endregion
         #region Properties
         public bool StorageTabVisible => false;
-
-
         public bool IsContentsSuspended => this.printerStatus == CrafterStatus.Crafting;
         public Pawn PawnBeingCrafted => this.pawnToPrint;
+        public bool IsUpgrade => this.GetDirectlyHeldThings().Any(x => x is Pawn);
         public CrafterStatus PrinterStatus => this.printerStatus;
         public PawnCrafterProperties PrinterProperties => this.def.GetModExtension<PawnCrafterProperties>();
         public Pawn PawnInside => (Pawn)this.GetDirectlyHeldThings().Where<Thing>((Func<Thing, bool>)(p => p is Pawn)).FirstOrDefault<Thing>();
@@ -170,7 +165,6 @@ namespace Androids
             Scribe_Values.Look<CrafterStatus>(ref this.printerStatus, "printerStatus");
             Scribe_Values.Look<int>(ref this.printingTicksLeft, "printingTicksLeft");
             Scribe_Values.Look<int>(ref this.nextResourceTick, "nextResourceTick");
-            Scribe_Values.Look(ref IsUpgrade, "Upgrading", forceSave: true);
             //Has Pawn inside => that pawn must be re-entering since de novo crafting doesn't generate pawn until print finishes
             if(this.GetDirectlyHeldThings().Any(x => x is Pawn))
             {
@@ -316,7 +310,7 @@ namespace Androids
         public void StopPawnCrafting()
         {
             this.printerStatus = CrafterStatus.Idle;
-            if (this.pawnToPrint != null && this.clonedPawnToPrint == null)
+            if (this.pawnToPrint != null && this.clonedPawnToPrint == null) //De novo printing
             {
                 this.pawnToPrint.Destroy(DestroyMode.Vanish);
                 this.pawnToPrint = (Pawn)null;
@@ -436,7 +430,7 @@ namespace Androids
                     break;
                 case CrafterStatus.Finished:
                     //Upgrade
-                    if (this.pawnToPrint != null && this.clonedPawnToPrint != null)
+                    if (IsUpgrade)
                     {
                         ThingOwner directlyHeldThings = this.GetDirectlyHeldThings();
                         Pawn pawn = (Pawn)directlyHeldThings.FirstOrDefault(p => p is Pawn);
@@ -542,7 +536,7 @@ namespace Androids
 
         public override void Open()
         {
-            if (printerStatus != CrafterStatus.Idle || printerStatus != CrafterStatus.Finished) return;
+            if (printerStatus != (CrafterStatus.Idle | CrafterStatus.Finished)) return;
             base.Open();
         }
 
