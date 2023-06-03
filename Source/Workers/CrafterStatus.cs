@@ -4,13 +4,16 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
+using System;
+
 namespace Androids
 {
-  public enum CrafterStatus
-  {
-    Idle,
-    Filling,
-    Crafting,
-    Finished,
-  }
+    [Flags]
+    public enum CrafterStatus : byte
+    {
+        Idle = 0,
+        Filling = 1,
+        Crafting = 2,
+        Finished = 4,
+    }
 }
