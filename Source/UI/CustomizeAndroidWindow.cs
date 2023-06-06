@@ -107,7 +107,7 @@ namespace Androids
         public List<Trait> _pawnTraits;
         public bool IsUpgrade;
         public Pawn clonedPawn;
-        
+
         public override Vector2 InitialSize => new Vector2(898f, 608f);
 
         public IEnumerable<Color> HairColors
@@ -370,8 +370,17 @@ namespace Androids
                     if (!this.finalCalculatedPrintingCost.NullOrEmpty<ThingOrderRequest>())
                         this.androidPrinter.orderProcessor.requestedItems = this.finalCalculatedPrintingCost;
                     this.androidPrinter.extraTimeCost = this.finalExtraPrintingTimeCost;
-                    this.androidPrinter.pawnToPrint = this.newAndroid;
-                    this.androidPrinter.clonedPawnToPrint = this.clonedPawn;
+
+                    //Have no idea what I was trying to do
+                    if(IsUpgrade)
+                    {
+                        this.androidPrinter.pawnToPrint = this.newAndroid;
+                    }
+                    else
+                    {
+                        this.androidPrinter.pawnToPrint = this.newAndroid;
+                        this.androidPrinter.clonedPawnToPrint = this.clonedPawn;
+                    }
                     this.androidPrinter.printerStatus = CrafterStatus.Filling;
                     //this.androidPrinter.upgradesToApply;
                     this.Close();

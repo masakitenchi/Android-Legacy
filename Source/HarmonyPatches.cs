@@ -192,13 +192,13 @@ namespace Androids
                 }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ValidPostfix")));
                 str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
                 System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
-                harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_ThoughtWorker_LookChangeDesired"));
+                harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches), "Patch_ThoughtWorker_LookChangeDesired"));
                 str = "Pawn_StyleTracker.CanDesireLookChange_getter";
                 Type type40 = typeof(Pawn_StyleTracker);
-                harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches),"Patch_CanDesireLookChange_getter"));
+                harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches), "Patch_CanDesireLookChange_getter"));
                 Type type41 = typeof(ITab_Pawn_Visitor);
                 str = "ITab_Pawn_Visitor.<>c__DisplayClass7_0.<FillTab>g__CanUsePrisonerInteractionMode|0";
-                harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass7_0"), x=> x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
+                harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass7_0"), x => x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
             }
             catch (Exception ex)
             {
@@ -505,12 +505,12 @@ namespace Androids
                 return true;
             JobDriver_Vomit instance = __instance;
             __result = (IEnumerable<Toil>)new List<Toil>()
-      {
-        new Toil()
-        {
-          initAction = (Action) (() => instance.pawn.jobs.StopAll())
-        }
-      };
+            {
+                new Toil()
+                {
+                    initAction = (Action) (() => instance.pawn.jobs.StopAll())
+                }
+            };
             return false;
         }
 
@@ -781,7 +781,7 @@ namespace Androids
         #region Ideology
         public static bool Patch_ThoughtWorker_LookChangeDesired(ref ThoughtState __result, Pawn p)
         {
-            if(p.def.HasModExtension<MechanicalPawnProperties>())
+            if (p.def.HasModExtension<MechanicalPawnProperties>())
             {
                 __result = ThoughtState.Inactive;
                 return false;
@@ -861,7 +861,7 @@ namespace Androids
 
         public static bool CanUsePrisonerInteractionMode_Prefix(ref bool __result, Pawn pawn, PrisonerInteractionModeDef mode)
         {
-            if(pawn.def.HasModExtension<AndroidPawnProperties>() && (mode == PrisonerInteractionModeDefOf.Bloodfeed || mode == PrisonerInteractionModeDefOf.HemogenFarm))
+            if (pawn.def.HasModExtension<AndroidPawnProperties>() && (mode == PrisonerInteractionModeDefOf.Bloodfeed || mode == PrisonerInteractionModeDefOf.HemogenFarm))
             {
                 __result = false;
                 return false;
