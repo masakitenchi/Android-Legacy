@@ -216,7 +216,6 @@ namespace Androids
                     action = delegate ()
                     {
                         this.printerStatus = CrafterStatus.Finished;
-                        this.GetDirectlyHeldThings().Clear();
                     }
                 };
             }
@@ -453,11 +452,12 @@ namespace Androids
                     }
                     if (this.pawnToPrint == null)
                         break;
-                    foreach (Thing directlyHeldThing in this.GetDirectlyHeldThings())
+                    /*foreach (Thing directlyHeldThing in this.GetDirectlyHeldThings())
                     {
                         if (directlyHeldThing is not Pawn)
                             directlyHeldThing.Destroy();
-                    }
+                    }*/
+                    this.innerContainer.ClearAndDestroyContents();
                     FilthMaker.TryMakeFilth(this.InteractionCell, this.Map, RimWorld.ThingDefOf.Filth_Slime, 5, FilthSourceFlags.None);
                     GenSpawn.Spawn((Thing)this.pawnToPrint, this.InteractionCell, this.Map);
                     this.pawnToPrint.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
@@ -567,12 +567,11 @@ namespace Androids
 
         private void ApplyUpgrades(Pawn target)
         {
-            HashSet<AndroidUpgradeDef> upgrades = new HashSet<AndroidUpgradeDef>(upgradesToApply);
-            foreach (var upgrade in upgrades)
+            foreach (var upgrade in upgradesToApply)
             {
                 UpgradeMaker.Make(upgrade).Apply(target);
-                upgradesToApply.Remove(upgrade);
             }
+            upgradesToApply.Clear();
         }
     }
 }
