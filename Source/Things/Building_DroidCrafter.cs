@@ -146,7 +146,7 @@ namespace Androids
             commandToggle.icon = (Texture)ContentFinder<Texture2D>.Get("ui/designators/PlanOn");
             // ISSUE: reference to a compiler-generated method
             commandToggle.isActive = () => repeatLastPawn;
-            commandToggle.toggleAction = delegate { repeatLastPawn = !repeatLastPawn; }; 
+            commandToggle.toggleAction = delegate { repeatLastPawn = !repeatLastPawn; };
             yield return (Gizmo)commandToggle;
         }
     }
