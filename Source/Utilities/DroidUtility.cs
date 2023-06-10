@@ -203,7 +203,7 @@ namespace Androids
         public static NameTriple MakeDroidName(string nickName)
         {
             string str = string.Format("D-{0:X}-{1:X}", (object)Rand.Range(0, 256), (object)Rand.Range(0, 256));
-            return nickName == null ? new NameTriple(str, str, " ") : new NameTriple(str, nickName, " ");
+            return nickName == null ? new NameTriple(str, str, "Droid") : new NameTriple(str, nickName, "Droid");
         }
 
         public static void DoTend(Pawn doctor, Pawn patient, Thing medicine)
