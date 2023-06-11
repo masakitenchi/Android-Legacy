@@ -459,6 +459,7 @@ namespace Androids
                     }*/
                     this.innerContainer.ClearAndDestroyContents();
                     FilthMaker.TryMakeFilth(this.InteractionCell, this.Map, RimWorld.ThingDefOf.Filth_Slime, 5, FilthSourceFlags.None);
+                    ApplyUpgrades(this.pawnToPrint);
                     GenSpawn.Spawn((Thing)this.pawnToPrint, this.InteractionCell, this.Map);
                     this.pawnToPrint.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
                     this.pawnToPrint.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
