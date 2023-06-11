@@ -184,8 +184,7 @@ namespace Androids
         public CustomizeAndroidWindow(Building_AndroidPrinter androidPrinter)
         {
             this.androidPrinter = androidPrinter;
-            Pawn sourcePawn = (Pawn)androidPrinter.GetDirectlyHeldThings().Where<Thing>((Func<Thing, bool>)(p => p is Pawn)).FirstOrDefault<Thing>();
-            if (sourcePawn != null)
+            if (androidPrinter.GetDirectlyHeldThings().FirstOrDefault(p => p is Pawn) is Pawn sourcePawn)
             {
                 this.currentPawnKindDef = sourcePawn.kindDef;
                 if (this.clonedPawn == null)
@@ -370,17 +369,8 @@ namespace Androids
                     if (!this.finalCalculatedPrintingCost.NullOrEmpty<ThingOrderRequest>())
                         this.androidPrinter.orderProcessor.requestedItems = this.finalCalculatedPrintingCost;
                     this.androidPrinter.extraTimeCost = this.finalExtraPrintingTimeCost;
-
-                    //Have no idea what I was trying to do
-                    if(IsUpgrade)
-                    {
-                        this.androidPrinter.pawnToPrint = this.newAndroid;
-                    }
-                    else
-                    {
-                        this.androidPrinter.pawnToPrint = this.newAndroid;
-                        this.androidPrinter.clonedPawnToPrint = this.clonedPawn;
-                    }
+                    this.androidPrinter.pawnToPrint = this.newAndroid;
+                    this.androidPrinter.clonedPawnToPrint = this.clonedPawn;
                     this.androidPrinter.printerStatus = CrafterStatus.Filling;
                     //this.androidPrinter.upgradesToApply;
                     this.Close();
