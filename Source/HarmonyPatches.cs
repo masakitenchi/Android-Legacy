@@ -328,7 +328,7 @@ namespace Androids
             Thing thing;
             if (patient.playerSettings == null || patient.playerSettings.medCare <= MedicalCareCategory.NoMeds)
                 thing = (Thing)null;
-            else if (Medicine.GetMedicineCountToFullyHeal(patient) <= 0)
+            else if (GetMedicineCountToFullyHeal(patient) <= 0)
             {
                 thing = (Thing)null;
             }
@@ -344,6 +344,45 @@ namespace Androids
             }
             __result = thing;
             return false;
+            static int GetMedicineCountToFullyHeal(Pawn pawn)
+            {
+                int num = 0;
+                int num2 = pawn.health.hediffSet.hediffs.Count + 1;
+                List<Hediff> tendableHediffsInTendPriorityOrder= new List<Hediff>();
+                List<Hediff> tmpHediffs = new List<Hediff>();
+                List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
+                for (int i = 0; i < hediffs.Count; i++)
+                {
+                    if (hediffs[i].TendableNow())
+                    {
+                        tendableHediffsInTendPriorityOrder.Add(hediffs[i]);
+                    }
+                }
+                TendUtility.SortByTendPriority(tendableHediffsInTendPriorityOrder);
+                int num3 = 0;
+                while (true)
+                {
+                    num++;
+                    if (num > num2)
+                    {
+                        Log.Error("Too many iterations.");
+                        break;
+                    }
+                    TendUtility.GetOptimalHediffsToTendWithSingleTreatment(pawn, usingMedicine: true, tmpHediffs, tendableHediffsInTendPriorityOrder);
+                    if (!tmpHediffs.Any())
+                    {
+                        break;
+                    }
+                    num3++;
+                    for (int j = 0; j < tmpHediffs.Count; j++)
+                    {
+                        tendableHediffsInTendPriorityOrder.Remove(tmpHediffs[j]);
+                    }
+                }
+                tmpHediffs.Clear();
+                tendableHediffsInTendPriorityOrder.Clear();
+                return num3;
+            }
         }
 
         public static bool Patch_Toils_Tend_FinalizeTend(ref Toil __result, Pawn patient)
