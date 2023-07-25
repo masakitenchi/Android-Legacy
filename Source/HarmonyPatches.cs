@@ -10,7 +10,6 @@ using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -348,7 +347,7 @@ namespace Androids
             {
                 int num = 0;
                 int num2 = pawn.health.hediffSet.hediffs.Count + 1;
-                List<Hediff> tendableHediffsInTendPriorityOrder= new List<Hediff>();
+                List<Hediff> tendableHediffsInTendPriorityOrder = new List<Hediff>();
                 List<Hediff> tmpHediffs = new List<Hediff>();
                 List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
                 for (int i = 0; i < hediffs.Count; i++)

@@ -73,7 +73,7 @@ namespace Androids
                 defaultLabel = "AndroidGizmoAutoRefuelLabel".Translate(),
                 defaultDesc = "AndroidGizmoAutoRefuelDescription".Translate(),
                 isActive = () => autoRefuel,
-                Order= -99f,
+                Order = -99f,
                 toggleAction = delegate
                 {
                     autoRefuel = !autoRefuel;

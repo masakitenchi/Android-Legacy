@@ -8,8 +8,8 @@ using Verse;
 
 namespace Androids
 {
-  public class AndroidUpgradeHediffProperties : DefModExtension
-  {
-    public AndroidUpgradeDef def;
-  }
+    public class AndroidUpgradeHediffProperties : DefModExtension
+    {
+        public AndroidUpgradeDef def;
+    }
 }

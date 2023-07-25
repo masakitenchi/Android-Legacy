@@ -10,30 +10,30 @@ using Verse;
 
 namespace Androids
 {
-  public class ApparelWithGizmos : Apparel
-  {
-    public override IEnumerable<Gizmo> GetWornGizmos()
+    public class ApparelWithGizmos : Apparel
     {
-      foreach (ThingComp allComp in this.AllComps)
-      {
-        foreach (Gizmo gizmo in allComp.CompGetGizmosExtra())
-          yield return gizmo;
-      }
-    }
-
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-    {
-      ApparelWithGizmos apparelWithGizmos = this;
-      foreach (StatDrawEntry statDrawEntry in base.SpecialDisplayStats())
-        yield return statDrawEntry;
-      foreach (ThingComp allComp in apparelWithGizmos.AllComps)
-      {
-        if (allComp is IExtraDisplayStats extraDisplayStats)
+        public override IEnumerable<Gizmo> GetWornGizmos()
         {
-          foreach (StatDrawEntry specialDisplayStat in extraDisplayStats.SpecialDisplayStats())
-            yield return specialDisplayStat;
+            foreach (ThingComp allComp in this.AllComps)
+            {
+                foreach (Gizmo gizmo in allComp.CompGetGizmosExtra())
+                    yield return gizmo;
+            }
         }
-      }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            ApparelWithGizmos apparelWithGizmos = this;
+            foreach (StatDrawEntry statDrawEntry in base.SpecialDisplayStats())
+                yield return statDrawEntry;
+            foreach (ThingComp allComp in apparelWithGizmos.AllComps)
+            {
+                if (allComp is IExtraDisplayStats extraDisplayStats)
+                {
+                    foreach (StatDrawEntry specialDisplayStat in extraDisplayStats.SpecialDisplayStats())
+                        yield return specialDisplayStat;
+                }
+            }
+        }
     }
-  }
 }

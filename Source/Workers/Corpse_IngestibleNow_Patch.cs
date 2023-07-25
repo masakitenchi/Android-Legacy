@@ -9,15 +9,15 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (Corpse), "get_IngestibleNow")]
-  public class Corpse_IngestibleNow_Patch
-  {
-    [HarmonyPostfix]
-    public static void Listener(Corpse __instance, ref bool __result)
+    [HarmonyPatch(typeof(Corpse), "get_IngestibleNow")]
+    public class Corpse_IngestibleNow_Patch
     {
-      if (!__instance.InnerPawn.IsAndroid() && !__instance.InnerPawn.def.HasModExtension<MechanicalPawnProperties>())
-        return;
-      __result = false;
+        [HarmonyPostfix]
+        public static void Listener(Corpse __instance, ref bool __result)
+        {
+            if (!__instance.InnerPawn.IsAndroid() && !__instance.InnerPawn.def.HasModExtension<MechanicalPawnProperties>())
+                return;
+            __result = false;
+        }
     }
-  }
 }

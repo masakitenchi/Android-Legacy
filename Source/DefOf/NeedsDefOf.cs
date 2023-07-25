@@ -8,14 +8,14 @@ using RimWorld;
 
 namespace Androids
 {
-  [DefOf]
-  public static class NeedsDefOf
-  {
-    public static NeedDef Beauty;
-    public static NeedDef Comfort;
-    public static NeedDef RoomSize;
-    public static NeedDef Outdoors;
-    public static NeedDef ChJEnergy;
-    public static ThoughtDef ChJAndroidSpawned;
-  }
+    [DefOf]
+    public static class NeedsDefOf
+    {
+        public static NeedDef Beauty;
+        public static NeedDef Comfort;
+        public static NeedDef RoomSize;
+        public static NeedDef Outdoors;
+        public static NeedDef ChJEnergy;
+        public static ThoughtDef ChJAndroidSpawned;
+    }
 }

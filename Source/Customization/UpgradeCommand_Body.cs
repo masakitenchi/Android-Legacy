@@ -10,27 +10,27 @@ using Verse;
 
 namespace Androids
 {
-  public class UpgradeCommand_Body : UpgradeCommand_Hediff
-  {
-    public BodyTypeDef originalBodyType;
-
-    public override void Apply(Pawn customTarget = null)
+    public class UpgradeCommand_Body : UpgradeCommand_Hediff
     {
-      base.Apply(customTarget);
-      Pawn pawn = customTarget == null ? this.customizationWindow.newAndroid : customTarget;
-      this.originalBodyType = pawn.story.bodyType;
-      if (!(pawn.def is ThingDef_AlienRace def) || def.alienRace.generalSettings.alienPartGenerator.bodyTypes.Contains(this.def.newBodyType))
-        pawn.story.bodyType = this.def.newBodyType;
-      if (this.customizationWindow == null)
-        return;
-      this.customizationWindow.refreshAndroidPortrait = true;
-    }
+        public BodyTypeDef originalBodyType;
 
-    public override void Undo()
-    {
-      base.Undo();
-      this.customizationWindow.newAndroid.story.bodyType = this.originalBodyType;
-      this.customizationWindow.refreshAndroidPortrait = true;
+        public override void Apply(Pawn customTarget = null)
+        {
+            base.Apply(customTarget);
+            Pawn pawn = customTarget == null ? this.customizationWindow.newAndroid : customTarget;
+            this.originalBodyType = pawn.story.bodyType;
+            if (!(pawn.def is ThingDef_AlienRace def) || def.alienRace.generalSettings.alienPartGenerator.bodyTypes.Contains(this.def.newBodyType))
+                pawn.story.bodyType = this.def.newBodyType;
+            if (this.customizationWindow == null)
+                return;
+            this.customizationWindow.refreshAndroidPortrait = true;
+        }
+
+        public override void Undo()
+        {
+            base.Undo();
+            this.customizationWindow.newAndroid.story.bodyType = this.originalBodyType;
+            this.customizationWindow.refreshAndroidPortrait = true;
+        }
     }
-  }
 }

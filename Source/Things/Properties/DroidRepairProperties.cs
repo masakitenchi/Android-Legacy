@@ -8,8 +8,8 @@ using Verse;
 
 namespace Androids
 {
-  public class DroidRepairProperties : DefModExtension
-  {
-    public float repairPotency = 1f;
-  }
+    public class DroidRepairProperties : DefModExtension
+    {
+        public float repairPotency = 1f;
+    }
 }

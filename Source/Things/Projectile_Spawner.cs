@@ -13,65 +13,65 @@ using Verse.Sound;
 
 namespace Androids
 {
-  public class Projectile_Spawner : Projectile
-  {
-    private Lord lord;
-
-    public SpawnerProjectileProperties SpawnerProps => this.def.GetModExtension<SpawnerProjectileProperties>();
-
-    public virtual void DoSpawn(Thing hitThing)
+    public class Projectile_Spawner : Projectile
     {
-      Pawn pawn = (Pawn) null;
-      if (this.SpawnerProps.pawnKind != null)
-        pawn = PawnGenerator.GeneratePawn(this.SpawnerProps.pawnKind);
-      if (this.SpawnerProps.pawnThingDef != null)
-        pawn = (Pawn) ThingMaker.MakeThing(this.SpawnerProps.pawnThingDef);
-      if (pawn == null)
-        return;
-      pawn.SetFaction(this.SpawnerProps.GetFaction(this.launcher), (Pawn) null);
-      if (this.SpawnerProps.forceAgeToZero)
-      {
-        pawn.ageTracker.AgeBiologicalTicks = 0L;
-        pawn.ageTracker.AgeChronologicalTicks = 0L;
-      }
-      GenPlace.TryPlaceThing((Thing) pawn, this.Position, this.Map, ThingPlaceMode.Near);
-      if (this.SpawnerProps.mentalStateUponSpawn != null)
-        pawn.mindState.mentalStateHandler.TryStartMentalState(this.SpawnerProps.mentalStateUponSpawn, forceWake: true);
-      if (this.SpawnerProps.joinLordOnSpawn)
-      {
-        if (this.lord == null && !this.SpawnerProps.joinSameLordFromProjectile)
-          this.lord = this.GetLord(pawn);
-        this.lord.AddPawn(pawn);
-      }
-      FleckMaker.ThrowSmoke(pawn.Position.ToVector3(), this.Map, Rand.Range(0.5f, 1.5f));
-      FleckMaker.ThrowSmoke(pawn.Position.ToVector3(), this.Map, Rand.Range(1f, 3f));
-      FleckMaker.ThrowAirPuffUp(pawn.Position.ToVector3(), this.Map);
-    }
+        private Lord lord;
 
-    public Lord GetLord(Pawn forPawn)
-    {
-      Lord lord = (Lord) null;
-      Faction faction = forPawn.Faction;
-      if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any<Pawn>((Predicate<Pawn>) (p => p != forPawn)))
-        lord = ((Pawn) GenClosest.ClosestThing_Global(forPawn.Position, (IEnumerable) forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction), this.SpawnerProps.lordJoinRadius, (Predicate<Thing>) (p => p != forPawn && ((Pawn) p).GetLord() != null))).GetLord();
-      if (lord == null)
-      {
-        LordJob jobForLord = this.SpawnerProps.CreateJobForLord(forPawn.Position);
-        lord = LordMaker.MakeNewLord(faction, jobForLord, this.Map);
-      }
-      return lord;
-    }
+        public SpawnerProjectileProperties SpawnerProps => this.def.GetModExtension<SpawnerProjectileProperties>();
 
-    protected virtual void Impact(Thing hitThing)
-    {
-      SoundDef soundExplode = this.def.projectile.soundExplode;
-      if (soundExplode != null)
-        soundExplode.PlayOneShot((SoundInfo) new TargetInfo(this.Position, this.Map));
-      if (this.SpawnerProps.joinSameLordFromProjectile)
-        this.lord = LordMaker.MakeNewLord(this.Faction, this.SpawnerProps.CreateJobForLord(this.Position), this.Map);
-      for (int index = 0; index < this.SpawnerProps.amount; ++index)
-        this.DoSpawn(hitThing);
-      this.Destroy(DestroyMode.Vanish);
+        public virtual void DoSpawn(Thing hitThing)
+        {
+            Pawn pawn = (Pawn)null;
+            if (this.SpawnerProps.pawnKind != null)
+                pawn = PawnGenerator.GeneratePawn(this.SpawnerProps.pawnKind);
+            if (this.SpawnerProps.pawnThingDef != null)
+                pawn = (Pawn)ThingMaker.MakeThing(this.SpawnerProps.pawnThingDef);
+            if (pawn == null)
+                return;
+            pawn.SetFaction(this.SpawnerProps.GetFaction(this.launcher), (Pawn)null);
+            if (this.SpawnerProps.forceAgeToZero)
+            {
+                pawn.ageTracker.AgeBiologicalTicks = 0L;
+                pawn.ageTracker.AgeChronologicalTicks = 0L;
+            }
+            GenPlace.TryPlaceThing((Thing)pawn, this.Position, this.Map, ThingPlaceMode.Near);
+            if (this.SpawnerProps.mentalStateUponSpawn != null)
+                pawn.mindState.mentalStateHandler.TryStartMentalState(this.SpawnerProps.mentalStateUponSpawn, forceWake: true);
+            if (this.SpawnerProps.joinLordOnSpawn)
+            {
+                if (this.lord == null && !this.SpawnerProps.joinSameLordFromProjectile)
+                    this.lord = this.GetLord(pawn);
+                this.lord.AddPawn(pawn);
+            }
+            FleckMaker.ThrowSmoke(pawn.Position.ToVector3(), this.Map, Rand.Range(0.5f, 1.5f));
+            FleckMaker.ThrowSmoke(pawn.Position.ToVector3(), this.Map, Rand.Range(1f, 3f));
+            FleckMaker.ThrowAirPuffUp(pawn.Position.ToVector3(), this.Map);
+        }
+
+        public Lord GetLord(Pawn forPawn)
+        {
+            Lord lord = (Lord)null;
+            Faction faction = forPawn.Faction;
+            if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any<Pawn>((Predicate<Pawn>)(p => p != forPawn)))
+                lord = ((Pawn)GenClosest.ClosestThing_Global(forPawn.Position, (IEnumerable)forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction), this.SpawnerProps.lordJoinRadius, (Predicate<Thing>)(p => p != forPawn && ((Pawn)p).GetLord() != null))).GetLord();
+            if (lord == null)
+            {
+                LordJob jobForLord = this.SpawnerProps.CreateJobForLord(forPawn.Position);
+                lord = LordMaker.MakeNewLord(faction, jobForLord, this.Map);
+            }
+            return lord;
+        }
+
+        protected virtual void Impact(Thing hitThing)
+        {
+            SoundDef soundExplode = this.def.projectile.soundExplode;
+            if (soundExplode != null)
+                soundExplode.PlayOneShot((SoundInfo)new TargetInfo(this.Position, this.Map));
+            if (this.SpawnerProps.joinSameLordFromProjectile)
+                this.lord = LordMaker.MakeNewLord(this.Faction, this.SpawnerProps.CreateJobForLord(this.Position), this.Map);
+            for (int index = 0; index < this.SpawnerProps.amount; ++index)
+                this.DoSpawn(hitThing);
+            this.Destroy(DestroyMode.Vanish);
+        }
     }
-  }
 }

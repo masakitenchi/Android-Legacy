@@ -10,70 +10,70 @@ using Verse;
 
 namespace Androids
 {
-  public class ThingOrderProcessor : IExposable
-  {
-    public ThingOwner thingHolder;
-    public StorageSettings storageSettings;
-    public List<ThingOrderRequest> requestedItems = new List<ThingOrderRequest>();
-
-    public ThingOrderProcessor()
+    public class ThingOrderProcessor : IExposable
     {
-    }
+        public ThingOwner thingHolder;
+        public StorageSettings storageSettings;
+        public List<ThingOrderRequest> requestedItems = new List<ThingOrderRequest>();
 
-    public ThingOrderProcessor(ThingOwner thingHolder, StorageSettings storageSettings)
-    {
-      this.thingHolder = thingHolder;
-      this.storageSettings = storageSettings;
-    }
-
-    public IEnumerable<ThingOrderRequest> PendingRequests(ThingOwner things)
-    {
-      this.thingHolder = things;
-      foreach (ThingOrderRequest requestedItem in this.requestedItems)
-      {
-        if (requestedItem.nutrition)
+        public ThingOrderProcessor()
         {
-          float num = this.CountNutrition(things);
-          if ((double) num < (double) requestedItem.amount)
-            yield return new ThingOrderRequest()
+        }
+
+        public ThingOrderProcessor(ThingOwner thingHolder, StorageSettings storageSettings)
+        {
+            this.thingHolder = thingHolder;
+            this.storageSettings = storageSettings;
+        }
+
+        public IEnumerable<ThingOrderRequest> PendingRequests(ThingOwner things)
+        {
+            this.thingHolder = things;
+            foreach (ThingOrderRequest requestedItem in this.requestedItems)
             {
-              nutrition = true,
-              amount = requestedItem.amount - num,
-              thingFilter = this.storageSettings.filter
-            };
+                if (requestedItem.nutrition)
+                {
+                    float num = this.CountNutrition(things);
+                    if ((double)num < (double)requestedItem.amount)
+                        yield return new ThingOrderRequest()
+                        {
+                            nutrition = true,
+                            amount = requestedItem.amount - num,
+                            thingFilter = this.storageSettings.filter
+                        };
+                }
+                else
+                {
+                    float num = (float)this.thingHolder.TotalStackCountOfDef(requestedItem.thingDef);
+                    if ((double)num < (double)requestedItem.amount)
+                        yield return new ThingOrderRequest()
+                        {
+                            thingDef = requestedItem.thingDef,
+                            amount = requestedItem.amount - num
+                        };
+                }
+            }
         }
-        else
+
+        public float CountNutrition(ThingOwner things)
         {
-          float num = (float) this.thingHolder.TotalStackCountOfDef(requestedItem.thingDef);
-          if ((double) num < (double) requestedItem.amount)
-            yield return new ThingOrderRequest()
+            this.thingHolder = things;
+            float num1 = 0.0f;
+            foreach (Thing thing in (IEnumerable<Thing>)this.thingHolder)
             {
-              thingDef = requestedItem.thingDef,
-              amount = requestedItem.amount - num
-            };
+                if (thing is Corpse corpse)
+                    num1 += FoodUtility.GetBodyPartNutrition(corpse, corpse.InnerPawn.RaceProps.body.corePart);
+                else if (thing.def.IsIngestible)
+                {
+                    double num2 = (double)num1;
+                    ThingDef def = thing.def;
+                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * (double)thing.stackCount;
+                    num1 = (float)(num2 + num3);
+                }
+            }
+            return num1;
         }
-      }
-    }
 
-    public float CountNutrition(ThingOwner things)
-    {
-      this.thingHolder = things;
-      float num1 = 0.0f;
-      foreach (Thing thing in (IEnumerable<Thing>) this.thingHolder)
-      {
-        if (thing is Corpse corpse)
-          num1 += FoodUtility.GetBodyPartNutrition(corpse, corpse.InnerPawn.RaceProps.body.corePart);
-        else if (thing.def.IsIngestible)
-        {
-          double num2 = (double) num1;
-          ThingDef def = thing.def;
-          double num3 = (def != null ? (double) def.ingestible.CachedNutrition : 0.05000000074505806) * (double) thing.stackCount;
-          num1 = (float) (num2 + num3);
-        }
-      }
-      return num1;
+        public void ExposeData() => Scribe_Collections.Look<ThingOrderRequest>(ref this.requestedItems, "requestedItems", LookMode.Deep);
     }
-
-    public void ExposeData() => Scribe_Collections.Look<ThingOrderRequest>(ref this.requestedItems, "requestedItems", LookMode.Deep);
-  }
 }

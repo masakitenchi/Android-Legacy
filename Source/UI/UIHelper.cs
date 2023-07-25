@@ -8,12 +8,12 @@ using UnityEngine;
 
 namespace Androids
 {
-  public static class UIHelper
-  {
-    public static Rect GetRowRect(Rect inRect, float rowHeight, int row)
+    public static class UIHelper
     {
-      float y = inRect.y + rowHeight * (float) row;
-      return new Rect(inRect.x, y, inRect.width, rowHeight);
+        public static Rect GetRowRect(Rect inRect, float rowHeight, int row)
+        {
+            float y = inRect.y + rowHeight * (float)row;
+            return new Rect(inRect.x, y, inRect.width, rowHeight);
+        }
     }
-  }
 }

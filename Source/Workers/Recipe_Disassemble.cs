@@ -10,29 +10,29 @@ using Verse;
 
 namespace Androids
 {
-  public class Recipe_Disassemble : RecipeWorker
-  {
-    public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
+    public class Recipe_Disassemble : RecipeWorker
     {
-      if (pawn.def.HasModExtension<MechanicalPawnProperties>())
-        yield return (BodyPartRecord) null;
-    }
+        public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
+        {
+            if (pawn.def.HasModExtension<MechanicalPawnProperties>())
+                yield return (BodyPartRecord)null;
+        }
 
-    public override void ApplyOnPawn(
-      Pawn pawn,
-      BodyPartRecord part,
-      Pawn billDoer,
-      List<Thing> ingredients,
-      Bill bill)
-    {
-      Need_Energy need = pawn.needs.TryGetNeed<Need_Energy>();
-      EnergyTrackerComp comp = pawn.TryGetComp<EnergyTrackerComp>();
-      if (need != null)
-        need.CurLevelPercentage = 0.0f;
-      if (comp != null)
-        comp.energy = 0.0f;
-      ButcherUtility.SpawnDrops(pawn, pawn.Position, pawn.Map);
-      pawn.Kill(null);
+        public override void ApplyOnPawn(
+          Pawn pawn,
+          BodyPartRecord part,
+          Pawn billDoer,
+          List<Thing> ingredients,
+          Bill bill)
+        {
+            Need_Energy need = pawn.needs.TryGetNeed<Need_Energy>();
+            EnergyTrackerComp comp = pawn.TryGetComp<EnergyTrackerComp>();
+            if (need != null)
+                need.CurLevelPercentage = 0.0f;
+            if (comp != null)
+                comp.energy = 0.0f;
+            ButcherUtility.SpawnDrops(pawn, pawn.Position, pawn.Map);
+            pawn.Kill(null);
+        }
     }
-  }
 }

@@ -9,17 +9,17 @@ using Verse;
 
 namespace Androids
 {
-  public class CompProperties_EnergySource : CompProperties
-  {
-    public bool isConsumable;
-    public float energyWhenConsumed;
-    public float passiveEnergyGeneration;
-    public List<ThingOrderRequest> fuels = new List<ThingOrderRequest>();
-    public float maxFuelAmount = 75f;
-    public double fuelAmountUsedPerInterval = 0.001;
-    public float activeEnergyGeneration;
-    public JobDef refillJob;
+    public class CompProperties_EnergySource : CompProperties
+    {
+        public bool isConsumable;
+        public float energyWhenConsumed;
+        public float passiveEnergyGeneration;
+        public List<ThingOrderRequest> fuels = new List<ThingOrderRequest>();
+        public float maxFuelAmount = 75f;
+        public double fuelAmountUsedPerInterval = 0.001;
+        public float activeEnergyGeneration;
+        public JobDef refillJob;
 
-    public CompProperties_EnergySource() => this.compClass = typeof (EnergySourceComp);
-  }
+        public CompProperties_EnergySource() => this.compClass = typeof(EnergySourceComp);
+    }
 }

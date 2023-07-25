@@ -14,5 +14,5 @@ namespace Androids
             DefOfHelper.EnsureInitializedInCtor(typeof(AndroidBodyPartDefOf));
         }
     }
-    
+
 }

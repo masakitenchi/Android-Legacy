@@ -9,8 +9,8 @@ using Verse;
 
 namespace Androids
 {
-  public class ThoughtWorker_LoverMentality : ThoughtWorker
-  {
-    protected override ThoughtState CurrentSocialStateInternal(Pawn p, Pawn otherPawn) => p.health.hediffSet.HasHediff(this.def.hediff) && p.health.hediffSet.GetFirstHediffOfDef(this.def.hediff) is Hediff_LoverMentality firstHediffOfDef && firstHediffOfDef.loverToChase == otherPawn ? (ThoughtState) true : (ThoughtState) false;
-  }
+    public class ThoughtWorker_LoverMentality : ThoughtWorker
+    {
+        protected override ThoughtState CurrentSocialStateInternal(Pawn p, Pawn otherPawn) => p.health.hediffSet.HasHediff(this.def.hediff) && p.health.hediffSet.GetFirstHediffOfDef(this.def.hediff) is Hediff_LoverMentality firstHediffOfDef && firstHediffOfDef.loverToChase == otherPawn ? (ThoughtState)true : (ThoughtState)false;
+    }
 }

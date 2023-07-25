@@ -8,9 +8,9 @@ using Verse;
 
 namespace Androids
 {
-  public class PawnCrafterWorkgiverProperties : DefModExtension
-  {
-    public ThingDef defToScan;
-    public JobDef fillJob;
-  }
+    public class PawnCrafterWorkgiverProperties : DefModExtension
+    {
+        public ThingDef defToScan;
+        public JobDef fillJob;
+    }
 }

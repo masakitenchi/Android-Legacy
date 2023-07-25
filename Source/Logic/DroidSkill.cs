@@ -8,10 +8,10 @@ using RimWorld;
 
 namespace Androids
 {
-  public class DroidSkill
-  {
-    public SkillDef def;
-    public int level;
-    public Passion passion;
-  }
+    public class DroidSkill
+    {
+        public SkillDef def;
+        public int level;
+        public Passion passion;
+    }
 }

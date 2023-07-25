@@ -8,20 +8,20 @@ using Verse;
 
 namespace Androids
 {
-  public class Hediff_MechaniteHive : HediffWithComps
-  {
-    public override void Tick()
+    public class Hediff_MechaniteHive : HediffWithComps
     {
-      base.Tick();
-      if (!this.pawn.IsHashIntervalTick(2000))
-        return;
-      foreach (Hediff hediff in this.pawn.health.hediffSet.hediffs)
-      {
-        if (hediff is Hediff_Injury hediffInjury && hediffInjury.Bleeding)
-          hediffInjury.Tended(1f, 1f, 0);
-      }
-    }
+        public override void Tick()
+        {
+            base.Tick();
+            if (!this.pawn.IsHashIntervalTick(2000))
+                return;
+            foreach (Hediff hediff in this.pawn.health.hediffSet.hediffs)
+            {
+                if (hediff is Hediff_Injury hediffInjury && hediffInjury.Bleeding)
+                    hediffInjury.Tended(1f, 1f, 0);
+            }
+        }
 
-    public override string TipStringExtra => (string) "AndroidMechaniteHive".Translate();
-  }
+        public override string TipStringExtra => (string)"AndroidMechaniteHive".Translate();
+    }
 }

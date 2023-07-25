@@ -4,12 +4,10 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using AlienRace;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 using Verse.Sound;
 
@@ -27,10 +25,8 @@ namespace Androids
         /// <summary>
         /// Creates a Droid template.
         /// </summary>
-        /// <param name="raceDef">ThingDef to use as race.</param>
         /// <param name="pawnKindDef">PawnKindDef to use as kind.</param>
         /// <param name="faction">Faction that owns this Droid.</param>
-        /// <param name="map">Map to spawn in.</param>
         /// <returns>New Pawn if successful. Null if not.</returns>
         public static Pawn MakeDroidTemplate(
           PawnKindDef pawnKindDef,

@@ -126,7 +126,6 @@
     <Compile Include="Workers\IncidentWorker_DiseaseHuman_PotentialVictims_Patch.cs" />
     <Compile Include="Workers\AddHediff_PatchPrefix.cs" />
     <Compile Include="AI\WorkGiver_Tend_HasJobOnThing_IgnoreMedPods.cs" />
-    <Compile Include="Workers\PotentialVictims_Patch.cs" />
     <Compile Include="DefOf\HediffDefOf.cs" />
     <Compile Include="HediffGiver\HediffGiver_Machine.cs" />
     <Compile Include="HediffGiver\HediffGiver_Machinelike.cs" />

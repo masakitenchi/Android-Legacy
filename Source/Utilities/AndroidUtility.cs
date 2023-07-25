@@ -13,8 +13,8 @@ using Verse;
 
 namespace Androids
 {
-  public static class AndroidUtility
-  {
+    public static class AndroidUtility
+    {
         public static void Androidify(Pawn pawn)
         {
             ThingDef_AlienRace chjAndroid = ThingDefOf.ChjAndroid as ThingDef_AlienRace;

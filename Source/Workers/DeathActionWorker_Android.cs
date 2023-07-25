@@ -5,48 +5,73 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using System;
-using System.Collections.Generic;
 using Verse;
 
 namespace Androids
 {
-  public class DeathActionWorker_Android : DeathActionWorker
-  {
-    public override void PawnDied(Corpse corpse)
+    public class DeathActionWorker_Android : DeathActionWorker
     {
-      if (!AndroidsModSettings.Instance.androidExplodesOnDeath)
-        return;
-      Pawn innerPawn = corpse.InnerPawn;
-      EnergyTrackerComp comp = innerPawn.TryGetComp<EnergyTrackerComp>();
-      if (comp != null)
-      {
-        bool flag = innerPawn.health.hediffSet.hediffs.Any<Hediff>((Predicate<Hediff>) (hediff => hediff.CauseDeathNow()));
-        Hediff firstHediffOfDef = innerPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjOverheating);
-        if (firstHediffOfDef == null || firstHediffOfDef == null && flag)
-          return;
-        float num = firstHediffOfDef.Severity * AndroidsModSettings.Instance.androidExplosionRadius * comp.energy;
-        if (firstHediffOfDef == null || (double) num < 1.0)
-          return;
-        GenExplosion.DoExplosion(corpse.Position, corpse.Map, num, RimWorld.DamageDefOf.Bomb, (Thing) corpse.InnerPawn, -1, -1f, (SoundDef) null, (ThingDef) null, (ThingDef) null, (Thing) null, (ThingDef) null, 0.0f, 1, null, false, (ThingDef) null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>) null);
-      }
-      else
-      {
-        Hediff firstHediffOfDef1 = innerPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjAndroidLike);
-        if (firstHediffOfDef1 != null && firstHediffOfDef1 is AndroidLikeHediff androidLikeHediff)
+        public override void PawnDied(Corpse corpse)
         {
-          bool flag = innerPawn.health.hediffSet.hediffs.Any<Hediff>((Predicate<Hediff>) (hediff => hediff.CauseDeathNow()));
-          Hediff firstHediffOfDef2 = innerPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjOverheating);
-          if (firstHediffOfDef2 == null || firstHediffOfDef2 == null && flag)
-            return;
-          float num = firstHediffOfDef2.Severity * AndroidsModSettings.Instance.androidExplosionRadius * androidLikeHediff.energyTracked;
-          if (firstHediffOfDef2 == null || (double) num < 1.0)
-            return;
-          GenExplosion.DoExplosion(corpse.Position, corpse.Map, num, RimWorld.DamageDefOf.Bomb, (Thing) corpse.InnerPawn, -1, -1f, (SoundDef) null, (ThingDef) null, (ThingDef) null, (Thing) null, (ThingDef) null, 0.0f, 1, null, false, (ThingDef) null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>) null);
+            if (!AndroidsModSettings.Instance.androidExplodesOnDeath)
+                return;
+            Pawn pawn = corpse.InnerPawn;
+            EnergyTrackerComp energy = pawn.TryGetComp<EnergyTrackerComp>();
+            if (energy != null)
+            {
+                //Make sure we did not die from natural causes. As natural as an Android can be.
+                bool shouldBeDeadByNaturalCauses = pawn.health.hediffSet.hediffs.Any(hediff => hediff.CauseDeathNow());
+
+                Hediff overheatingHediff = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjOverheating);
+                //Overheating death is excepted.
+                if (overheatingHediff != null || !shouldBeDeadByNaturalCauses)
+                {
+                    float explosionRadius = overheatingHediff.Severity * AndroidsModSettings.Instance.androidExplosionRadius * energy.energy;
+
+                    //if (deadFromOverheating)
+                    //    explosionRadius *= 2;
+
+                    //Scale explosion strength from how much remaining energy we got.
+                    if (explosionRadius >= 1f)
+                    {
+                        GenExplosion.DoExplosion(corpse.Position, corpse.Map, explosionRadius, RimWorld.DamageDefOf.Bomb, corpse.InnerPawn);
+                    }
+                }
+            }
+            else
+            {
+                //Attempt to get the energy need directly.
+                if (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjAndroidLike) is AndroidLikeHediff androidLikeForReal)
+                {
+                    //Make sure we did not die from natural causes. As natural as an Android can be.
+                    bool shouldBeDeadByNaturalCauses = pawn.health.hediffSet.hediffs.Any(hediff => hediff.CauseDeathNow());
+
+                    Hediff overheatingHediff = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjOverheating);
+                    //bool deadFromOverheating = overheatingHediff != null ? overheatingHediff.Severity >= 1f : false;
+
+                    if (overheatingHediff == null)
+                        return;
+
+                    //Overheating death is excepted.
+                    if (overheatingHediff != null || !shouldBeDeadByNaturalCauses)
+                    {
+                        float explosionRadius = overheatingHediff.Severity * AndroidsModSettings.Instance.androidExplosionRadius * androidLikeForReal.energyTracked;
+
+                        //if (deadFromOverheating)
+                        //    explosionRadius *= 2;
+
+                        //Scale explosion strength from how much remaining energy we got.
+                        if (overheatingHediff != null && explosionRadius >= 1f)
+                            GenExplosion.DoExplosion(corpse.Position, corpse.Map, explosionRadius, RimWorld.DamageDefOf.Bomb, corpse.InnerPawn);
+                    }
+                    return;
+                }
+                else
+                {
+                    Log.Warning("Androids.DeathActionWorker_Android: EnergyTrackerComp is null at or is not Android Like either: " + corpse.ThingID);
+                    return;
+                }
+            }
         }
-        else
-          Log.Warning("Androids.DeathActionWorker_Android: EnergyTrackerComp is null at or is not Android Like either: " + corpse.ThingID);
-      }
     }
-  }
 }

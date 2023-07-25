@@ -10,15 +10,15 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (ThoughtWorker_Expectations), "CurrentStateInternal")]
-  public class ThoughtWorker_Expectations_CurrentStateInternal_Patch
-  {
-    [HarmonyPostfix]
-    public static void Listener(Pawn p, ref ThoughtState __result)
+    [HarmonyPatch(typeof(ThoughtWorker_Expectations), "CurrentStateInternal")]
+    public class ThoughtWorker_Expectations_CurrentStateInternal_Patch
     {
-      if (p == null || !p.def.HasModExtension<MechanicalPawnProperties>())
-        return;
-      __result = ThoughtState.ActiveAtStage(5);
+        [HarmonyPostfix]
+        public static void Listener(Pawn p, ref ThoughtState __result)
+        {
+            if (p == null || !p.def.HasModExtension<MechanicalPawnProperties>())
+                return;
+            __result = ThoughtState.ActiveAtStage(5);
+        }
     }
-  }
 }

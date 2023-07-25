@@ -8,30 +8,30 @@ using Verse;
 
 namespace Androids
 {
-  public class AndroidLikeHediff : HediffWithComps
-  {
-    public float energyTracked;
-
-    public override void ExposeData()
+    public class AndroidLikeHediff : HediffWithComps
     {
-      base.ExposeData();
-      Scribe_Values.Look<float>(ref this.energyTracked, "energyTracked");
-    }
+        public float energyTracked;
 
-    public override void Tick()
-    {
-      base.Tick();
-      Need_Energy need = this.pawn.needs.TryGetNeed<Need_Energy>();
-      if (need == null)
-        return;
-      this.energyTracked = need.CurLevel;
-    }
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look<float>(ref this.energyTracked, "energyTracked");
+        }
 
-    public override void Notify_PawnDied()
-    {
-      if (!this.pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || ThingDefOf.ChjAndroid.race.DeathActionWorker == null || this.pawn.Corpse == null)
-        return;
-      ThingDefOf.ChjAndroid.race.DeathActionWorker.PawnDied(this.pawn.Corpse);
+        public override void Tick()
+        {
+            base.Tick();
+            Need_Energy need = this.pawn.needs.TryGetNeed<Need_Energy>();
+            if (need == null)
+                return;
+            this.energyTracked = need.CurLevel;
+        }
+
+        public override void Notify_PawnDied()
+        {
+            if (!this.pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || ThingDefOf.ChjAndroid.race.DeathActionWorker == null || this.pawn.Corpse == null)
+                return;
+            ThingDefOf.ChjAndroid.race.DeathActionWorker.PawnDied(this.pawn.Corpse);
+        }
     }
-  }
 }

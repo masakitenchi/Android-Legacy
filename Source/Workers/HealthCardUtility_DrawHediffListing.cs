@@ -13,25 +13,25 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (HealthCardUtility))]
-  [HarmonyPatch("DrawHediffListing")]
-  public static class HealthCardUtility_DrawHediffListing
-  {
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    [HarmonyPatch(typeof(HealthCardUtility))]
+    [HarmonyPatch("DrawHediffListing")]
+    public static class HealthCardUtility_DrawHediffListing
     {
-      MethodInfo labelHelper = AccessTools.Method(typeof (HealthCardUtility_DrawHediffListing), "TransformToLeakingIfDroid");
-      foreach (CodeInstruction instruction in instructions)
-      {
-        if (instruction.opcode == OpCodes.Ldstr && (string) instruction.operand == "BleedingRate")
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-          yield return new CodeInstruction(OpCodes.Ldarg_1);
-          yield return new CodeInstruction(OpCodes.Call, (object) labelHelper);
+            MethodInfo labelHelper = AccessTools.Method(typeof(HealthCardUtility_DrawHediffListing), "TransformToLeakingIfDroid");
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.opcode == OpCodes.Ldstr && (string)instruction.operand == "BleedingRate")
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new CodeInstruction(OpCodes.Call, (object)labelHelper);
+                }
+                else
+                    yield return instruction;
+            }
         }
-        else
-          yield return instruction;
-      }
-    }
 
-    public static string TransformToLeakingIfDroid(Pawn pawn) => pawn.IsAndroid() || pawn.def.HasModExtension<MechanicalPawnProperties>() ? "LeakingRate" : "BleedingRate";
-  }
+        public static string TransformToLeakingIfDroid(Pawn pawn) => pawn.IsAndroid() || pawn.def.HasModExtension<MechanicalPawnProperties>() ? "LeakingRate" : "BleedingRate";
+    }
 }

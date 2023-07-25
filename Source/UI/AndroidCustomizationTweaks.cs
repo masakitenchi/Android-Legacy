@@ -8,11 +8,11 @@ using Verse;
 
 namespace Androids
 {
-  public static class AndroidCustomizationTweaks
-  {
-    [TweakValue("AndroidCustomizationWindow", 16f, 128f)]
-    public static int upgradeBaseSize = 48;
-    [TweakValue("AndroidCustomizationWindow", 3f, 100f)]
-    public static int maxTraitsToPick = 7;
-  }
+    public static class AndroidCustomizationTweaks
+    {
+        [TweakValue("AndroidCustomizationWindow", 16f, 128f)]
+        public static int upgradeBaseSize = 48;
+        [TweakValue("AndroidCustomizationWindow", 3f, 100f)]
+        public static int maxTraitsToPick = 7;
+    }
 }

@@ -4,15 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Verse;
-using Verse.AI;
-using Verse.Sound;
-
 namespace Androids
 {
     //Several months later, I don't see any reason this should be a standalone class since the actual printer only has Building_AndroidPrinter

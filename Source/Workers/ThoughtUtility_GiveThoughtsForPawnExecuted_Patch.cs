@@ -10,10 +10,10 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (ThoughtUtility), "GiveThoughtsForPawnExecuted")]
-  public class ThoughtUtility_GiveThoughtsForPawnExecuted_Patch
-  {
-    [HarmonyPrefix]
-    public static bool Listener(Pawn victim, PawnExecutionKind kind) => !victim.def.HasModExtension<MechanicalPawnProperties>();
-  }
+    [HarmonyPatch(typeof(ThoughtUtility), "GiveThoughtsForPawnExecuted")]
+    public class ThoughtUtility_GiveThoughtsForPawnExecuted_Patch
+    {
+        [HarmonyPrefix]
+        public static bool Listener(Pawn victim, PawnExecutionKind kind) => !victim.def.HasModExtension<MechanicalPawnProperties>();
+    }
 }

@@ -8,7 +8,7 @@ using Verse;
 
 namespace Androids
 {
-  public class AndroidPawnProperties : DefModExtension
-  {
-  }
+    public class AndroidPawnProperties : DefModExtension
+    {
+    }
 }

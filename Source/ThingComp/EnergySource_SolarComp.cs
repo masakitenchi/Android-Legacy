@@ -10,16 +10,16 @@ using Verse;
 
 namespace Androids
 {
-  public class EnergySource_SolarComp : EnergySourceComp
-  {
-    public override void RechargeEnergyNeed(Pawn targetPawn)
+    public class EnergySource_SolarComp : EnergySourceComp
     {
-      if (((double) GenLocalDate.DayPercent((Thing) targetPawn) < 0.20000000298023224 ? 1 : ((double) GenLocalDate.DayPercent((Thing) targetPawn) > 0.699999988079071 ? 1 : 0)) != 0 || targetPawn.InContainerEnclosed || !targetPawn.IsCaravanMember() && targetPawn.Position.Roofed(targetPawn.Map))
-        return;
-      Need_Energy need = targetPawn.needs.TryGetNeed<Need_Energy>();
-      if (need == null)
-        return;
-      need.CurLevel += this.EnergyProps.passiveEnergyGeneration;
+        public override void RechargeEnergyNeed(Pawn targetPawn)
+        {
+            if (((double)GenLocalDate.DayPercent((Thing)targetPawn) < 0.20000000298023224 ? 1 : ((double)GenLocalDate.DayPercent((Thing)targetPawn) > 0.699999988079071 ? 1 : 0)) != 0 || targetPawn.InContainerEnclosed || !targetPawn.IsCaravanMember() && targetPawn.Position.Roofed(targetPawn.Map))
+                return;
+            Need_Energy need = targetPawn.needs.TryGetNeed<Need_Energy>();
+            if (need == null)
+                return;
+            need.CurLevel += this.EnergyProps.passiveEnergyGeneration;
+        }
     }
-  }
 }

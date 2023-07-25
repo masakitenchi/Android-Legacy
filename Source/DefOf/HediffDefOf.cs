@@ -9,14 +9,14 @@ using Verse;
 
 namespace Androids
 {
-  [DefOf]
-  public static class HediffDefOf
-  {
-    public static HediffDef ChjPowerFailure;
-    public static HediffDef ChjOverheating;
-    public static HediffDef ChjCoolantLoss;
-    public static HediffDef ChjPowerShortage;
-    public static HediffDef ChjAndroidUpgrade_DroneCore;
-    public static HediffDef ChjAndroidLike;
-  }
+    [DefOf]
+    public static class HediffDefOf
+    {
+        public static HediffDef ChjPowerFailure;
+        public static HediffDef ChjOverheating;
+        public static HediffDef ChjCoolantLoss;
+        public static HediffDef ChjPowerShortage;
+        public static HediffDef ChjAndroidUpgrade_DroneCore;
+        public static HediffDef ChjAndroidLike;
+    }
 }

@@ -12,27 +12,27 @@ using Verse.AI;
 
 namespace Androids
 {
-  public static class FuelUtility
-  {
-    public static readonly float autoRefillThreshhold = 0.8f;
-
-    public static Thing FindSuitableFuelForPawn(Pawn pawn, EnergySource_Fueled fuelEnergySourceComp) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: ((Predicate<Thing>) (thing => FuelUtility.ValidFuelSource(fuelEnergySourceComp, thing))));
-
-    public static bool ValidFuelSource(EnergySource_Fueled fuelEnergySourceComp, Thing checkThing) => fuelEnergySourceComp.EnergyProps.fuels.Any<ThingOrderRequest>((Predicate<ThingOrderRequest>) (fuelType => fuelType.thingDef == checkThing.def));
-
-    public static Thing FueledEnergySourceNeedRefilling(Pawn pawn)
+    public static class FuelUtility
     {
-      if (pawn.apparel != null)
-      {
-        Apparel apparel = pawn.apparel.WornApparel.FirstOrDefault<Apparel>((Func<Apparel, bool>) (ap =>
+        public static readonly float autoRefillThreshhold = 0.8f;
+
+        public static Thing FindSuitableFuelForPawn(Pawn pawn, EnergySource_Fueled fuelEnergySourceComp) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => FuelUtility.ValidFuelSource(fuelEnergySourceComp, thing))));
+
+        public static bool ValidFuelSource(EnergySource_Fueled fuelEnergySourceComp, Thing checkThing) => fuelEnergySourceComp.EnergyProps.fuels.Any<ThingOrderRequest>((Predicate<ThingOrderRequest>)(fuelType => fuelType.thingDef == checkThing.def));
+
+        public static Thing FueledEnergySourceNeedRefilling(Pawn pawn)
         {
-          EnergySource_Fueled comp = ap.TryGetComp<EnergySource_Fueled>();
-          return comp != null && (double) comp.MissingFuelPercentage > (double) FuelUtility.autoRefillThreshhold;
-        }));
-        if (apparel != null)
-          return (Thing) apparel;
-      }
-      return (Thing) null;
+            if (pawn.apparel != null)
+            {
+                Apparel apparel = pawn.apparel.WornApparel.FirstOrDefault<Apparel>((Func<Apparel, bool>)(ap =>
+                {
+                    EnergySource_Fueled comp = ap.TryGetComp<EnergySource_Fueled>();
+                    return comp != null && (double)comp.MissingFuelPercentage > (double)FuelUtility.autoRefillThreshhold;
+                }));
+                if (apparel != null)
+                    return (Thing)apparel;
+            }
+            return (Thing)null;
+        }
     }
-  }
 }

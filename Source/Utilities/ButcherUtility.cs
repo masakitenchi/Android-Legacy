@@ -9,26 +9,26 @@ using Verse;
 
 namespace Androids
 {
-  public static class ButcherUtility
-  {
-    public static void SpawnDrops(Pawn pawn, IntVec3 position, Map map)
+    public static class ButcherUtility
     {
-      float missingNaturalParts = pawn.health.hediffSet.GetCoverageOfNotMissingNaturalParts(pawn.RaceProps.body.corePart);
-      foreach (ThingDefCountClass butcherProduct in pawn.def.butcherProducts)
-      {
-        int val1 = (int) Math.Ceiling((double) butcherProduct.count * (double) missingNaturalParts);
-        if (val1 > 0)
+        public static void SpawnDrops(Pawn pawn, IntVec3 position, Map map)
         {
-          do
-          {
-            Thing thing = ThingMaker.MakeThing(butcherProduct.thingDef);
-            thing.stackCount = Math.Min(val1, butcherProduct.thingDef.stackLimit);
-            val1 -= thing.stackCount;
-            GenPlace.TryPlaceThing(thing, position, map, ThingPlaceMode.Near);
-          }
-          while (val1 > 0);
+            float missingNaturalParts = pawn.health.hediffSet.GetCoverageOfNotMissingNaturalParts(pawn.RaceProps.body.corePart);
+            foreach (ThingDefCountClass butcherProduct in pawn.def.butcherProducts)
+            {
+                int val1 = (int)Math.Ceiling((double)butcherProduct.count * (double)missingNaturalParts);
+                if (val1 > 0)
+                {
+                    do
+                    {
+                        Thing thing = ThingMaker.MakeThing(butcherProduct.thingDef);
+                        thing.stackCount = Math.Min(val1, butcherProduct.thingDef.stackLimit);
+                        val1 -= thing.stackCount;
+                        GenPlace.TryPlaceThing(thing, position, map, ThingPlaceMode.Near);
+                    }
+                    while (val1 > 0);
+                }
+            }
         }
-      }
     }
-  }
 }

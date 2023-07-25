@@ -9,8 +9,8 @@ using Verse;
 
 namespace Androids
 {
-  public interface IExtraGizmos
-  {
-    IEnumerable<Gizmo> GetGizmosExtra();
-  }
+    public interface IExtraGizmos
+    {
+        IEnumerable<Gizmo> GetGizmosExtra();
+    }
 }

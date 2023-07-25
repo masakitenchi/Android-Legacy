@@ -5,7 +5,7 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using System.Collections.Generic;
+using RimWorld;
 using System.Linq;
 using Verse;
 
@@ -16,13 +16,16 @@ namespace Androids
         public float potencyToIncreasePerDay = 1f;
         public float chanceToContract = 0.5f;
 
-        public float PotencyPerTick => this.potencyToIncreasePerDay / 60000f;
+        public float PotencyPerTick => this.potencyToIncreasePerDay * CheckInterval;
 
-        public int CheckInterval => AndroidsModSettings.Instance.droidWearDownQuadrum ? 900000 : 60000;
+        // One quadrum = 15 days = 900k ticks
+        // One day = 60000 ticks
+
+        public int CheckInterval => AndroidsModSettings.Instance.droidWearDownQuadrum ? GenDate.TicksPerQuadrum : GenDate.TicksPerDay;
 
         public override void OnIntervalPassed(Pawn pawn, Hediff cause)
         {
-            if (!AndroidsModSettings.Instance.droidWearDown || cause != null || this.partsToAffect == null)
+            if (!AndroidsModSettings.Instance.droidWearDown || cause != null || this.partsToAffect == null || !pawn.IsHashIntervalTick(CheckInterval))
                 return;
             foreach (BodyPartDef partDef in this.partsToAffect)
             {

@@ -11,41 +11,41 @@ using Verse.AI;
 
 namespace Androids
 {
-  public class EnergySourceComp : ThingComp
-  {
-    public CompProperties_EnergySource EnergyProps => this.props as CompProperties_EnergySource;
-
-    public virtual void RechargeEnergyNeed(Pawn targetPawn)
+    public class EnergySourceComp : ThingComp
     {
-      Need_Energy need = targetPawn.needs.TryGetNeed<Need_Energy>();
-      if (need == null)
-        return;
-      if (this.EnergyProps.isConsumable)
-      {
-        float num = (float) this.parent.stackCount * this.EnergyProps.energyWhenConsumed;
-        need.CurLevel += num;
-      }
-      else
-        need.CurLevel += this.EnergyProps.passiveEnergyGeneration;
-    }
+        public CompProperties_EnergySource EnergyProps => this.props as CompProperties_EnergySource;
 
-    public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
-    {
-      EnergySourceComp energySourceComp = this;
-      Need_Energy need = selPawn.needs.TryGetNeed<Need_Energy>();
-      if (energySourceComp.EnergyProps.isConsumable && need != null)
-      {
-        int thingCount = (int) Math.Ceiling(((double) need.MaxLevel - (double) need.CurLevel) / (double) energySourceComp.EnergyProps.energyWhenConsumed);
-        if (thingCount > 0)
-          yield return new FloatMenuOption((string) "AndroidConsumeEnergySource".Translate((NamedArgument) energySourceComp.parent.LabelCap), (Action) (() =>
-          {
-            Pawn_JobTracker jobs = selPawn.jobs;
-            Job job = new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo((Thing) this.parent));
-            job.count = thingCount;
-            JobTag? tag = new JobTag?(JobTag.Misc);
-            jobs.TryTakeOrderedJob(job, tag);
-          }), revalidateClickTarget: ((Thing) energySourceComp.parent));
-      }
+        public virtual void RechargeEnergyNeed(Pawn targetPawn)
+        {
+            Need_Energy need = targetPawn.needs.TryGetNeed<Need_Energy>();
+            if (need == null)
+                return;
+            if (this.EnergyProps.isConsumable)
+            {
+                float num = (float)this.parent.stackCount * this.EnergyProps.energyWhenConsumed;
+                need.CurLevel += num;
+            }
+            else
+                need.CurLevel += this.EnergyProps.passiveEnergyGeneration;
+        }
+
+        public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
+        {
+            EnergySourceComp energySourceComp = this;
+            Need_Energy need = selPawn.needs.TryGetNeed<Need_Energy>();
+            if (energySourceComp.EnergyProps.isConsumable && need != null)
+            {
+                int thingCount = (int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / (double)energySourceComp.EnergyProps.energyWhenConsumed);
+                if (thingCount > 0)
+                    yield return new FloatMenuOption((string)"AndroidConsumeEnergySource".Translate((NamedArgument)energySourceComp.parent.LabelCap), (Action)(() =>
+                    {
+                        Pawn_JobTracker jobs = selPawn.jobs;
+                        Job job = new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo((Thing)this.parent));
+                        job.count = thingCount;
+                        JobTag? tag = new JobTag?(JobTag.Misc);
+                        jobs.TryTakeOrderedJob(job, tag);
+                    }), revalidateClickTarget: ((Thing)energySourceComp.parent));
+            }
+        }
     }
-  }
 }

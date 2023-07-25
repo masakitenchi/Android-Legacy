@@ -23,19 +23,18 @@ namespace Androids
         public override void InitiatePawnCrafting()
         {
             List<FloatMenuOption> options = new List<FloatMenuOption>();
-            foreach (DroidCraftingDef droidCraftingDef in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy<DroidCraftingDef, int>((Func<DroidCraftingDef, int>)(def => def.orderID)))
+            foreach (DroidCraftingDef def in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy<DroidCraftingDef, int>((Func<DroidCraftingDef, int>)(def => def.orderID)))
             {
-                DroidCraftingDef def = droidCraftingDef;
                 bool disabled = false;
                 if (def.requiredResearch != null && !def.requiredResearch.IsFinished)
                     disabled = true;
-                options.Add(new FloatMenuOption(!disabled ? (string)"AndroidDroidCrafterPawnMake".Translate((NamedArgument)def.label) : (string)"AndroidDroidCrafterPawnNeedResearch".Translate((NamedArgument)def.label, (NamedArgument)def.requiredResearch.LabelCap), (Action)(() =>
-          {
-              if (disabled)
-                  return;
-              this.lastDef = def;
-              this.MakePawnAndInitCrafting(def);
-          }))
+                options.Add(new FloatMenuOption(!disabled ? (string)"AndroidDroidCrafterPawnMake".Translate((NamedArgument)def.label) : (string)"AndroidDroidCrafterPawnNeedResearch".Translate((NamedArgument)def.label, (NamedArgument)def.requiredResearch.LabelCap), () =>
+                {
+                    if (disabled)
+                        return;
+                    this.lastDef = def;
+                    this.MakePawnAndInitCrafting(def);
+                })
                 {
                     Disabled = disabled
                 });
@@ -137,17 +136,19 @@ namespace Androids
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            Building_DroidCrafter buildingDroidCrafter = this;
             foreach (Gizmo gizmo in base.GetGizmos())
                 yield return gizmo;
-            Command_Toggle commandToggle = new Command_Toggle();
-            commandToggle.defaultLabel = (string)"AndroidGizmoRepeatPawnCraftingLabel".Translate();
-            commandToggle.defaultDesc = (string)"AndroidGizmoRepeatPawnCraftingDescription".Translate();
-            commandToggle.icon = (Texture)ContentFinder<Texture2D>.Get("ui/designators/PlanOn");
-            // ISSUE: reference to a compiler-generated method
-            commandToggle.isActive = () => repeatLastPawn;
-            commandToggle.toggleAction = delegate { repeatLastPawn = !repeatLastPawn; };
-            yield return (Gizmo)commandToggle;
+            yield return new Command_Toggle()
+            {
+                defaultLabel = "AndroidGizmoRepeatPawnCraftingLabel".Translate(),
+                defaultDesc = "AndroidGizmoRepeatPawnCraftingDescription".Translate(),
+                icon = ContentFinder<Texture2D>.Get("ui/designators/PlanOn", true),
+                isActive = () => repeatLastPawn,
+                toggleAction = delegate ()
+                {
+                    repeatLastPawn = !repeatLastPawn;
+                }
+            };
         }
     }
 }

@@ -10,15 +10,15 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (WorkGiver_Tend), "HasJobOnThing")]
-  internal static class WorkGiver_Tend_HasJobOnThing_IgnoreMedPods
-  {
-    private static void Postfix(ref bool __result, Pawn pawn, Thing t, bool forced = false)
+    [HarmonyPatch(typeof(WorkGiver_Tend), "HasJobOnThing")]
+    internal static class WorkGiver_Tend_HasJobOnThing_IgnoreMedPods
     {
-      Pawn patient = t as Pawn;
-      if (!patient.def.HasModExtension<MechanicalPawnProperties>() || HealthAIUtility.FindBestMedicine(pawn, patient) != null)
-        return;
-      __result = false;
+        private static void Postfix(ref bool __result, Pawn pawn, Thing t, bool forced = false)
+        {
+            Pawn patient = t as Pawn;
+            if (!patient.def.HasModExtension<MechanicalPawnProperties>() || HealthAIUtility.FindBestMedicine(pawn, patient) != null)
+                return;
+            __result = false;
+        }
     }
-  }
 }

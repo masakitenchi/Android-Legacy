@@ -12,56 +12,55 @@ using Verse.AI;
 
 namespace Androids
 {
-  public class HibernationComp : ThingComp
-  {
-    public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
+    public class HibernationComp : ThingComp
     {
-      HibernationComp hibernationComp = this;
-      EnergyTrackerComp comp1 = selPawn.TryGetComp<EnergyTrackerComp>();
-      if (comp1 != null)
-      {
-        CompProperties_EnergyTracker props = comp1.EnergyProperties;
-        if (props != null && props.canHibernate)
+        public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
         {
-          if (selPawn.CanReserveAndReach((LocalTargetInfo) (Thing) hibernationComp.parent, PathEndMode.OnCell, Danger.Deadly))
-          {
-            CompPowerTrader comp2 = hibernationComp.parent.TryGetComp<CompPowerTrader>();
-            if (comp2 != null)
+            EnergyTrackerComp comp1 = selPawn.TryGetComp<EnergyTrackerComp>();
+            if (comp1 != null)
             {
-              if (comp2.PowerOn)
-              {
-                yield return new FloatMenuOption((string) "AndroidMachinelikeHibernate".Translate((NamedArgument) selPawn.Name.ToStringShort), (Action) (() => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo) (Thing) this.parent))));
-                yield break;
-              }
-              else
-              {
-                yield return new FloatMenuOption((string) "AndroidMachinelikeHibernateFailNoPower".Translate((NamedArgument) selPawn.Name.ToStringShort, (NamedArgument) hibernationComp.parent.LabelCap), (Action) null)
+                CompProperties_EnergyTracker props = comp1.EnergyProperties;
+                if (props != null && props.canHibernate)
                 {
-                  Disabled = true
-                };
-                yield break;
-              }
+                    if (selPawn.CanReserveAndReach(parent, PathEndMode.OnCell, Danger.Deadly))
+                    {
+                        CompPowerTrader comp2 = parent.TryGetComp<CompPowerTrader>();
+                        if (comp2 != null)
+                        {
+                            if (comp2.PowerOn)
+                            {
+                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), (Action)(() => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)(Thing)this.parent))));
+                                yield break;
+                            }
+                            else
+                            {
+                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailNoPower".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), (Action)null)
+                                {
+                                    Disabled = true
+                                };
+                                yield break;
+                            }
+                        }
+                        else
+                        {
+                            yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), () => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)(Thing)this.parent)));
+                            yield break;
+                        }
+                    }
+                    else
+                    {
+                        yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailReserveOrReach".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), (Action)null)
+                        {
+                            Disabled = true
+                        };
+                        yield break;
+                    }
+                }
             }
-            else
+            yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFail".Translate((NamedArgument)selPawn.Name.ToStringShort), null)
             {
-              yield return new FloatMenuOption((string) "AndroidMachinelikeHibernate".Translate((NamedArgument) selPawn.Name.ToStringShort), (Action) (() => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo) (Thing) this.parent))));
-              yield break;
-            }
-          }
-          else
-          {
-            yield return new FloatMenuOption((string) "AndroidMachinelikeHibernateFailReserveOrReach".Translate((NamedArgument) selPawn.Name.ToStringShort, (NamedArgument) hibernationComp.parent.LabelCap), (Action) null)
-            {
-              Disabled = true
+                Disabled = true
             };
-            yield break;
-          }
         }
-      }
-      yield return new FloatMenuOption((string) "AndroidMachinelikeHibernateFail".Translate((NamedArgument) selPawn.Name.ToStringShort), (Action) null)
-      {
-        Disabled = true
-      };
     }
-  }
 }

@@ -4,11 +4,10 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using System;
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
-using RimWorld;
 
 namespace Androids
 {

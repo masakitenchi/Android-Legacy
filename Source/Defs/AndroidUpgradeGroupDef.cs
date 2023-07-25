@@ -12,33 +12,33 @@ using Verse;
 
 namespace Androids
 {
-  public class AndroidUpgradeGroupDef : Def
-  {
-    public int orderID;
-    [Unsaved(false)]
-    private List<AndroidUpgradeDef> intCachedUpgrades;
-
-    public IEnumerable<AndroidUpgradeDef> Upgrades
+    public class AndroidUpgradeGroupDef : Def
     {
-      get
-      {
-        if (this.intCachedUpgrades == null)
+        public int orderID;
+        [Unsaved(false)]
+        private List<AndroidUpgradeDef> intCachedUpgrades;
+
+        public IEnumerable<AndroidUpgradeDef> Upgrades
         {
-          this.intCachedUpgrades = new List<AndroidUpgradeDef>();
-          foreach (AndroidUpgradeDef allDef in DefDatabase<AndroidUpgradeDef>.AllDefs)
-          {
-            if (allDef.upgradeGroup == this)
-              this.intCachedUpgrades.Add(allDef);
-          }
+            get
+            {
+                if (this.intCachedUpgrades == null)
+                {
+                    this.intCachedUpgrades = new List<AndroidUpgradeDef>();
+                    foreach (AndroidUpgradeDef allDef in DefDatabase<AndroidUpgradeDef>.AllDefs)
+                    {
+                        if (allDef.upgradeGroup == this)
+                            this.intCachedUpgrades.Add(allDef);
+                    }
+                }
+                return (IEnumerable<AndroidUpgradeDef>)this.intCachedUpgrades;
+            }
         }
-        return (IEnumerable<AndroidUpgradeDef>) this.intCachedUpgrades;
-      }
-    }
 
-    public float calculateNeededHeight(Rect upgradeSize, float rowWidth)
-    {
-      int num = (int) Math.Floor((double) rowWidth / (double) upgradeSize.width);
-      return upgradeSize.height * (float) Math.Ceiling((double) this.Upgrades.Count<AndroidUpgradeDef>() / (double) num);
+        public float calculateNeededHeight(Rect upgradeSize, float rowWidth)
+        {
+            int num = (int)Math.Floor((double)rowWidth / (double)upgradeSize.width);
+            return upgradeSize.height * (float)Math.Ceiling((double)this.Upgrades.Count<AndroidUpgradeDef>() / (double)num);
+        }
     }
-  }
 }

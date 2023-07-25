@@ -6,12 +6,12 @@
 
 namespace Androids
 {
-  public class Building_CustomDroidCrafter : Building_DroidCrafter
-  {
-    public override void InitiatePawnCrafting()
+    public class Building_CustomDroidCrafter : Building_DroidCrafter
     {
-      this.pawnBeingCrafted = DroidUtility.MakeCustomDroid(this.printerProperties.pawnKind, this.Faction);
-      this.crafterStatus = CrafterStatus.Filling;
+        public override void InitiatePawnCrafting()
+        {
+            this.pawnBeingCrafted = DroidUtility.MakeCustomDroid(this.printerProperties.pawnKind, this.Faction);
+            this.crafterStatus = CrafterStatus.Filling;
+        }
     }
-  }
 }

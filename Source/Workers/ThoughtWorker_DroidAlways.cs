@@ -9,8 +9,8 @@ using Verse;
 
 namespace Androids
 {
-  public class ThoughtWorker_DroidAlways : ThoughtWorker
-  {
-    protected override ThoughtState CurrentStateInternal(Pawn p) => p.def.HasModExtension<MechanicalPawnProperties>() || p.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidUpgrade_DroneCore) ? ThoughtState.ActiveAtStage(0) : ThoughtState.Inactive;
-  }
+    public class ThoughtWorker_DroidAlways : ThoughtWorker
+    {
+        protected override ThoughtState CurrentStateInternal(Pawn p) => p.def.HasModExtension<MechanicalPawnProperties>() || p.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidUpgrade_DroneCore) ? ThoughtState.ActiveAtStage(0) : ThoughtState.Inactive;
+    }
 }

@@ -8,8 +8,8 @@ using Verse;
 
 namespace Androids
 {
-  public class ExtraReportStringProperties : DefModExtension
-  {
-    public string extraReportString = "";
-  }
+    public class ExtraReportStringProperties : DefModExtension
+    {
+        public string extraReportString = "";
+    }
 }

@@ -9,20 +9,20 @@ using Verse;
 
 namespace Androids
 {
-  public class Hediff_VanometricCell : HediffWithComps
-  {
-    public override void Tick()
+    public class Hediff_VanometricCell : HediffWithComps
     {
-      base.Tick();
-      Need_Food food = this.pawn?.needs?.food;
-      if (food != null)
-        food.CurLevel = food.MaxLevel;
-      Need_Energy need = this.pawn?.needs?.TryGetNeed<Need_Energy>();
-      if (need == null)
-        return;
-      need.CurLevel = need.MaxLevel;
-    }
+        public override void Tick()
+        {
+            base.Tick();
+            Need_Food food = this.pawn?.needs?.food;
+            if (food != null)
+                food.CurLevel = food.MaxLevel;
+            Need_Energy need = this.pawn?.needs?.TryGetNeed<Need_Energy>();
+            if (need == null)
+                return;
+            need.CurLevel = need.MaxLevel;
+        }
 
-    public override string TipStringExtra => (string) "AndroidHediffVanometricCell".Translate();
-  }
+        public override string TipStringExtra => (string)"AndroidHediffVanometricCell".Translate();
+    }
 }

@@ -8,14 +8,14 @@ using Verse;
 
 namespace Androids
 {
-  public class HediffGiver_Machine : HediffGiver
-  {
-    public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
+    public class HediffGiver_Machine : HediffGiver
     {
-      if (!hediff.def.makesSickThought || hediff.Bleeding)
-        return true;
-      pawn.health.RemoveHediff(hediff);
-      return false;
+        public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
+        {
+            if (!hediff.def.makesSickThought || hediff.Bleeding)
+                return true;
+            pawn.health.RemoveHediff(hediff);
+            return false;
+        }
     }
-  }
 }

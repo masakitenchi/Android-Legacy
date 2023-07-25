@@ -9,9 +9,9 @@ using Verse;
 
 namespace Androids
 {
-  [DefOf]
-  public static class DamageDefOf
-  {
-    public static DamageDef ChjPowerFailure;
-  }
+    [DefOf]
+    public static class DamageDefOf
+    {
+        public static DamageDef ChjPowerFailure;
+    }
 }

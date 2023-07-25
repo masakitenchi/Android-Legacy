@@ -9,20 +9,20 @@ using Verse;
 
 namespace Androids
 {
-  public class HediffGiver_Machinelike : HediffGiver
-  {
-    public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
+    public class HediffGiver_Machinelike : HediffGiver
     {
-      if (hediff.def == RimWorld.HediffDefOf.BloodLoss)
-      {
-        HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjCoolantLoss, hediff.Severity);
-        hediff.Severity = 0.0f;
-        return true;
-      }
-      if (!(hediff is Hediff_Injury) || !(hediff is HediffWithComps hediffWithComps))
-        return false;
-      hediffWithComps.comps.RemoveAll((Predicate<HediffComp>) (hediffComp => hediffComp is HediffComp_Infecter));
-      return true;
+        public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
+        {
+            if (hediff.def == RimWorld.HediffDefOf.BloodLoss)
+            {
+                HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjCoolantLoss, hediff.Severity);
+                hediff.Severity = 0.0f;
+                return true;
+            }
+            if (!(hediff is Hediff_Injury) || !(hediff is HediffWithComps hediffWithComps))
+                return false;
+            hediffWithComps.comps.RemoveAll((Predicate<HediffComp>)(hediffComp => hediffComp is HediffComp_Infecter));
+            return true;
+        }
     }
-  }
 }

@@ -9,8 +9,8 @@ using Verse;
 
 namespace Androids
 {
-  public class Hediff_Percentage : HediffWithComps
-  {
-    public override string SeverityLabel => Math.Abs(this.Severity / this.def.lethalSeverity).ToStringPercent();
-  }
+    public class Hediff_Percentage : HediffWithComps
+    {
+        public override string SeverityLabel => Math.Abs(this.Severity / this.def.lethalSeverity).ToStringPercent();
+    }
 }

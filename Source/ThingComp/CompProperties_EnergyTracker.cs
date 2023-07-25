@@ -8,15 +8,15 @@ using Verse;
 
 namespace Androids
 {
-  public class CompProperties_EnergyTracker : CompProperties
-  {
-    public bool canHibernate = true;
-    public float maxEnergy = 1f;
-    public float drainRateModifier = 1f;
-    public float powerNetDrainRate = 1.32f;
-    public int ticksSpentCharging = 300;
-    public JobDef hibernationJob;
+    public class CompProperties_EnergyTracker : CompProperties
+    {
+        public bool canHibernate = true;
+        public float maxEnergy = 1f;
+        public float drainRateModifier = 1f;
+        public float powerNetDrainRate = 1.32f;
+        public int ticksSpentCharging = 300;
+        public JobDef hibernationJob;
 
-    public CompProperties_EnergyTracker() => this.compClass = typeof (EnergyTrackerComp);
-  }
+        public CompProperties_EnergyTracker() => this.compClass = typeof(EnergyTrackerComp);
+    }
 }

@@ -10,15 +10,15 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (Corpse), "GiveObservedThought")]
-  public class Corpse_GiveObservedThought_Patch
-  {
-    [HarmonyPostfix]
-    public static void Listener(Corpse __instance, ref Thought_Memory __result)
+    [HarmonyPatch(typeof(Corpse), "GiveObservedThought")]
+    public class Corpse_GiveObservedThought_Patch
     {
-      if (__instance.InnerPawn == null || !__instance.InnerPawn.def.HasModExtension<MechanicalPawnProperties>())
-        return;
-      __result = (Thought_Memory) null;
+        [HarmonyPostfix]
+        public static void Listener(Corpse __instance, ref Thought_Memory __result)
+        {
+            if (__instance.InnerPawn == null || !__instance.InnerPawn.def.HasModExtension<MechanicalPawnProperties>())
+                return;
+            __result = (Thought_Memory)null;
+        }
     }
-  }
 }

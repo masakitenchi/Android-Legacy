@@ -10,10 +10,10 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (PawnBreathMoteMaker), "TryMakeBreathMote")]
-  public class PawnBreathMoteMaker_TryMakeBreathMote_Patch
-  {
-    [HarmonyPrefix]
-    public static bool Listener(Pawn ___pawn) => !___pawn.def.HasModExtension<MechanicalPawnProperties>();
-  }
+    [HarmonyPatch(typeof(PawnBreathMoteMaker), "TryMakeBreathMote")]
+    public class PawnBreathMoteMaker_TryMakeBreathMote_Patch
+    {
+        [HarmonyPrefix]
+        public static bool Listener(Pawn ___pawn) => !___pawn.def.HasModExtension<MechanicalPawnProperties>();
+    }
 }

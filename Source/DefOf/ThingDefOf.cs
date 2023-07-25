@@ -9,12 +9,12 @@ using Verse;
 
 namespace Androids
 {
-  [DefOf]
-  public static class ThingDefOf
-  {
-    public static ThingDef ChjAndroid;
-    public static ThingDef ChJAndroidPrinter;
-    public static ThingDef ChJAndroidThermalBandages;
-    public static ThingDef ChjDroid;
-  }
+    [DefOf]
+    public static class ThingDefOf
+    {
+        public static ThingDef ChjAndroid;
+        public static ThingDef ChJAndroidPrinter;
+        public static ThingDef ChJAndroidThermalBandages;
+        public static ThingDef ChjDroid;
+    }
 }

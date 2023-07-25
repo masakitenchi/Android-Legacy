@@ -9,8 +9,8 @@ using System.Collections.Generic;
 
 namespace Androids
 {
-  public interface IExtraDisplayStats
-  {
-    IEnumerable<StatDrawEntry> SpecialDisplayStats();
-  }
+    public interface IExtraDisplayStats
+    {
+        IEnumerable<StatDrawEntry> SpecialDisplayStats();
+    }
 }

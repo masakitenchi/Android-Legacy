@@ -8,19 +8,19 @@ using System;
 
 namespace Androids
 {
-  public static class UpgradeMaker
-  {
-    public static UpgradeCommand Make(
-      AndroidUpgradeDef def,
-      CustomizeAndroidWindow customizationWindow = null)
+    public static class UpgradeMaker
     {
-      UpgradeCommand instance = (UpgradeCommand) Activator.CreateInstance(def.commandType);
-      if (instance != null)
-      {
-        instance.def = def;
-        instance.customizationWindow = customizationWindow;
-      }
-      return instance;
+        public static UpgradeCommand Make(
+          AndroidUpgradeDef def,
+          CustomizeAndroidWindow customizationWindow = null)
+        {
+            UpgradeCommand instance = (UpgradeCommand)Activator.CreateInstance(def.commandType);
+            if (instance != null)
+            {
+                instance.def = def;
+                instance.customizationWindow = customizationWindow;
+            }
+            return instance;
+        }
     }
-  }
 }

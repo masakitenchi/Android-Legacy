@@ -5,7 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Verse;
-using RimWorld;
 
 namespace Androids
 {

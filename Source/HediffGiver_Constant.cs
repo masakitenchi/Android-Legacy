@@ -9,17 +9,17 @@ using Verse;
 
 namespace Androids
 {
-  public class HediffGiver_Constant : HediffGiver
-  {
-    private static List<Hediff> addedHediffs = new List<Hediff>();
-
-    public override void OnIntervalPassed(Pawn pawn, Hediff cause)
+    public class HediffGiver_Constant : HediffGiver
     {
-      if (!pawn.IsHashIntervalTick(120) || pawn.health.hediffSet.HasHediff(this.hediff))
-        return;
-      Hediff hediff = HediffMaker.MakeHediff(this.hediff, pawn);
-      HediffGiver_Constant.addedHediffs.Add(hediff);
-      this.TryApply(pawn, HediffGiver_Constant.addedHediffs);
+        private static List<Hediff> addedHediffs = new List<Hediff>();
+
+        public override void OnIntervalPassed(Pawn pawn, Hediff cause)
+        {
+            if (!pawn.IsHashIntervalTick(120) || pawn.health.hediffSet.HasHediff(this.hediff))
+                return;
+            Hediff hediff = HediffMaker.MakeHediff(this.hediff, pawn);
+            HediffGiver_Constant.addedHediffs.Add(hediff);
+            this.TryApply(pawn, HediffGiver_Constant.addedHediffs);
+        }
     }
-  }
 }

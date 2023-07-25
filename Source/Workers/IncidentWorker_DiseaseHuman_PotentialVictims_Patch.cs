@@ -11,21 +11,21 @@ using Verse;
 
 namespace Androids
 {
-  [HarmonyPatch(typeof (IncidentWorker_DiseaseHuman), "PotentialVictimCandidates")]
-  public class IncidentWorker_DiseaseHuman_PotentialVictims_Patch
-  {
-    [HarmonyPostfix]
-    public static void Listener(IIncidentTarget target, ref IEnumerable<Pawn> __result)
+    [HarmonyPatch(typeof(IncidentWorker_DiseaseHuman), "PotentialVictimCandidates")]
+    public class IncidentWorker_DiseaseHuman_PotentialVictims_Patch
     {
-      if (__result == null)
-        return;
-      List<Pawn> pawnList = new List<Pawn>();
-      foreach (Pawn pawn in __result)
-      {
-        if (!pawn.def.HasModExtension<MechanicalPawnProperties>() || !pawn.IsAndroid())
-          pawnList.Add(pawn);
-      }
-      __result = (IEnumerable<Pawn>) pawnList;
+        [HarmonyPostfix]
+        public static void Listener(IIncidentTarget target, ref IEnumerable<Pawn> __result)
+        {
+            if (__result == null)
+                return;
+            List<Pawn> pawnList = new List<Pawn>();
+            foreach (Pawn pawn in __result)
+            {
+                if (!pawn.def.HasModExtension<MechanicalPawnProperties>() || !pawn.IsAndroid())
+                    pawnList.Add(pawn);
+            }
+            __result = (IEnumerable<Pawn>)pawnList;
+        }
     }
-  }
 }

@@ -11,52 +11,52 @@ using Verse;
 
 namespace Androids
 {
-  public class ThingOrderRequest : IExposable
-  {
-    public ThingDef thingDef;
-    public bool nutrition;
-    public ThingFilter thingFilter;
-    public float amount;
-
-    public ThingRequest Request()
+    public class ThingOrderRequest : IExposable
     {
-      if (this.thingDef != null)
-        return ThingRequest.ForDef(this.thingDef);
-      return this.nutrition ? ThingRequest.ForGroup(ThingRequestGroup.MechCharger) : ThingRequest.ForUndefined();
-    }
+        public ThingDef thingDef;
+        public bool nutrition;
+        public ThingFilter thingFilter;
+        public float amount;
 
-    public Predicate<Thing> ExtraPredicate()
-    {
-      if (!this.nutrition)
-        return (Predicate<Thing>) (thing => true);
-      return this.thingFilter == null ? (Predicate<Thing>) (thing =>
-      {
-        ThingDef def = thing.def;
-        return (def != null ? (!def.ingestible.IsMeal ? 1 : 0) : 0) != 0 && thing.def.IsNutritionGivingIngestible;
-      }) : (Predicate<Thing>) (thing => this.thingFilter.Allows(thing) && thing.def.IsNutritionGivingIngestible && (!(thing is Corpse t) || !t.IsDessicated()));
-    }
+        public ThingRequest Request()
+        {
+            if (this.thingDef != null)
+                return ThingRequest.ForDef(this.thingDef);
+            return this.nutrition ? ThingRequest.ForGroup(ThingRequestGroup.MechCharger) : ThingRequest.ForUndefined();
+        }
 
-    public void LoadDataFromXmlCustom(XmlNode xmlRoot)
-    {
-      if (xmlRoot.ChildNodes.Count != 1)
-      {
-        Log.Error("Misconfigured ThingOrderRequest: " + xmlRoot.OuterXml);
-      }
-      else
-      {
-        if (xmlRoot.Name.ToLower() == "nutrition")
-          this.nutrition = true;
-        else
-          DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef((object) this, "thingDef", xmlRoot.Name);
-        this.amount = (float) ParseHelper.FromString(xmlRoot.FirstChild.Value, typeof (float));
-      }
-    }
+        public Predicate<Thing> ExtraPredicate()
+        {
+            if (!this.nutrition)
+                return (Predicate<Thing>)(thing => true);
+            return this.thingFilter == null ? (Predicate<Thing>)(thing =>
+            {
+                ThingDef def = thing.def;
+                return (def != null ? (!def.ingestible.IsMeal ? 1 : 0) : 0) != 0 && thing.def.IsNutritionGivingIngestible;
+            }) : (Predicate<Thing>)(thing => this.thingFilter.Allows(thing) && thing.def.IsNutritionGivingIngestible && (!(thing is Corpse t) || !t.IsDessicated()));
+        }
 
-    public void ExposeData()
-    {
-      Scribe_Defs.Look<ThingDef>(ref this.thingDef, "thingDef");
-      Scribe_Values.Look<bool>(ref this.nutrition, "nutrition");
-      Scribe_Values.Look<float>(ref this.amount, "amount");
+        public void LoadDataFromXmlCustom(XmlNode xmlRoot)
+        {
+            if (xmlRoot.ChildNodes.Count != 1)
+            {
+                Log.Error("Misconfigured ThingOrderRequest: " + xmlRoot.OuterXml);
+            }
+            else
+            {
+                if (xmlRoot.Name.ToLower() == "nutrition")
+                    this.nutrition = true;
+                else
+                    DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef((object)this, "thingDef", xmlRoot.Name);
+                this.amount = (float)ParseHelper.FromString(xmlRoot.FirstChild.Value, typeof(float));
+            }
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Defs.Look<ThingDef>(ref this.thingDef, "thingDef");
+            Scribe_Values.Look<bool>(ref this.nutrition, "nutrition");
+            Scribe_Values.Look<float>(ref this.amount, "amount");
+        }
     }
-  }
 }

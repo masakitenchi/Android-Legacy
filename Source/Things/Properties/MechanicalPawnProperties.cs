@@ -8,10 +8,10 @@ using Verse;
 
 namespace Androids
 {
-  public class MechanicalPawnProperties : DefModExtension
-  {
-    public bool noSkillLoss = true;
-    public bool canSocialize;
-    public bool colonyCaresIfDead;
-  }
+    public class MechanicalPawnProperties : DefModExtension
+    {
+        public bool noSkillLoss = true;
+        public bool canSocialize;
+        public bool colonyCaresIfDead;
+    }
 }

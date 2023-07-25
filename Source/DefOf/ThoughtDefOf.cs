@@ -8,9 +8,9 @@ using RimWorld;
 
 namespace Androids
 {
-  [DefOf]
-  public static class ThoughtDefOf
-  {
-    public static ThoughtDef ChjAndroid_LoverObsessionTarget;
-  }
+    [DefOf]
+    public static class ThoughtDefOf
+    {
+        public static ThoughtDef ChjAndroid_LoverObsessionTarget;
+    }
 }

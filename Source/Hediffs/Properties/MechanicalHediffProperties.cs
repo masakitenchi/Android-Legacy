@@ -8,7 +8,7 @@ using Verse;
 
 namespace Androids
 {
-  public class MechanicalHediffProperties : DefModExtension
-  {
-  }
+    public class MechanicalHediffProperties : DefModExtension
+    {
+    }
 }

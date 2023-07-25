@@ -5,7 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
-using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,13 +34,13 @@ namespace Androids
             sb.AppendLine("Androids: Belt found and added:");
             List<ThingDef> whiteApparelList = ((ThingDef_AlienRace)ThingDef.Named("ChjBattleDroid")).alienRace.raceRestriction.whiteApparelList;
             foreach (ThingDef allDef in DefDatabase<ThingDef>.AllDefs.Where
-                (x=>x.IsApparel && 
-                x.apparel.bodyPartGroups != null && 
-                x.apparel.bodyPartGroups.Count ==1 && 
-                x.apparel.bodyPartGroups.First<BodyPartGroupDef>().defName== "Waist"&& 
-                x.apparel.layers != null && 
-                x.apparel.layers.Count == 1 && 
-                x.apparel.layers.First<ApparelLayerDef>().defName == "Belt" && 
+                (x => x.IsApparel &&
+                x.apparel.bodyPartGroups != null &&
+                x.apparel.bodyPartGroups.Count == 1 &&
+                x.apparel.bodyPartGroups.First<BodyPartGroupDef>().defName == "Waist" &&
+                x.apparel.layers != null &&
+                x.apparel.layers.Count == 1 &&
+                x.apparel.layers.First<ApparelLayerDef>().defName == "Belt" &&
                 !whiteApparelList.Any<ThingDef>(i => i.defName == x.defName)))
             {
                 sb.AppendLine($" - {allDef.defName}");

@@ -8,7 +8,7 @@ using Verse;
 
 namespace Androids
 {
-  public class SexualizeAndroidRJW : DefModExtension
-  {
-  }
+    public class SexualizeAndroidRJW : DefModExtension
+    {
+    }
 }
