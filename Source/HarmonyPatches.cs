@@ -198,6 +198,12 @@ namespace Androids
                 Type type41 = typeof(ITab_Pawn_Visitor);
                 str = "ITab_Pawn_Visitor.<>c__DisplayClass7_0.<FillTab>g__CanUsePrisonerInteractionMode|0";
                 harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass7_0"), x => x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
+                System.Type xenogerm = typeof(Xenogerm);
+                harmony.Patch(AccessTools.Method(xenogerm, "GetFloatMenuOptions"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallXenoGerm_Prefix")));
+                str = "Xenogerm_GetFloatMenuOptions_CanInstallXenoGerm_Prefix";
+                System.Type xenogerm3 = typeof(Xenogerm);
+                harmony.Patch(AccessTools.Method(xenogerm, "GetGizmos"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallXenoGerm_Gizmo_Prefix")));
+                str = "Xenogerm_GetGizmos_CanInstallXenoGerm_Prefix";
             }
             catch (Exception ex)
             {
@@ -842,6 +848,28 @@ namespace Androids
                 failReason = null;
                 __result = true;
             }
+        }
+
+        public static bool CanInstallXenoGerm_Prefix(Pawn selPawn)
+        {
+            if (selPawn != null && selPawn.def.GetModExtension<DroidSpawnProperties>() != null)
+            {
+                selPawn.genes = null;
+            }
+            return true;
+        }
+
+
+        public static bool CanInstallXenoGerm_Gizmo_Prefix(Xenogerm __instance)
+        {
+            foreach (Pawn item in __instance.Map.mapPawns.AllPawnsSpawned)
+            {
+                if (item != null && item.def.GetModExtension<DroidSpawnProperties>() != null)
+                {
+                    item.genes = null;
+                }
+            }
+            return true;
         }
 
         public static bool DoEffectPrefix(Pawn user, CompUseEffect_InstallImplant __instance)
