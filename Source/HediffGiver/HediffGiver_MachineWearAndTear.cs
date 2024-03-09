@@ -30,7 +30,7 @@ namespace Androids
             foreach (BodyPartDef partDef in this.partsToAffect)
             {
                 //Log.Message($"{partDef.defName} to affect");
-                BodyPartRecord part = pawn.RaceProps.body.AllParts.FindAll(part => part.def == partDef).RandomElementWithFallback();
+                BodyPartRecord part = pawn.health.hediffSet.GetNotMissingParts().Where(x => x.def == partDef).RandomElementWithFallback();
                 if (part != null)
                 {
                     //Log.Message($"Affecting {part.def.defName}");

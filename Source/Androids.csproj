@@ -79,6 +79,7 @@
     <Compile Include="Defs\HediffApplication.cs" />
     <Compile Include="Defs\AndroidUpgradeGroupDef.cs" />
     <Compile Include="Defs\DroidCraftingDef.cs" />
+    <None Include="GameComponent\UpgradeTracker.cs" />
     <Compile Include="HediffGiver_Constant.cs" />
     <Compile Include="Hediffs\AndroidLikeHediff.cs" />
     <Compile Include="Hediffs\Hediff_BlackBox.cs" />

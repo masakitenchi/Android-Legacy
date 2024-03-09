@@ -707,7 +707,9 @@ namespace Androids
             }
             if (this.newAndroid.def is ThingDef_AlienRace def1)
             {
-                List<TraitDef> traitDefList1;
+                List<Trait> disallowedTraits = def1.alienRace?.generalSettings?.disallowedTraits?.Where(x => x.chance == 0f).Select(x => new Trait(x.defName, x.degree)).ToList();
+                this.allTraits.RemoveAll(x =>  disallowedTraits.Exists(y => y.def == x.def && y.Degree == x.Degree));
+                /*List<TraitDef> traitDefList1;
                 if (def1 == null)
                 {
                     traitDefList1 = (List<TraitDef>)null;
@@ -728,8 +730,9 @@ namespace Androids
                         }
                         else
                         {
-                            List<AlienTraitEntry> disallowedTraits = generalSettings.disallowedTraits;
-                            traitDefList1 = disallowedTraits != null ? disallowedTraits.Select<AlienTraitEntry, TraitDef>((Func<AlienTraitEntry, TraitDef>)(trait => trait.defName)).ToList<TraitDef>() : (List<TraitDef>)null;
+                            List<AlienChanceEntry<TraitDef>> disallowedTraits = generalSettings.disallowedTraits;
+                            //I couldn't fully understand this atm, so I'll just fix the code issue atm. Only 0% chance in disallowedTraits are disabled
+                            traitDefList1 = disallowedTraits != null ? disallowedTraits.Where(x => x.chance == 0f).Select(trait => trait.defName).ToList<TraitDef>() : null;
                         }
                     }
                 }
@@ -741,7 +744,7 @@ namespace Androids
                         TraitDef trait = traitDef;
                         this.allTraits.RemoveAll((Predicate<Trait>)(thisTrait => trait.defName == thisTrait.def.defName));
                     }
-                }
+                }*/
             }
             foreach (Trait allTrait in this.newAndroid.story.traits.allTraits)
             {
