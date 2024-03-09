@@ -34,17 +34,18 @@ jobs:
         path: Source/libs/AlienRaces
     - name: Copy Dependency dlls
       shell: bash
+      #cp -n prevents it from overwriting existing files
       run: |
         find  Source/libs/VanillaExpandedFramework/1.4/Assemblies \
               Source/libs/VanillaPsycastsExpanded/1.4/Assemblies \
-              Source/libs/AlienRaces/1.4/Assemblies -type f -exec cp {} Source/libs \;
-        ls Source/libs
+              Source/libs/AlienRaces/1.4/Assemblies -type f -exec cp -n {} Source/libs \;
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
     - name: Compile
       shell: bash
+      #The ReferencePath in MSBuild.exe is relative to the project file, not current bash directory
       run: |
           nuget restore Source/Androids.csproj -SolutionDirectory Source/Androids.sln
           MSBuild.exe Source/Androids.sln -p:Configuration=release -p:ReferencePath=libs
