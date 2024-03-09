@@ -1,0 +1,68 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Test
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DIRECTORY: 'Android-Legacy'
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Get Dependency dlls
+      uses: actions/checkout@v4
+      with:
+        repository: Vanilla-Expanded/VanillaExpandedFramework
+        path: Source/libs/VanillaExpandedFramework
+    - name: Get Dependency dlls
+      uses: actions/checkout@v4
+      with:
+        repository: Vanilla-Expanded/VanillaPsycastsExpanded
+        path: Source/libs/VanillaPsycastsExpanded
+    - name: Get Dependency dlls
+      uses: actions/checkout@v4
+      with:
+        repository: erdelf/AlienRaces
+        path: Source/libs/AlienRaces
+    - name: Copy Dependency dlls
+      shell: bash
+      run: |
+        find  Source/libs/VanillaExpandedFramework/1.4/Assemblies \
+              Source/libs/VanillaPsycastsExpanded/1.4/Assemblies \
+              Source/libs/AlienRaces/1.4/Assemblies -type f -exec cp {} Source/libs \;
+        ls Source/libs
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+    - name: Compile
+      shell: bash
+      run: |
+          nuget restore Source/Androids.csproj -SolutionDirectory Source/Androids.sln
+          MSBuild.exe Source/Androids.sln -p:Configuration=release -p:ReferencePath=libs
+    - name: zip release
+      uses: TheDoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        filename: 'Androids-HSK${{github.ref_name}}.zip'
+        exclusions: '.git Source .gitattributes .gitignore .github libs'
+    - name: check files
+      run: ls
+    - name: Release
+      uses: softprops/action-gh-release@v0.1.13
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Androids ${{ github.ref_name }}
+        body: built with Github Actions
+        draft: false
+        prerelease: false
+        files: |
+          Androids-HSK${{github.ref_name}}.zip
