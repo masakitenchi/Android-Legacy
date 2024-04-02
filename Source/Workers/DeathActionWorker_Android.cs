@@ -24,7 +24,7 @@ namespace Androids
 
                 Hediff overheatingHediff = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.ChjOverheating);
                 //Overheating death is excepted.
-                if (overheatingHediff != null || !shouldBeDeadByNaturalCauses)
+                if (overheatingHediff != null && !shouldBeDeadByNaturalCauses)
                 {
                     float explosionRadius = overheatingHediff.Severity * AndroidsModSettings.Instance.androidExplosionRadius * energy.energy;
 
@@ -53,7 +53,7 @@ namespace Androids
                         return;
 
                     //Overheating death is excepted.
-                    if (overheatingHediff != null || !shouldBeDeadByNaturalCauses)
+                    if (overheatingHediff != null && !shouldBeDeadByNaturalCauses)
                     {
                         float explosionRadius = overheatingHediff.Severity * AndroidsModSettings.Instance.androidExplosionRadius * androidLikeForReal.energyTracked;
 
