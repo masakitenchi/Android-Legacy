@@ -40,7 +40,7 @@ namespace Androids
                     yMin = overRect.height / 2f
                 };
                 float fillPercent = 1f - this.fueledEnergySource.MissingFuelPercentage;
-                Widgets.FillableBar(rect3, fillPercent, Gizmo_EnergySourceFueled.FullShieldBarTex, Gizmo_EnergySourceFueled.EmptyShieldBarTex, false);
+                Widgets.FillableBar(rect3, fillPercent, FullShieldBarTex, EmptyShieldBarTex, false);
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect3, this.fueledEnergySource.fuelAmountLoaded.ToString("F0") + " / " + this.fueledEnergySource.EnergyProps.maxFuelAmount.ToString("F0"));

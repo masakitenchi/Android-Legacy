@@ -38,7 +38,7 @@ namespace Androids
             }
         }
 
-        public static Texture2D TransformIconColorBlueIfAndroid(Texture2D original, Pawn pawn) => pawn.IsAndroid() || pawn.def.HasModExtension<MechanicalPawnProperties>() ? HealthCardUtility_DrawHediffRow.leakingIcon : original;
+        public static Texture2D TransformIconColorBlueIfAndroid(Texture2D original, Pawn pawn) => pawn.IsAndroid() || pawn.def.HasModExtension<MechanicalPawnProperties>() ? leakingIcon : original;
 
         public static Color TransformLabelColorRedToBlueIfAndroid(Color original, Pawn pawn) => pawn.IsAndroid() || pawn.def.HasModExtension<MechanicalPawnProperties>() ? Color.blue : original;
     }

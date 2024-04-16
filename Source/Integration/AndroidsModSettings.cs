@@ -19,7 +19,7 @@ namespace Androids.Integration
         public bool droidWearDown = true;
         public bool droidWearDownQuadrum = true;
 
-        public AndroidsModSettings() => AndroidsModSettings.Instance = this;
+        public AndroidsModSettings() => Instance = this;
 
         public override void ExposeData()
         {

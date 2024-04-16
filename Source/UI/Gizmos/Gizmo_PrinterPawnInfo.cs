@@ -23,7 +23,7 @@ namespace Androids
             this.printer = printer;
             this.defaultLabel = printer.PawnBeingCrafted.Name.ToStringFull;
             this.defaultDesc = (string)this.description.Translate();
-            this.icon = (Texture)Gizmo_PrinterPawnInfo.emptyIcon;
+            this.icon = (Texture)emptyIcon;
         }
 
         public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth, GizmoRenderParms parms)
@@ -33,7 +33,7 @@ namespace Androids
             Rect rect = new Rect(topLeft.x + 10f, topLeft.y, width - 40f, width - 20f);
             Vector2 vector2 = new Vector2(width - 20f, width);
             RenderTexture image = PortraitsCache.Get(this.printer.PawnBeingCrafted, vector2, Rot4.South, new Vector3(), 1f, true, true, true, true, (Dictionary<Apparel, Color>)null, new Color?(), false);
-            if (!((Object)image != (Object)null))
+            if (image is not null) 
                 return gizmoResult;
             GUI.DrawTexture(new Rect(rect.x, rect.y, vector2.x, vector2.y), (Texture)image);
             return gizmoResult;

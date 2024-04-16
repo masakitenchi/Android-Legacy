@@ -12,9 +12,8 @@ namespace Androids
 {
     public class Hediff_BlackBox : HediffWithComps, IExtraGizmos
     {
-        public override void Notify_PawnDied()
+        public override void Notify_PawnDied(DamageInfo? dinfo, Hediff culprit = null)
         {
-            base.Notify_PawnDied();
             if (this.pawn.Corpse == null)
                 return;
             GenExplosion.DoExplosion(this.pawn.Corpse.Position, this.pawn.Corpse.Map, 50f, RimWorld.DamageDefOf.Bomb, (Thing)null, 500, 15f, (SoundDef)null, (ThingDef)null, (ThingDef)null, (Thing)null, (ThingDef)null, 0.0f, 1, null, false, (ThingDef)null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>)null);

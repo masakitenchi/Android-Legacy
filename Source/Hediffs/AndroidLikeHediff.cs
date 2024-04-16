@@ -5,6 +5,7 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Verse;
+using Verse.AI.Group;
 
 namespace Androids
 {
@@ -27,11 +28,12 @@ namespace Androids
             this.energyTracked = need.CurLevel;
         }
 
-        public override void Notify_PawnDied()
+        public override void Notify_PawnDied(DamageInfo? dinfo, Hediff culprit = null)
         {
             if (!this.pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || ThingDefOf.ChjAndroid.race.DeathActionWorker == null || this.pawn.Corpse == null)
                 return;
-            ThingDefOf.ChjAndroid.race.DeathActionWorker.PawnDied(this.pawn.Corpse);
+            ThingDefOf.ChjAndroid.race.DeathActionWorker.PawnDied(this.pawn.Corpse, this.pawn.GetLord());
+
         }
     }
 }

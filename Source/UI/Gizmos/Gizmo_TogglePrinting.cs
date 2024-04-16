@@ -27,7 +27,7 @@ namespace Androids
             {
                 defaultLabel = (string)labelStart.Translate();
                 defaultDesc = (string)descriptionStart.Translate();
-                icon = (Texture)Gizmo_TogglePrinting.startIcon;
+                icon = (Texture)startIcon;
             }
             else
             {
@@ -35,7 +35,7 @@ namespace Androids
                     return;
                 defaultLabel = (string)labelStop.Translate();
                 defaultDesc = (string)descriptionStop.Translate();
-                icon = (Texture)Gizmo_TogglePrinting.stopIcon;
+                icon = (Texture)stopIcon;
             }
         }
 

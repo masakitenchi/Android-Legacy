@@ -22,7 +22,7 @@ namespace Androids
 
         public ITab_AndroidPrinter()
         {
-            this.size = ITab_AndroidPrinter.WinSize;
+            this.size = WinSize;
             this.labelKey = "AndroidTab";
             this.state = new ThingFilterUI.UIState();
             this.state.scrollPosition = new Vector2();
@@ -32,7 +32,7 @@ namespace Androids
         {
             IStoreSettingsParent storeSettingsParent = this.SelStoreSettingsParent;
             StorageSettings storeSettings = storeSettingsParent.GetStoreSettings();
-            Rect rect = new Rect(0.0f, 0.0f, ITab_AndroidPrinter.WinSize.x, ITab_AndroidPrinter.WinSize.y).ContractedBy(10f);
+            Rect rect = new Rect(0.0f, 0.0f, WinSize.x, WinSize.y).ContractedBy(10f);
             GUI.BeginGroup(rect);
             Text.Font = GameFont.Medium;
             Text.Anchor = TextAnchor.MiddleCenter;

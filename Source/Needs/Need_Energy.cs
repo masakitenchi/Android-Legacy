@@ -94,7 +94,7 @@ namespace Androids
                         comp2.RechargeEnergyNeed(this.pawn);
                 }
             }
-            if (this.pawn.IsCaravanMember() && this.pawn.IsHashIntervalTick(250) && (double)this.CurLevelPercentage < (double)Need_Energy.rechargePercentage)
+            if (this.pawn.IsCaravanMember() && this.pawn.IsHashIntervalTick(250) && (double)this.CurLevelPercentage < (double)rechargePercentage)
             {
                 Thing thing1 = this.pawn.GetCaravan().Goods.FirstOrDefault<Thing>((Func<Thing, bool>)(thing =>
                 {

@@ -18,23 +18,23 @@ namespace Androids
         private static bool alienRaceKindSearchDoneint = false;
         private static bool alienRacesFoundint = false;
 
-        public static bool AlienRacesExist => RaceUtility.alienRacesFoundint;
+        public static bool AlienRacesExist => alienRacesFoundint;
 
         public static IEnumerable<PawnKindDef> AlienRaceKinds
         {
             get
             {
-                if (!RaceUtility.alienRaceKindSearchDoneint)
+                if (!alienRaceKindSearchDoneint)
                 {
                     foreach (ThingDef_AlienRace allDef in DefDatabase<ThingDef_AlienRace>.AllDefs)
                     {
                         ThingDef_AlienRace alienDef = allDef;
                         PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault<PawnKindDef>((Func<PawnKindDef, bool>)(def => def.race == alienDef));
                         if (pawnKindDef != null)
-                            RaceUtility.alienRaceKindsint.Add(pawnKindDef);
+                            alienRaceKindsint.Add(pawnKindDef);
                     }
-                    RaceUtility.alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.defName == "Human"));
-                    RaceUtility.alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.HasModExtension<MechanicalPawnProperties>()));
+                    alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.defName == "Human"));
+                    alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.HasModExtension<MechanicalPawnProperties>()));
                     foreach (Def allDef in DefDatabase<ThingDef>.AllDefs)
                     {
                         PawnCrafterProperties modExtension = allDef.GetModExtension<PawnCrafterProperties>();
@@ -43,15 +43,15 @@ namespace Androids
                             foreach (ThingDef disabledRace in modExtension.disabledRaces)
                             {
                                 ThingDef raceDef = disabledRace;
-                                RaceUtility.alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race == raceDef));
+                                alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race == raceDef));
                             }
                         }
                     }
-                    if (RaceUtility.alienRaceKindsint.Count > 1)
-                        RaceUtility.alienRacesFoundint = true;
-                    RaceUtility.alienRaceKindSearchDoneint = true;
+                    if (alienRaceKindsint.Count > 1)
+                        alienRacesFoundint = true;
+                    alienRaceKindSearchDoneint = true;
                 }
-                return (IEnumerable<PawnKindDef>)RaceUtility.alienRaceKindsint;
+                return (IEnumerable<PawnKindDef>)alienRaceKindsint;
             }
         }
 

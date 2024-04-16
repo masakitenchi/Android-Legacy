@@ -131,17 +131,17 @@ namespace Androids
                     this.orderProcessor.requestedItems.Add(new ThingOrderRequest()
                     {
                         nutrition = true,
-                        amount = Building_AndroidPrinter.requestNutrition
+                        amount = requestNutrition
                     });
                     this.orderProcessor.requestedItems.Add(new ThingOrderRequest()
                     {
                         thingDef = RimWorld.ThingDefOf.Plasteel,
-                        amount = (float)Building_AndroidPrinter.requestPlasteel
+                        amount = (float)requestPlasteel
                     });
                     this.orderProcessor.requestedItems.Add(new ThingOrderRequest()
                     {
                         thingDef = RimWorld.ThingDefOf.ComponentIndustrial,
-                        amount = (float)Building_AndroidPrinter.requestComponents
+                        amount = (float)requestComponents
                     });
                 }
                 else
@@ -524,7 +524,7 @@ namespace Androids
                 yield return option;
             if (this.innerContainer.Count == 0 && selPawn.IsAndroid())
             {
-                if (!selPawn.CanReach(this, Verse.AI.PathEndMode.InteractionCell, Danger.Deadly))
+                if (!selPawn.CanReach(this, PathEndMode.InteractionCell, Danger.Deadly))
                 {
                     yield return new FloatMenuOption("CannotUseNoPath".Translate(), null);
                 }

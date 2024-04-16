@@ -15,7 +15,7 @@ namespace Androids
 {
     public static class EnergyNeedUtility
     {
-        public static Thing ClosestPowerSource(Pawn pawn) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.BuildingArtificial), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => EnergyNeedUtility.BestClosestPowerSource(pawn, thing))));
+        public static Thing ClosestPowerSource(Pawn pawn) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.BuildingArtificial), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => BestClosestPowerSource(pawn, thing))));
 
         public static bool BestClosestPowerSource(Pawn pawn, Thing thing)
         {

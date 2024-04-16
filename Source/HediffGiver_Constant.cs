@@ -18,8 +18,8 @@ namespace Androids
             if (!pawn.IsHashIntervalTick(120) || pawn.health.hediffSet.HasHediff(this.hediff))
                 return;
             Hediff hediff = HediffMaker.MakeHediff(this.hediff, pawn);
-            HediffGiver_Constant.addedHediffs.Add(hediff);
-            this.TryApply(pawn, HediffGiver_Constant.addedHediffs);
+            addedHediffs.Add(hediff);
+            this.TryApply(pawn, addedHediffs);
         }
     }
 }

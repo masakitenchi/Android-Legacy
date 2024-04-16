@@ -215,7 +215,7 @@ namespace Androids
         {
             if (this.refreshAndroidPortrait)
             {
-                this.newAndroid.Drawer.renderer.graphics.ResolveAllGraphics();
+                this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
                 PortraitsCache.SetDirty(this.newAndroid);
                 PortraitsCache.PortraitsCacheUpdate();
                 this.refreshAndroidPortrait = false;
@@ -313,7 +313,7 @@ namespace Androids
                     Func<Color, Action> func = (Func<Color, Action>)(color => (Action)(() =>
                   {
                       this.newAndroid.story.HairColor = color;
-                      this.newAndroid.Drawer.renderer.graphics.ResolveAllGraphics();
+                      this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
                       PortraitsCache.SetDirty(this.newAndroid);
                       PortraitsCache.PortraitsCacheUpdate();
                   }));
@@ -352,7 +352,7 @@ namespace Androids
                         FloatMenuUtility.MakeMenu<HairDef>(hairs, (Func<HairDef, string>)(hairDef => (string)hairDef.LabelCap), (Func<HairDef, Action>)(hairDef => (Action)(() =>
                     {
                         this.newAndroid.story.hairDef = hairDef;
-                        this.newAndroid.Drawer.renderer.graphics.ResolveAllGraphics();
+                        this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
                         PortraitsCache.SetDirty(this.newAndroid);
                         PortraitsCache.PortraitsCacheUpdate();
                         this.RefreshUpgrades();
@@ -604,7 +604,7 @@ namespace Androids
                                 //Using TipStringExtra will result in null reference hediff instance since there's no pawn have this hediff yet. Manually send null for Hediff instance solve this problem.
                                 foreach (StatDrawEntry item in HediffStatsUtility.SpecialDisplayStats(upgradeDef.hediffToApply.ConcreteExample.CurStage, null))
                                 {
-                                    if (item.ShouldDisplay)
+                                    if (item.ShouldDisplay())
                                         tooltip.AppendLine("  - " + item.LabelCap + ": " + item.ValueString);
                                 }
                                 //stringBuilder.AppendLine(upgrade.hediffToApply.ConcreteExample.TipStringExtra.TrimEndNewlines());
@@ -878,17 +878,15 @@ namespace Androids
             float x = !sk.usuallyDefinedInBackstories ? Rand.ByCurve(CustomizeAndroidWindow.LevelRandomCurve) : (float)Rand.RangeInclusive(0, 4);
             foreach (BackstoryDef backstory in pawn.story.AllBackstories.Where<BackstoryDef>((Func<BackstoryDef, bool>)(bs => bs != null)))
             {
-                foreach (KeyValuePair<SkillDef, int> keyValuePair in backstory.skillGains)
+                foreach (SkillGain sg in backstory.skillGains)
                 {
-                    if (keyValuePair.Key == sk)
-                        x += (float)keyValuePair.Value * Rand.Range(1f, 1.4f);
+                    if (sg.skill == sk)
+                        x += sg.amount * Rand.Range(1f, 1.4f);
                 }
             }
             for (int index = 0; index < pawn.story.traits.allTraits.Count; ++index)
             {
-                int num = 0;
-                if (pawn.story.traits.allTraits[index].CurrentData.skillGains.TryGetValue(sk, out num))
-                    x += (float)num;
+                x += pawn.story.traits.allTraits[index].CurrentData.skillGains.Find(x => x.skill == sk)?.amount ?? 0;
             }
             return Mathf.Clamp(Mathf.RoundToInt(CustomizeAndroidWindow.LevelFinalAdjustmentCurve.Evaluate(x)), 0, 20);
         }

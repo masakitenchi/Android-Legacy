@@ -4,18 +4,19 @@
 // MVID: 8066CB7E-6A03-46DB-AA24-53C0F3BB55DD
 // Assembly location: D:\SteamLibrary\steamapps\common\RimWorld\Mods\Androids\Assemblies\Androids.dll
 
+global using HarmonyLib;
+global using RimWorld;
+global using RimWorld.Planet;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Reflection;
+global using System.Reflection.Emit;
+global using UnityEngine;
+global using Verse;
+global using Verse.AI;
+global using LudeonTK;
 using Androids.Integration;
-using HarmonyLib;
-using RimWorld;
-using RimWorld.Planet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using UnityEngine;
-using Verse;
-using Verse.AI;
 
 namespace Androids
 {
@@ -34,17 +35,17 @@ namespace Androids
 
         static HarmonyPatches()
         {
-            HarmonyPatches.Need_Bladder = DefDatabase<NeedDef>.GetNamedSilentFail("Bladder");
-            HarmonyPatches.Need_Hygiene = DefDatabase<NeedDef>.GetNamedSilentFail("Hygiene");
+            Need_Bladder = DefDatabase<NeedDef>.GetNamedSilentFail("Bladder");
+            Need_Hygiene = DefDatabase<NeedDef>.GetNamedSilentFail("Hygiene");
             Harmony harmony = new Harmony("ChJees.Androids");
             string str = "";
             try
             {
                 str = "Pawn_NeedsTracker.ShouldHaveNeed";
                 System.Type type1 = typeof(Pawn_NeedsTracker);
-                HarmonyPatches.int_Pawn_NeedsTracker_GetPawn = type1.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+                int_Pawn_NeedsTracker_GetPawn = type1.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch((MethodBase)type1.GetMethod("ShouldHaveNeed", BindingFlags.Instance | BindingFlags.NonPublic), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_NeedsTracker_ShouldHaveNeed")));
-                str = "PawnRenderer.RenderPawnInternal";
+                /* str = "PawnRenderer.RenderPawnInternal";
                 System.Type type2 = typeof(PawnRenderer);
                 HarmonyPatches.int_PawnRenderer_GetPawn = type2.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch((MethodBase)type2.GetMethod("RenderPawnInternal", BindingFlags.Instance | BindingFlags.NonPublic, System.Type.DefaultBinder, CallingConventions.Any, new System.Type[6]
@@ -55,10 +56,10 @@ namespace Androids
           typeof (Rot4),
           typeof (RotDrawMode),
           typeof (PawnRenderFlags)
-                }, (ParameterModifier[])null), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PawnRenderer_RenderPawnInternal")));
+                }, (ParameterModifier[])null), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PawnRenderer_RenderPawnInternal"))); */
                 str = "Need_Food.Starving";
                 System.Type type3 = typeof(Need_Food);
-                HarmonyPatches.int_Need_Food_Starving_GetPawn = type3.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+                int_Need_Food_Starving_GetPawn = type3.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 MethodInfo getMethod = AccessTools.Property(type3, "Starving")?.GetGetMethod();
                 harmony.Patch((MethodBase)getMethod, postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Need_Food_Starving_Get")));
                 str = "HealthUtility.AdjustSeverity";
@@ -66,7 +67,7 @@ namespace Androids
                 harmony.Patch((MethodBase)type4.GetMethod("AdjustSeverity"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_HealthUtility_AdjustSeverity")));
                 str = "ThinkNode_ConditionalNeedPercentageAbove.Satisfied";
                 System.Type type5 = typeof(ThinkNode_ConditionalNeedPercentageAbove);
-                HarmonyPatches.int_ConditionalPercentageNeed_need = type5.GetField("need", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+                int_ConditionalPercentageNeed_need = type5.GetField("need", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch((MethodBase)type5.GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_ThinkNode_ConditionalNeedPercentageAbove_Satisfied")));
                 str = "Pawn_HealthTracker.DropBloodFilth";
                 System.Type type6 = typeof(Pawn_HealthTracker);
@@ -109,7 +110,7 @@ namespace Androids
           typeof (int),
           typeof (bool)
                 };
-                harmony.Patch((MethodBase)type13.GetMethod("ApproxDaysWorthOfFood", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, System.Type.DefaultBinder, types, (ParameterModifier[])null), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_DaysWorthOfFoodCalculator_ApproxDaysWorthOfFood")));
+                harmony.Patch((MethodBase)type13.GetMethod("ApproxDaysWorthOfFood", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, Type.DefaultBinder, types, (ParameterModifier[])null), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_DaysWorthOfFoodCalculator_ApproxDaysWorthOfFood")));
                 str = "GatheringsUtility.ShouldPawnKeepPartying";
                 System.Type type14 = typeof(GatheringsUtility);
                 harmony.Patch((MethodBase)type14.GetMethod("ShouldGuestKeepAttendingGathering"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PartyUtility_ShouldPawnKeepAttending")));
@@ -133,7 +134,7 @@ namespace Androids
                 harmony.Patch((MethodBase)type20.GetMethod("CanInitiateInteraction"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanInitiateInteraction")));
                 str = "Pawn_HealthTracker.ShouldBeDeadFromRequiredCapacity";
                 System.Type type21 = typeof(Pawn_HealthTracker);
-                HarmonyPatches.int_Pawn_HealthTracker_GetPawn = type21.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+                int_Pawn_HealthTracker_GetPawn = type21.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch((MethodBase)type21.GetMethod("ShouldBeDeadFromRequiredCapacity"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_ShouldBeDeadFromRequiredCapacity")));
                 str = "HediffSet.CalculatePain";
                 System.Type type22 = typeof(HediffSet);
@@ -152,7 +153,7 @@ namespace Androids
                 harmony.Patch((MethodBase)type26.GetMethod("TryGiveJob", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_GetJoyTryGiveJob")));
                 str = "Pawn_InteractionsTracker.SocialFightChance && InteractionsTrackerTick && CanInteractNowWith";
                 System.Type type27 = typeof(Pawn_InteractionsTracker);
-                HarmonyPatches.int_Pawn_InteractionsTracker_GetPawn = type27.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+                int_Pawn_InteractionsTracker_GetPawn = type27.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch((MethodBase)type27.GetMethod("SocialFightChance"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_SocialFightChance")));
                 harmony.Patch((MethodBase)type27.GetMethod("InteractionsTrackerTick"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_InteractionsTrackerTick")));
                 harmony.Patch((MethodBase)type27.GetMethod("CanInteractNowWith"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanInteractNowWith")));
@@ -234,7 +235,7 @@ namespace Androids
 
         public static void Patch_PawnGenerator_TryGenerateNewPawnInternal_Post(ref Pawn __result)
         {
-            if (__result == null || HarmonyPatches.bypassGenerationOfUpgrades || !__result.IsAndroid())
+            if (__result == null || bypassGenerationOfUpgrades || !__result.IsAndroid())
                 return;
             bool flag = false;
             if (__result.story != null)
@@ -477,7 +478,7 @@ namespace Androids
           ref DamageInfo dinfo,
           DamageWorker.DamageResult result)
         {
-            Pawn pawn = HarmonyPatches.Pawn_HealthTracker_GetPawn(__instance);
+            Pawn pawn = Pawn_HealthTracker_GetPawn(__instance);
             if (!pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || pawn.Dead || ThingDefOf.ChjAndroid.race.hediffGiverSets == null)
                 return;
             for (int index1 = 0; index1 < ThingDefOf.ChjAndroid.race.hediffGiverSets.Count; ++index1)
@@ -490,7 +491,7 @@ namespace Androids
 
         public static void Patch_Pawn_HealthTracker_HealthTick(Pawn_HealthTracker __instance)
         {
-            Pawn pawn = HarmonyPatches.Pawn_HealthTracker_GetPawn(__instance);
+            Pawn pawn = Pawn_HealthTracker_GetPawn(__instance);
             if (!pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || pawn.Dead)
                 return;
             List<HediffGiverSetDef> hediffGiverSets = ThingDefOf.ChjAndroid.race.hediffGiverSets;
@@ -512,7 +513,7 @@ namespace Androids
 
         public static bool Patch_Pawn_HealthTracker_DropBloodFilth(Pawn_HealthTracker __instance)
         {
-            Pawn pawn = HarmonyPatches.Pawn_HealthTracker_GetPawn(__instance);
+            Pawn pawn = Pawn_HealthTracker_GetPawn(__instance);
             if (!pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike) || !pawn.Spawned && !(pawn.ParentHolder is Pawn_CarryTracker) || !pawn.SpawnedOrAnyParentSpawned || pawn.RaceProps.BloodDef == null)
                 return true;
             FilthMaker.TryMakeFilth(pawn.PositionHeld, pawn.MapHeld, ThingDefOf.ChjAndroid.race.BloodDef, pawn.LabelIndefinite());
@@ -524,7 +525,7 @@ namespace Androids
           ref AlertReport __result)
         {
             IEnumerable<Pawn> __result1 = (IEnumerable<Pawn>)null;
-            HarmonyPatches.CompatPatch_BoredPawns(ref __result1);
+            CompatPatch_BoredPawns(ref __result1);
             __result = AlertReport.CulpritsAre(__result1.ToList<Pawn>());
             return false;
         }
@@ -577,7 +578,7 @@ namespace Androids
 
         public static bool CompatPatch_InteractionsTrackerTick(ref Pawn_InteractionsTracker __instance)
         {
-            MechanicalPawnProperties modExtension = HarmonyPatches.Pawn_InteractionsTracker_GetPawn(__instance).def.GetModExtension<MechanicalPawnProperties>();
+            MechanicalPawnProperties modExtension = Pawn_InteractionsTracker_GetPawn(__instance).def.GetModExtension<MechanicalPawnProperties>();
             return modExtension == null || modExtension.canSocialize;
         }
 
@@ -599,7 +600,7 @@ namespace Androids
           ref InteractionDef interaction,
           ref Pawn initiator)
         {
-            MechanicalPawnProperties modExtension1 = HarmonyPatches.Pawn_InteractionsTracker_GetPawn(__instance).def.GetModExtension<MechanicalPawnProperties>();
+            MechanicalPawnProperties modExtension1 = Pawn_InteractionsTracker_GetPawn(__instance).def.GetModExtension<MechanicalPawnProperties>();
             int num;
             if (modExtension1 == null || modExtension1.canSocialize)
             {
@@ -679,7 +680,7 @@ namespace Androids
           ref Pawn_HealthTracker __instance,
           ref PawnCapacityDef __result)
         {
-            if (!HarmonyPatches.Pawn_HealthTracker_GetPawn(__instance).def.HasModExtension<MechanicalPawnProperties>())
+            if (!Pawn_HealthTracker_GetPawn(__instance).def.HasModExtension<MechanicalPawnProperties>())
                 return true;
             List<PawnCapacityDef> defsListForReading = DefDatabase<PawnCapacityDef>.AllDefsListForReading;
             for (int index = 0; index < defsListForReading.Count; ++index)
@@ -723,20 +724,20 @@ namespace Androids
             return false;
         }
 
-        public static Pawn Pawn_HealthTracker_GetPawn(Pawn_HealthTracker instance) => (Pawn)HarmonyPatches.int_Pawn_HealthTracker_GetPawn.GetValue((object)instance);
+        public static Pawn Pawn_HealthTracker_GetPawn(Pawn_HealthTracker instance) => (Pawn)int_Pawn_HealthTracker_GetPawn.GetValue((object)instance);
 
-        public static Pawn Pawn_InteractionsTracker_GetPawn(Pawn_InteractionsTracker instance) => (Pawn)HarmonyPatches.int_Pawn_InteractionsTracker_GetPawn.GetValue((object)instance);
+        public static Pawn Pawn_InteractionsTracker_GetPawn(Pawn_InteractionsTracker instance) => (Pawn)int_Pawn_InteractionsTracker_GetPawn.GetValue((object)instance);
 
-        public static Pawn Pawn_NeedsTracker_GetPawn(Pawn_NeedsTracker instance) => (Pawn)HarmonyPatches.int_Pawn_NeedsTracker_GetPawn.GetValue((object)instance);
+        public static Pawn Pawn_NeedsTracker_GetPawn(Pawn_NeedsTracker instance) => (Pawn)int_Pawn_NeedsTracker_GetPawn.GetValue((object)instance);
 
-        public static Pawn Need_Food_Starving_GetPawn(Need_Food instance) => (Pawn)HarmonyPatches.int_Need_Food_Starving_GetPawn.GetValue((object)instance);
+        public static Pawn Need_Food_Starving_GetPawn(Need_Food instance) => (Pawn)int_Need_Food_Starving_GetPawn.GetValue((object)instance);
 
-        public static Pawn PawnRenderer_GetPawn_GetPawn(PawnRenderer instance) => (Pawn)HarmonyPatches.int_PawnRenderer_GetPawn.GetValue((object)instance);
+        public static Pawn PawnRenderer_GetPawn_GetPawn(PawnRenderer instance) => (Pawn)int_PawnRenderer_GetPawn.GetValue((object)instance);
 
         public static NeedDef ThinkNode_ConditionalNeedPercentageAbove_GetNeed(
           ThinkNode_ConditionalNeedPercentageAbove instance)
         {
-            return (NeedDef)HarmonyPatches.int_ConditionalPercentageNeed_need.GetValue((object)instance);
+            return (NeedDef)int_ConditionalPercentageNeed_need.GetValue((object)instance);
         }
 
         public static bool Patch_ThinkNode_ConditionalNeedPercentageAbove_Satisfied(
@@ -744,7 +745,7 @@ namespace Androids
           ref bool __result,
           ref Pawn pawn)
         {
-            NeedDef need = HarmonyPatches.ThinkNode_ConditionalNeedPercentageAbove_GetNeed(__instance);
+            NeedDef need = ThinkNode_ConditionalNeedPercentageAbove_GetNeed(__instance);
             if (pawn.needs.TryGetNeed(need) != null)
                 return true;
             __result = false;
@@ -764,18 +765,18 @@ namespace Androids
           ref bool __result,
           ref NeedDef nd)
         {
-            Pawn pawn = HarmonyPatches.Pawn_NeedsTracker_GetPawn(__instance);
+            Pawn pawn = Pawn_NeedsTracker_GetPawn(__instance);
             if (NeedsDefOf.ChJEnergy != null && nd == NeedsDefOf.ChJEnergy)
             {
                 int num = pawn.IsAndroid() ? 1 : (pawn.def.HasModExtension<MechanicalPawnProperties>() ? 1 : 0);
                 __result = num != 0;
             }
-            if (AndroidsModSettings.Instance.droidCompatibilityMode || nd != NeedDefOf.Food && nd != NeedDefOf.Rest && nd != NeedDefOf.Joy && nd != NeedsDefOf.Beauty && nd != NeedsDefOf.Comfort && nd != NeedsDefOf.RoomSize && nd != NeedsDefOf.Outdoors && (HarmonyPatches.Need_Bladder == null || nd != HarmonyPatches.Need_Bladder) && (HarmonyPatches.Need_Hygiene == null || nd != HarmonyPatches.Need_Hygiene) || !pawn.def.HasModExtension<MechanicalPawnProperties>())
+            if (AndroidsModSettings.Instance.droidCompatibilityMode || nd != NeedDefOf.Food && nd != NeedDefOf.Rest && nd != NeedsDefOf.Joy && nd != NeedsDefOf.Beauty && nd != NeedsDefOf.Comfort && nd != NeedsDefOf.RoomSize && nd != NeedsDefOf.Outdoors && (Need_Bladder == null || nd != Need_Bladder) && (Need_Hygiene == null || nd != Need_Hygiene) || !pawn.def.HasModExtension<MechanicalPawnProperties>())
                 return;
             __result = false;
         }
 
-        public static void Patch_PawnRenderer_RenderPawnInternal(
+        /* public static void Patch_PawnRenderer_RenderPawnInternal(
           ref PawnRenderer __instance,
           Vector3 rootLoc,
           float angle,
@@ -812,11 +813,11 @@ namespace Androids
                         GenDraw.DrawMeshNowOrLater(mesh, loc, quat, EffectTextures.GetEyeGraphic(true, pawnGetPawn.story.HairColor.SaturationChanged(0.6f)).MatSingle, flags.FlagSet(PawnRenderFlags.Portrait));
                 }
             }
-        }
+        } */
 
         public static void Patch_Need_Food_Starving_Get(ref Need_Food __instance, ref bool __result)
         {
-            Pawn pawn = HarmonyPatches.Need_Food_Starving_GetPawn(__instance);
+            Pawn pawn = Need_Food_Starving_GetPawn(__instance);
             if (pawn == null || !pawn.IsAndroid())
                 return;
             __result = false;
@@ -895,7 +896,7 @@ namespace Androids
 
         public static bool GetPartsPrefix(BodyDef __instance, ref BodyPartDef def)
         {
-            if (__instance.corePart.def == AndroidBodyPartDefOf.AndroidThorax && def == BodyPartDefOf.Brain)
+            if (__instance.corePart.def == AndroidBodyPartDefOf.AndroidThorax && def == AndroidBodyPartDefOf.Brain)
                 def = AndroidBodyPartDefOf.ArtificialAndroidBrain;
             return true;
         }

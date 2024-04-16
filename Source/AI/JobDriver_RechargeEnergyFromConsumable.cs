@@ -61,14 +61,14 @@ namespace Androids
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedNullOrForbidden(TargetIndex.A);
-            if (!base.TargetB.IsValid)
+            if (!TargetB.IsValid)
             {
                 AddFailCondition(() => energyNeed == null);
             }
             if (!isUsedFromInventory)
             {
                 yield return Toils_Reserve.Reserve(TargetIndex.A);
-                if (base.TargetB.IsValid)
+                if (TargetB.IsValid)
                 {
                     yield return Toils_Reserve.Reserve(TargetIndex.B);
                 }
@@ -81,12 +81,12 @@ namespace Androids
                 {
                     initAction = delegate
                     {
-                        if (!thingIsSplitOff && pawn.carryTracker.CarriedThing != base.TargetThingA)
+                        if (!thingIsSplitOff && pawn.carryTracker.CarriedThing != TargetThingA)
                         {
-                            Thing thing = base.TargetThingA.SplitOff(job.count);
+                            Thing thing = TargetThingA.SplitOff(job.count);
                             thingIsSplitOff = true;
                             GenPlace.TryPlaceThing(thing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
-                            base.TargetThingA = thing;
+                            TargetThingA = thing;
                         }
                     }
                 };
@@ -111,7 +111,7 @@ namespace Androids
                     }
                 }
             });
-            if (base.TargetB.IsValid)
+            if (TargetB.IsValid)
             {
                 yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.Touch).FailOnForbidden(TargetIndex.B);
                 yield return Toils_General.Wait(100).WithProgressBarToilDelay(TargetIndex.A);
@@ -121,7 +121,7 @@ namespace Androids
                     Thing carriedThing2 = pawn.carryTracker.CarriedThing;
                     if (carriedThing2 != null)
                     {
-                        carriedThing2.TryGetComp<EnergySourceComp>()?.RechargeEnergyNeed((Pawn)base.TargetB.Thing);
+                        carriedThing2.TryGetComp<EnergySourceComp>()?.RechargeEnergyNeed((Pawn)TargetB.Thing);
                         pawn.carryTracker.DestroyCarriedThing();
                     }
                 });

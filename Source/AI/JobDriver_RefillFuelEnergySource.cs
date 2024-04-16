@@ -36,7 +36,7 @@ namespace Androids
                 Thing carriedThing = pawn.carryTracker.CarriedThing;
                 if (carriedThing != null)
                 {
-                    base.TargetThingA.TryGetComp<EnergySource_Fueled>()?.LoadFuel(carriedThing);
+                    TargetThingA.TryGetComp<EnergySource_Fueled>()?.LoadFuel(carriedThing);
                     pawn.carryTracker.DestroyCarriedThing();
                 }
             });

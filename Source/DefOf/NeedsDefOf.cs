@@ -11,6 +11,7 @@ namespace Androids
     [DefOf]
     public static class NeedsDefOf
     {
+        public static NeedDef Joy;
         public static NeedDef Beauty;
         public static NeedDef Comfort;
         public static NeedDef RoomSize;

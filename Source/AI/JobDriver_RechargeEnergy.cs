@@ -41,7 +41,7 @@ namespace Androids
             this.FailOnDestroyedNullOrForbidden(TargetIndex.A);
             AddFailCondition(() => energyNeed == null);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
-            if (!base.TargetB.IsValid)
+            if (!TargetB.IsValid)
             {
                 yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch);
             }
@@ -77,7 +77,7 @@ namespace Androids
                 }
                 return (ticksSpentCharging <= MaxTicksSpentCharging) ? JobCondition.Ongoing : JobCondition.Incompletable;
             });
-            if (!base.TargetB.IsValid)
+            if (!TargetB.IsValid)
             {
                 toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.ClosestTouch);
             }

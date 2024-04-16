@@ -6,12 +6,13 @@
 
 using Androids.Integration;
 using Verse;
+using Verse.AI.Group;
 
 namespace Androids
 {
     public class DeathActionWorker_Android : DeathActionWorker
     {
-        public override void PawnDied(Corpse corpse)
+        public override void PawnDied(Corpse corpse, Lord prevLord)
         {
             if (!AndroidsModSettings.Instance.androidExplodesOnDeath)
                 return;

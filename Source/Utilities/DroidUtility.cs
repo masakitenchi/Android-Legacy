@@ -124,13 +124,13 @@ namespace Androids
                 {
                     int num4 = source.Count<Name>((Func<Name, bool>)(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower())));
                     string nickName = (string)(pawnKindDef.race.LabelCap + " ") + num4.ToString();
-                    pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName(nickName);
+                    pawnBeingCrafted.Name = (Name)MakeDroidName(nickName);
                 }
                 else
-                    pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName((string)null);
+                    pawnBeingCrafted.Name = (Name)MakeDroidName((string)null);
             }
             else
-                pawnBeingCrafted.Name = (Name)DroidUtility.MakeDroidName((string)null);
+                pawnBeingCrafted.Name = (Name)MakeDroidName((string)null);
             return pawnBeingCrafted;
         }
 
@@ -211,13 +211,13 @@ namespace Androids
                 Log.Warning("Tried to use destroyed repair kit.");
                 medicine = (Thing)null;
             }
-            DroidUtility.GetOptimalHediffsToTendWithSingleTreatment(patient, medicine != null, DroidUtility.tmpHediffsToTend);
-            for (int index = 0; index < DroidUtility.tmpHediffsToTend.Count; ++index)
+            GetOptimalHediffsToTendWithSingleTreatment(patient, medicine != null, tmpHediffsToTend);
+            for (int index = 0; index < tmpHediffsToTend.Count; ++index)
             {
                 if (medicine == null)
-                    DroidUtility.tmpHediffsToTend[index].Tended(0.1f, (float)index);
+                    tmpHediffsToTend[index].Tended(0.1f, (float)index);
                 else
-                    patient.health.RemoveHediff(DroidUtility.tmpHediffsToTend[index]);
+                    patient.health.RemoveHediff(tmpHediffsToTend[index]);
             }
             if (doctor != null && doctor.Faction == Faction.OfPlayer && patient.Faction != doctor.Faction && !patient.IsPrisoner && patient.Faction != null)
                 ++patient.mindState.timesGuestTendedToByPlayer;
@@ -256,10 +256,10 @@ namespace Androids
           List<Hediff> tendableHediffsInTendPriorityOrder = null)
         {
             outHediffsToTend.Clear();
-            DroidUtility.tmpHediffs.Clear();
+            tmpHediffs.Clear();
             if (tendableHediffsInTendPriorityOrder != null)
             {
-                DroidUtility.tmpHediffs.AddRange((IEnumerable<Hediff>)tendableHediffsInTendPriorityOrder);
+                tmpHediffs.AddRange((IEnumerable<Hediff>)tendableHediffsInTendPriorityOrder);
             }
             else
             {
@@ -267,29 +267,29 @@ namespace Androids
                 for (int index = 0; index < hediffs.Count; ++index)
                 {
                     if (hediffs[index].TendableNow())
-                        DroidUtility.tmpHediffs.Add(hediffs[index]);
+                        tmpHediffs.Add(hediffs[index]);
                 }
-                TendUtility.SortByTendPriority(DroidUtility.tmpHediffs);
+                TendUtility.SortByTendPriority(tmpHediffs);
             }
-            if (!DroidUtility.tmpHediffs.Any<Hediff>())
+            if (!tmpHediffs.Any<Hediff>())
                 return;
-            Hediff tmpHediff1 = DroidUtility.tmpHediffs[0];
+            Hediff tmpHediff1 = tmpHediffs[0];
             outHediffsToTend.Add(tmpHediff1);
             HediffCompProperties_TendDuration propertiesTendDuration = tmpHediff1.def.CompProps<HediffCompProperties_TendDuration>();
             if (propertiesTendDuration != null && propertiesTendDuration.tendAllAtOnce)
             {
-                for (int index = 0; index < DroidUtility.tmpHediffs.Count; ++index)
+                for (int index = 0; index < tmpHediffs.Count; ++index)
                 {
-                    if (DroidUtility.tmpHediffs[index] != tmpHediff1 && DroidUtility.tmpHediffs[index].def == tmpHediff1.def)
-                        outHediffsToTend.Add(DroidUtility.tmpHediffs[index]);
+                    if (tmpHediffs[index] != tmpHediff1 && tmpHediffs[index].def == tmpHediff1.def)
+                        outHediffsToTend.Add(tmpHediffs[index]);
                 }
             }
             else if (tmpHediff1 is Hediff_Injury & usingMedicine)
             {
                 float severity1 = tmpHediff1.Severity;
-                for (int index = 0; index < DroidUtility.tmpHediffs.Count; ++index)
+                for (int index = 0; index < tmpHediffs.Count; ++index)
                 {
-                    if (DroidUtility.tmpHediffs[index] != tmpHediff1 && DroidUtility.tmpHediffs[index] is Hediff_Injury tmpHediff2)
+                    if (tmpHediffs[index] != tmpHediff1 && tmpHediffs[index] is Hediff_Injury tmpHediff2)
                     {
                         float severity2 = tmpHediff2.Severity;
                         if ((double)severity1 + (double)severity2 <= 20.0)
@@ -300,7 +300,7 @@ namespace Androids
                     }
                 }
             }
-            DroidUtility.tmpHediffs.Clear();
+            tmpHediffs.Clear();
         }
     }
 }

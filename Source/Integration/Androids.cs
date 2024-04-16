@@ -17,7 +17,7 @@ namespace Androids.Integration
         public Androids(ModContentPack content)
           : base(content)
         {
-            Integration.Androids.Instance = this;
+            Instance = this;
             AndroidsModSettings.Instance = this.GetSettings<AndroidsModSettings>();
             if (AndroidsModSettings.Instance == null)
                 return;

@@ -96,7 +96,7 @@ namespace Androids
                             int num = CalculateFuelNeededToRefill(thing);
                             if (num > 0)
                             {
-                                Job job = new Job(base.EnergyProps.refillJob, parent, thing)
+                                Job job = new Job(EnergyProps.refillJob, parent, thing)
                                 {
                                     count = num
                                 };

@@ -20,10 +20,10 @@ namespace Androids
         public static Graphic GetEyeGraphic(bool isFront, Color color)
         {
             Pair<bool, Color> key = new Pair<bool, Color>(isFront, color);
-            if (EffectTextures.eyeCache.ContainsKey(key))
-                return EffectTextures.eyeCache[key];
-            EffectTextures.eyeCache[key] = !isFront ? GraphicDatabase.Get<Graphic_Single>(EffectTextures.Eyeglow_Side_Path, ShaderDatabase.MoteGlow, Vector2.one, color) : GraphicDatabase.Get<Graphic_Single>(EffectTextures.Eyeglow_Front_Path, ShaderDatabase.MoteGlow, Vector2.one, color);
-            return EffectTextures.eyeCache[key];
+            if (eyeCache.ContainsKey(key))
+                return eyeCache[key];
+            eyeCache[key] = !isFront ? GraphicDatabase.Get<Graphic_Single>(Eyeglow_Side_Path, ShaderDatabase.MoteGlow, Vector2.one, color) : GraphicDatabase.Get<Graphic_Single>(Eyeglow_Front_Path, ShaderDatabase.MoteGlow, Vector2.one, color);
+            return eyeCache[key];
         }
     }
 }
