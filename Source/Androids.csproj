@@ -7,30 +7,24 @@
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\Assemblies</OutputPath>
+    <Version>1.5</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AlienRace">
-      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\AlienRaces\1.5\Assemblies\AlienRace.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\AlienRaces\$(Version)\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VanillaPsycastsExpanded">
-      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\Vanilla Psycasts Expanded\1.5\Assemblies\VanillaPsycastsExpanded.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\Vanilla Psycasts Expanded\$(Version)\Assemblies\VanillaPsycastsExpanded.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VFECore">
-      <HintPath>D:\SteamLibrary\steamapps\workshop\content\294100\2023507013\1.5\Assemblies\VFECore.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\workshop\content\294100\2023507013\$(Version)\Assemblies\VFECore.dll</HintPath>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GameComponent\UpgradeTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer" Version="2.2.1" />

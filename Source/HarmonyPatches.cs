@@ -197,8 +197,8 @@ namespace Androids
                 Type type40 = typeof(Pawn_StyleTracker);
                 harmony.Patch(AccessTools.PropertyGetter(type40, "CanDesireLookChange"), postfix: new HarmonyMethod(typeof(HarmonyPatches), "Patch_CanDesireLookChange_getter"));
                 Type type41 = typeof(ITab_Pawn_Visitor);
-                str = "ITab_Pawn_Visitor.<>c__DisplayClass7_0.<FillTab>g__CanUsePrisonerInteractionMode|0";
-                harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass7_0"), x => x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
+                str = "ITab_Pawn_Visitor+<>c__DisplayClass8_0.<DoPrisonerTab>g__CanUsePrisonerInteractionMode|0";
+                harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass8_0"), x => x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
                 System.Type xenogerm = typeof(Xenogerm);
                 harmony.Patch(AccessTools.Method(xenogerm, "GetFloatMenuOptions"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallXenoGerm_Prefix")));
                 str = "Xenogerm_GetFloatMenuOptions_CanInstallXenoGerm_Prefix";
@@ -842,11 +842,10 @@ namespace Androids
         #endregion
 
         #region Biotech
-        public static void CanInstallMechLinkPostfix(Pawn p, ref bool __result, ref string failReason)
+        public static void CanInstallMechLinkPostfix(Pawn p, ref AcceptanceReport __result)
         {
             if (!__result && p.IsAndroid())
             {
-                failReason = null;
                 __result = true;
             }
         }
