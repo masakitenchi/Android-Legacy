@@ -22,7 +22,7 @@ namespace Androids
                 return;
             if (this.EnergyProps.isConsumable)
             {
-                float num = (float)this.parent.stackCount * this.EnergyProps.energyWhenConsumed;
+                float num = parent.stackCount * this.EnergyProps.energyWhenConsumed;
                 need.CurLevel += num;
             }
             else
@@ -35,16 +35,16 @@ namespace Androids
             Need_Energy need = selPawn.needs.TryGetNeed<Need_Energy>();
             if (energySourceComp.EnergyProps.isConsumable && need != null)
             {
-                int thingCount = (int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / (double)energySourceComp.EnergyProps.energyWhenConsumed);
+                int thingCount = (int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / energySourceComp.EnergyProps.energyWhenConsumed);
                 if (thingCount > 0)
-                    yield return new FloatMenuOption((string)"AndroidConsumeEnergySource".Translate((NamedArgument)energySourceComp.parent.LabelCap), (Action)(() =>
+                    yield return new FloatMenuOption((string)"AndroidConsumeEnergySource".Translate((NamedArgument)energySourceComp.parent.LabelCap), () =>
                     {
                         Pawn_JobTracker jobs = selPawn.jobs;
-                        Job job = new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo((Thing)this.parent));
+                        Job job = new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(parent));
                         job.count = thingCount;
                         JobTag? tag = new JobTag?(JobTag.Misc);
                         jobs.TryTakeOrderedJob(job, tag);
-                    }), revalidateClickTarget: ((Thing)energySourceComp.parent));
+                    }, revalidateClickTarget: energySourceComp.parent);
             }
         }
     }

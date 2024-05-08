@@ -18,10 +18,10 @@ namespace Androids
             Pawn pawn = DroidUtility.MakeCustomDroid(this.SpawnerProps.pawnKind, usedBy.Faction);
             if (pawn == null)
                 return;
-            GenPlace.TryPlaceThing((Thing)pawn, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
+            GenPlace.TryPlaceThing(pawn, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
             if (!this.SpawnerProps.sendMessage)
                 return;
-            Messages.Message((string)this.SpawnerProps.pawnSpawnedStringKey.Translate((NamedArgument)pawn.Name.ToStringFull, (NamedArgument)usedBy.Name.ToStringFull), (LookTargets)new GlobalTargetInfo((Thing)pawn), MessageTypeDefOf.NeutralEvent);
+            Messages.Message((string)this.SpawnerProps.pawnSpawnedStringKey.Translate((NamedArgument)pawn.Name.ToStringFull, (NamedArgument)usedBy.Name.ToStringFull), (LookTargets)new GlobalTargetInfo(pawn), MessageTypeDefOf.NeutralEvent);
         }
     }
 }

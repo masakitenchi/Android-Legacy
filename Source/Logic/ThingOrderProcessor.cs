@@ -34,7 +34,7 @@ namespace Androids
                 if (requestedItem.nutrition)
                 {
                     float num = this.CountNutrition(things);
-                    if ((double)num < (double)requestedItem.amount)
+                    if ((double)num < requestedItem.amount)
                         yield return new ThingOrderRequest()
                         {
                             nutrition = true,
@@ -44,8 +44,8 @@ namespace Androids
                 }
                 else
                 {
-                    float num = (float)this.thingHolder.TotalStackCountOfDef(requestedItem.thingDef);
-                    if ((double)num < (double)requestedItem.amount)
+                    float num = this.thingHolder.TotalStackCountOfDef(requestedItem.thingDef);
+                    if ((double)num < requestedItem.amount)
                         yield return new ThingOrderRequest()
                         {
                             thingDef = requestedItem.thingDef,
@@ -59,7 +59,7 @@ namespace Androids
         {
             this.thingHolder = things;
             float num1 = 0.0f;
-            foreach (Thing thing in (IEnumerable<Thing>)this.thingHolder)
+            foreach (Thing thing in thingHolder)
             {
                 if (thing is Corpse corpse)
                     num1 += FoodUtility.GetBodyPartNutrition(corpse, corpse.InnerPawn.RaceProps.body.corePart);
@@ -67,7 +67,7 @@ namespace Androids
                 {
                     double num2 = (double)num1;
                     ThingDef def = thing.def;
-                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * (double)thing.stackCount;
+                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * thing.stackCount;
                     num1 = (float)(num2 + num3);
                 }
             }

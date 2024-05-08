@@ -25,7 +25,7 @@ namespace Androids
             {
                 if (allDef.defName.StartsWith("Administer_"))
                 {
-                    totalnum += allDef.recipeUsers.RemoveAll((Predicate<ThingDef>)(thingDef => thingDef.HasModExtension<MechanicalPawnProperties>()));
+                    totalnum += allDef.recipeUsers.RemoveAll(thingDef => thingDef.HasModExtension<MechanicalPawnProperties>());
                 }
             }
             if (totalnum > 0)

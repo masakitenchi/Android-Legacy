@@ -25,7 +25,7 @@ namespace Androids
                 if (instruction.opcode == OpCodes.Ldstr && (string)instruction.operand == "BleedingRate")
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Call, (object)labelHelper);
+                    yield return new CodeInstruction(OpCodes.Call, labelHelper);
                 }
                 else
                     yield return instruction;

@@ -33,7 +33,7 @@ namespace Androids
                 if (code.opcode == OpCodes.Ldsfld && code.operand == (object)bleedingIconField)
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Call, (object)iconHelper);
+                    yield return new CodeInstruction(OpCodes.Call, iconHelper);
                 }
             }
         }

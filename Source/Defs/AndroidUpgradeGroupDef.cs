@@ -31,14 +31,14 @@ namespace Androids
                             this.intCachedUpgrades.Add(allDef);
                     }
                 }
-                return (IEnumerable<AndroidUpgradeDef>)this.intCachedUpgrades;
+                return intCachedUpgrades;
             }
         }
 
         public float calculateNeededHeight(Rect upgradeSize, float rowWidth)
         {
             int num = (int)Math.Floor((double)rowWidth / (double)upgradeSize.width);
-            return upgradeSize.height * (float)Math.Ceiling((double)this.Upgrades.Count<AndroidUpgradeDef>() / (double)num);
+            return upgradeSize.height * (float)Math.Ceiling(this.Upgrades.Count<AndroidUpgradeDef>() / (double)num);
         }
     }
 }

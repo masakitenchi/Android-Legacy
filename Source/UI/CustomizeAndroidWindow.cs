@@ -87,7 +87,7 @@ namespace Androids
         public Color originalHairColor;
         public HairDef originalHairDef;
         public static readonly float upgradesOffset = 640f;
-        public static List<Color> DefaultHairColors = new List<Color>((IEnumerable<Color>)new Color[13]
+        public static List<Color> DefaultHairColors = new List<Color>(new Color[13]
         {
           new Color(0.17f, 0.17f, 0.17f, 1f),
           new Color(0.02f, 0.02f, 0.02f, 1f),
@@ -164,7 +164,7 @@ namespace Androids
         public List<Trait> pawnTraits(Pawn pawn)
         {
             if (!this.IsUpgrade)
-                return (List<Trait>)null;
+                return null;
             List<Trait> list = pawn.story.traits.allTraits.ToList<Trait>();
             if (this._pawnTraits.NullOrEmpty<Trait>())
                 this._pawnTraits = list;
@@ -222,14 +222,14 @@ namespace Androids
             }
             if (this.newChildhoodBackstory != null)
             {
-                this.newAndroid.story.Childhood = (BackstoryDef)this.newChildhoodBackstory;
-                this.newChildhoodBackstory = (BackstoryDef)null;
+                this.newAndroid.story.Childhood = newChildhoodBackstory;
+                this.newChildhoodBackstory = null;
                 this.RefreshPawn();
             }
             if (this.newAdulthoodBackstory != null)
             {
-                this.newAndroid.story.Adulthood = (BackstoryDef)this.newAdulthoodBackstory;
-                this.newAdulthoodBackstory = (BackstoryDef)null;
+                this.newAndroid.story.Adulthood = newAdulthoodBackstory;
+                this.newAdulthoodBackstory = null;
                 this.RefreshPawn();
             }
             if (this.newTrait != null)
@@ -237,7 +237,7 @@ namespace Androids
                 if (this.replacedTrait != null)
                 {
                     this.newAndroid.story.traits.allTraits.Remove(this.replacedTrait);
-                    this.replacedTrait = (Trait)null;
+                    this.replacedTrait = null;
                 }
                 this.newAndroid.story.traits.allTraits.Add(new Trait(this.newTrait.def, this.newTrait.Degree));
                 if (this.newAndroid.workSettings != null)
@@ -247,7 +247,7 @@ namespace Androids
                 if (this.newAndroid.RaceProps.Humanlike)
                     this.newAndroid.needs.mood.thoughts.situational.Notify_SituationalThoughtsDirty();
                 this.RefreshPawn();
-                this.newTrait = (Trait)null;
+                this.newTrait = null;
             }
             Rect pawnRect = new Rect(inRect)
             {
@@ -258,9 +258,9 @@ namespace Androids
             pawnRect.y += 16f;
             if (this.newAndroid != null)
             {
-                Rect pawnRenderRect = new Rect((float)((double)pawnRect.xMin + ((double)pawnRect.width - (double)CustomizeAndroidWindow.PawnPortraitSize.x) / 2.0 - 10.0), pawnRect.yMin + 20f, CustomizeAndroidWindow.PawnPortraitSize.x, CustomizeAndroidWindow.PawnPortraitSize.y);
-                GUI.DrawTexture(pawnRenderRect, (Texture)PortraitsCache.Get(this.newAndroid, CustomizeAndroidWindow.PawnPortraitSize, Rot4.South, new Vector3(), 1f, true, true, true, true, (Dictionary<Apparel, Color>)null, new Color?(), false));
-                Widgets.InfoCardButton(pawnRenderRect.xMax - 16f, pawnRenderRect.y, (Thing)this.newAndroid);
+                Rect pawnRenderRect = new Rect((float)((double)pawnRect.xMin + ((double)pawnRect.width - PawnPortraitSize.x) / 2.0 - 10.0), pawnRect.yMin + 20f, CustomizeAndroidWindow.PawnPortraitSize.x, CustomizeAndroidWindow.PawnPortraitSize.y);
+                GUI.DrawTexture(pawnRenderRect, PortraitsCache.Get(this.newAndroid, CustomizeAndroidWindow.PawnPortraitSize, Rot4.South, new Vector3(), 1f, true, true, true, true, null, new Color?(), false));
+                Widgets.InfoCardButton(pawnRenderRect.xMax - 16f, pawnRenderRect.y, newAndroid);
                 Verse.Text.Font = GameFont.Medium;
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(new Rect(0.0f, 0.0f, inRect.width, 32f), "AndroidCustomization".Translate());
@@ -288,7 +288,7 @@ namespace Androids
                     GUI.color = Color.white;
                     CharacterCardUtility.DoNameInputRect(rect5, ref last, 12);
                     if (name.First != first || name.Nick != nick || name.Last != last)
-                        this.newAndroid.Name = (Name)new NameTriple(first, nick, last);
+                        this.newAndroid.Name = new NameTriple(first, nick, last);
                     TooltipHandler.TipRegion(rect3, (TipSignal)"FirstNameDesc".Translate());
                     TooltipHandler.TipRegion(rect4, (TipSignal)"ShortIdentifierDesc".Translate());
                     TooltipHandler.TipRegion(rect5, (TipSignal)"LastNameDesc".Translate());
@@ -301,7 +301,7 @@ namespace Androids
                     Verse.Text.Font = GameFont.Small;
                 }
                 //Hair customization
-                float finalPawnCustomizationWidthOffset = (float)((double)pawnRect.x + (double)pawnRect.width + 16.0 + ((double)inRect.width - (double)CustomizeAndroidWindow.upgradesOffset));
+                float finalPawnCustomizationWidthOffset = (float)((double)pawnRect.x + (double)pawnRect.width + 16.0 + ((double)inRect.width - upgradesOffset));
                 Rect source1 = new Rect((float)((double)pawnRect.x + (double)pawnRect.width + 16.0), pawnRect.y, inRect.width - finalPawnCustomizationWidthOffset, 24f);
                 Rect hairColorRect = new Rect(source1);
                 hairColorRect.width = hairColorRect.height;
@@ -310,18 +310,18 @@ namespace Androids
                 Widgets.DrawHighlightIfMouseover(hairColorRect);
                 if (Widgets.ButtonInvisible(hairColorRect))
                 {
-                    Func<Color, Action> func = (Func<Color, Action>)(color => (Action)(() =>
+                    Func<Color, Action> func = color => () =>
                   {
                       this.newAndroid.story.HairColor = color;
                       this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
                       PortraitsCache.SetDirty(this.newAndroid);
                       PortraitsCache.PortraitsCacheUpdate();
-                  }));
+                  };
                     List<FloatMenuOption> options = new List<FloatMenuOption>();
                     foreach (Color hairColor1 in this.HairColors)
                     {
                         Color HairColor = hairColor1;
-                        options.Add(new FloatMenuOption((string)"AndroidCustomizationChangeColor".Translate(), func(HairColor), extraPartWidth: 24f, extraPartOnGUI: ((Func<Rect, bool>)(rect =>
+                        options.Add(new FloatMenuOption((string)"AndroidCustomizationChangeColor".Translate(), func(HairColor), extraPartWidth: 24f, extraPartOnGUI: rect =>
                       {
                           Rect rect7 = new Rect(rect);
                           rect7.x += 8f;
@@ -330,9 +330,9 @@ namespace Androids
                           this.RefreshUpgrades();
                           this.RefreshCosts();
                           return false;
-                      }))));
+                      }));
                     }
-                    Find.WindowStack.Add((Window)new FloatMenu(options));
+                    Find.WindowStack.Add(new FloatMenu(options));
                 }
                 Rect hairTypeRect = new Rect(source1);
                 hairTypeRect.width -= hairColorRect.width;
@@ -340,16 +340,16 @@ namespace Androids
                 hairTypeRect.x = (float)((double)hairColorRect.x + (double)hairColorRect.width + 8.0);
                 if (Widgets.ButtonText(hairTypeRect, (string)(this.newAndroid?.story?.hairDef?.LabelCap ?? (TaggedString)"Bald"), true, true, true))
                 {
-                    IEnumerable<HairDef> hairs = DefDatabase<HairDef>.AllDefs.Where<HairDef>((Func<HairDef, bool>)(hairdef =>
+                    IEnumerable<HairDef> hairs = DefDatabase<HairDef>.AllDefs.Where<HairDef>(hairdef =>
                    {
                        if (this.newAndroid.gender == Gender.Female && (hairdef.styleGender == StyleGender.Any || hairdef.styleGender == StyleGender.Female || hairdef.styleGender == StyleGender.FemaleUsually))
                            return true;
                        if (this.newAndroid.gender != Gender.Male)
                            return false;
                        return hairdef.styleGender == StyleGender.Any || hairdef.styleGender == StyleGender.Male || hairdef.styleGender == StyleGender.MaleUsually;
-                   }));
+                   });
                     if (hairs != null)
-                        FloatMenuUtility.MakeMenu<HairDef>(hairs, (Func<HairDef, string>)(hairDef => (string)hairDef.LabelCap), (Func<HairDef, Action>)(hairDef => (Action)(() =>
+                        FloatMenuUtility.MakeMenu<HairDef>(hairs, hairDef => (string)hairDef.LabelCap, hairDef => () =>
                     {
                         this.newAndroid.story.hairDef = hairDef;
                         this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
@@ -357,7 +357,7 @@ namespace Androids
                         PortraitsCache.PortraitsCacheUpdate();
                         this.RefreshUpgrades();
                         this.RefreshCosts();
-                    })));
+                    });
                 }
                 //Print button
 
@@ -380,25 +380,25 @@ namespace Androids
                 if (RaceUtility.AlienRaceKinds.Count<PawnKindDef>() > 1)
                 {
                     if (Widgets.ButtonText(new Rect(304f, row, 240f, 24f), (string)this.currentPawnKindDef.race.LabelCap, true, true, true))
-                        FloatMenuUtility.MakeMenu<PawnKindDef>(RaceUtility.AlienRaceKinds, (Func<PawnKindDef, string>)(raceKind => (string)raceKind.race.LabelCap), (Func<PawnKindDef, Action>)(raceKind => (Action)(() =>
+                        FloatMenuUtility.MakeMenu<PawnKindDef>(RaceUtility.AlienRaceKinds, raceKind => (string)raceKind.race.LabelCap, raceKind => () =>
                     {
                         this.currentPawnKindDef = raceKind;
                         Gender gender = Gender.Female;
-                        if (this.currentPawnKindDef.race is ThingDef_AlienRace race2 && (double)race2.alienRace.generalSettings.maleGenderProbability >= 1.0)
+                        if (this.currentPawnKindDef.race is ThingDef_AlienRace race2 && race2.alienRace.generalSettings.maleGenderProbability >= 1.0)
                             gender = Gender.Male;
                         this.newAndroid = this.GetNewPawn(gender);
                         this.RefreshUpgrades();
                         this.RefreshCosts();
-                    })));
+                    });
                     row += 26f;
                 }
                 //Generate new pawn
                 Rect rect10 = new Rect(304f, row, 120f, 24f);
                 if (this.androidPrinter.PawnInside == null)
                 {
-                    if (this.currentPawnKindDef.race is ThingDef_AlienRace race && (double)race.alienRace.generalSettings.maleGenderProbability < 1.0 && Widgets.ButtonText(rect10, (string)"AndroidCustomizationRollFemale".Translate(), true, true, true))
+                    if (this.currentPawnKindDef.race is ThingDef_AlienRace race && race.alienRace.generalSettings.maleGenderProbability < 1.0 && Widgets.ButtonText(rect10, (string)"AndroidCustomizationRollFemale".Translate(), true, true, true))
                     {
-                        this.newAndroid.SetFactionDirect((Faction)null);
+                        this.newAndroid.SetFactionDirect(null);
                         this.newAndroid.Destroy(DestroyMode.Vanish);
                         this.newAndroid = this.GetNewPawn();
                         this.RefreshUpgrades();
@@ -407,7 +407,7 @@ namespace Androids
                     rect10 = new Rect(424f, row, 120f, 24f);
                     if (Widgets.ButtonText(rect10, (string)"AndroidCustomizationRollMale".Translate(), true, true, true))
                     {
-                        this.newAndroid.SetFactionDirect((Faction)null);
+                        this.newAndroid.SetFactionDirect(null);
                         this.newAndroid.Destroy(DestroyMode.Vanish);
                         this.newAndroid = this.GetNewPawn(Gender.Male);
                         this.RefreshUpgrades();
@@ -420,7 +420,7 @@ namespace Androids
                 Widgets.DrawHighlightIfMouseover(rect11);
                 string label1 = this.newAndroid.story.Childhood == null ? (string)("AndroidCustomizationFirstIdentity".Translate() + " " + "AndroidNone".Translate()) : (string)("AndroidCustomizationFirstIdentity".Translate() + " " + this.newAndroid.story.Childhood.TitleCapFor(this.newAndroid.gender));
                 if (Widgets.ButtonText(rect11, label1))
-                    FloatMenuUtility.MakeMenu<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Select<BackstoryDef, BackstoryDef>((Func<BackstoryDef, BackstoryDef>)(backstoryDef => backstoryDef)).Where<BackstoryDef>((Func<BackstoryDef, bool>)(backstory => (backstory.spawnCategories.Any<string>((Predicate<string>)(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any<string>((Predicate<string>)(subCategory => subCategory == category)))) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Childhood)), (Func<BackstoryDef, string>)(backstory => backstory.TitleCapFor(this.newAndroid.gender)), (Func<BackstoryDef, Action>)(backstory => (Action)(() => this.newChildhoodBackstory = backstory)));
+                    FloatMenuUtility.MakeMenu<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Select<BackstoryDef, BackstoryDef>(backstoryDef => backstoryDef).Where<BackstoryDef>(backstory => (backstory.spawnCategories.Any<string>(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any<string>(subCategory => subCategory == category)) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Childhood), backstory => backstory.TitleCapFor(this.newAndroid.gender), backstory => () => this.newChildhoodBackstory = backstory);
                 if (this.newAndroid.story.Childhood != null)
                     TooltipHandler.TipRegion(rect11, (TipSignal)this.newAndroid.story.Childhood.FullDescriptionFor(this.newAndroid));
                 Rect rect12 = new Rect(304f, y2, 240f, 24f);
@@ -428,7 +428,7 @@ namespace Androids
                 Widgets.DrawHighlightIfMouseover(rect12);
                 string label2 = this.newAndroid.story.Adulthood == null ? (string)("AndroidCustomizationSecondIdentity".Translate() + " " + "AndroidNone".Translate()) : (string)("AndroidCustomizationSecondIdentity".Translate() + " " + this.newAndroid.story.Adulthood.TitleCapFor(this.newAndroid.gender));
                 if (Widgets.ButtonText(rect12, label2))
-                    FloatMenuUtility.MakeMenu<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Select<BackstoryDef, BackstoryDef>((Func<BackstoryDef, BackstoryDef>)(backstoryDef => backstoryDef)).Where<BackstoryDef>((Func<BackstoryDef, bool>)(backstory => (backstory.spawnCategories.Any<string>((Predicate<string>)(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any<string>((Predicate<string>)(subCategory => subCategory == category)))) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Adulthood)), (Func<BackstoryDef, string>)(backstory => backstory.TitleCapFor(this.newAndroid.gender)), (Func<BackstoryDef, Action>)(backstory => (Action)(() => this.newAdulthoodBackstory = backstory)));
+                    FloatMenuUtility.MakeMenu<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefs.ToList<BackstoryDef>().Select<BackstoryDef, BackstoryDef>(backstoryDef => backstoryDef).Where<BackstoryDef>(backstory => (backstory.spawnCategories.Any<string>(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any<string>(subCategory => subCategory == category)) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Adulthood), backstory => backstory.TitleCapFor(this.newAndroid.gender), backstory => () => this.newAdulthoodBackstory = backstory);
                 if (this.newAndroid.story.Adulthood != null)
                     TooltipHandler.TipRegion(rect12, (TipSignal)this.newAndroid.story.Adulthood.FullDescriptionFor(this.newAndroid));
                 float y3 = y2 + 32f;
@@ -450,8 +450,8 @@ namespace Androids
                 Verse.Text.Font = GameFont.Tiny;
                 Verse.Text.Anchor = TextAnchor.LowerLeft;
                 int num3 = this.IsUpgrade ? 0 : this.androidPrinter.PrinterProperties.ticksToCraft;
-                Rect rect15 = new Rect((float)((double)xMax + 3.0 + (double)num2 * 32.0), y5, 26f, 26f);
-                Widgets.DrawTextureFitted(rect15, (Texture)ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast"), 1f);
+                Rect rect15 = new Rect((float)((double)xMax + 3.0 + num2 * 32.0), y5, 26f, 26f);
+                Widgets.DrawTextureFitted(rect15, ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast"), 1f);
                 TooltipHandler.TipRegion(rect15, (TipSignal)("AndroidCustomizationTimeCost".Translate() + ": " + (num3 + this.finalExtraPrintingTimeCost).ToStringTicksToPeriodVerbose()));
                 Widgets.DrawHighlightIfMouseover(rect15);
                 Widgets.Label(rect15.ExpandedBy(8f), (num3 + this.finalExtraPrintingTimeCost).ToStringTicksToPeriodVerbose() ?? "");
@@ -461,15 +461,15 @@ namespace Androids
                 //Material Cost
                 foreach (ThingOrderRequest thingOrderRequest in this.finalCalculatedPrintingCost)
                 {
-                    Rect rect16 = new Rect((float)((double)xMax + 3.0 + (double)num4 * 32.0), y5, 26f, 26f);
+                    Rect rect16 = new Rect((float)((double)xMax + 3.0 + num4 * 32.0), y5, 26f, 26f);
                     if (thingOrderRequest.nutrition)
                     {
-                        Widgets.ThingIcon(rect16, RimWorld.ThingDefOf.Meat_Human, (ThingDef)null, (ThingStyleDef)null, 1f, new Color?());
+                        Widgets.ThingIcon(rect16, RimWorld.ThingDefOf.Meat_Human, null, null, 1f, new Color?());
                         TooltipHandler.TipRegion(rect16, (TipSignal)"AndroidNutrition".Translate());
                     }
                     else
                     {
-                        Widgets.ThingIcon(rect16, thingOrderRequest.thingDef, (ThingDef)null, (ThingStyleDef)null, 1f, new Color?());
+                        Widgets.ThingIcon(rect16, thingOrderRequest.thingDef, null, null, 1f, new Color?());
                         TooltipHandler.TipRegion(rect16, (TipSignal)thingOrderRequest.thingDef.LabelCap);
                     }
                     Widgets.DrawHighlightIfMouseover(rect16);
@@ -487,10 +487,10 @@ namespace Androids
                 Verse.Text.Font = GameFont.Small;
                 float y7 = y6 + 26f;
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
-                Trait trait1 = (Trait)null;
+                Trait trait1 = null;
                 float width = 256f;
                 float height1 = 24f;
-                float num5 = (float)(this.newAndroid.story.traits.allTraits.Count + 1) * height1;
+                float num5 = (this.newAndroid.story.traits.allTraits.Count + 1) * height1;
                 Rect rect18 = new Rect(rect17);
                 rect18.y += 26f;
                 rect18.height = inRect.height - rect18.y;
@@ -510,7 +510,7 @@ namespace Androids
                     Rect butRect = new Rect(rect19);
                     butRect.width = butRect.height;
                     butRect.x = rect20.xMax;
-                    if (this.originalTraits.Any<Trait>((Predicate<Trait>)(otherTrait => otherTrait.def == trait.def && otherTrait.Degree == trait.Degree)))
+                    if (this.originalTraits.Any<Trait>(otherTrait => otherTrait.def == trait.def && otherTrait.Degree == trait.Degree))
                         Widgets.Label(rect20, "<" + trait.LabelCap + ">");
                     else
                         Widgets.Label(rect20, trait.LabelCap);
@@ -530,7 +530,7 @@ namespace Androids
                 butRect1.x = rect21.xMax;
                 Widgets.Label(rect21, "AndroidCustomizationAddTraitLabel".Translate((NamedArgument)this.newAndroid.story.traits.allTraits.Count, (NamedArgument)AndroidCustomizationTweaks.maxTraitsToPick));
                 if (Widgets.ButtonImage(butRect1, TexCommand.Install) && this.newAndroid.story.traits.allTraits.Count < AndroidCustomizationTweaks.maxTraitsToPick)
-                    this.PickTraitMenu((Trait)null);
+                    this.PickTraitMenu(null);
                 Widgets.EndScrollView();
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
                 if (trait1 != null)
@@ -588,7 +588,7 @@ namespace Androids
                             upgradeItem = 0;
                             upgradeItemRow += upgradeSizeBase.height;
                         }
-                        Rect upgradeItemRect = new Rect(upgradesRowRect.x + upgradeSizeBase.width * (float)upgradeItem, row + upgradeItemRow, upgradeSizeBase.width, upgradeSizeBase.height);
+                        Rect upgradeItemRect = new Rect(upgradesRowRect.x + upgradeSizeBase.width * upgradeItem, row + upgradeItemRow, upgradeSizeBase.width, upgradeSizeBase.height);
 
                         //Button
                         bool needsFulfilled = false;
@@ -620,7 +620,7 @@ namespace Androids
                                 tooltip.AppendLine((string)"AndroidCustomizationChangeSkinColor".Translate());
                                 tooltip.AppendLine();
                             }
-                            tooltip.AppendLine(this.androidPrinter.FormatIngredientCosts(out needsFulfilled, (IEnumerable<ThingOrderRequest>)upgradeDef.costList, false));
+                            tooltip.AppendLine(this.androidPrinter.FormatIngredientCosts(out needsFulfilled, upgradeDef.costList, false));
                             tooltip.AppendLine((string)("AndroidCustomizationTimeCost".Translate() + ": " + upgradeDef.extraPrintingTime.ToStringTicksToPeriodVerbose()));
                             if (upgradeDef.requiredResearch != null && !upgradeDef.requiredResearch.IsFinished)
                             {
@@ -660,13 +660,13 @@ namespace Androids
                         }
                         else
                         {
-                            if (this.appliedUpgradeCommands.Any<UpgradeCommand>((Predicate<UpgradeCommand>)(upgradeCommand => upgradeCommand.def == upgradeDef)))
+                            if (this.appliedUpgradeCommands.Any<UpgradeCommand>(upgradeCommand => upgradeCommand.def == upgradeDef))
                                 Widgets.DrawRectFast(upgradeItemRect, Color.white);
                             if (this.AlreadyUpgradedOnPawn(upgradeDef))
                                 Widgets.DrawRectFast(upgradeItemRect, Color.white);
                         }
                         if (upgradeDef.iconTexturePath != null)
-                            Widgets.DrawTextureFitted(upgradeItemRect.ContractedBy(3f), (Texture)ContentFinder<Texture2D>.Get(upgradeDef.iconTexturePath), 1f);
+                            Widgets.DrawTextureFitted(upgradeItemRect.ContractedBy(3f), ContentFinder<Texture2D>.Get(upgradeDef.iconTexturePath), 1f);
                         Widgets.DrawHighlightIfMouseover(upgradeItemRect);
                         UpgradeCommand upgradeCommand1 = this.appliedUpgradeCommands.FirstOrDefault<UpgradeCommand>((Func<UpgradeCommand, bool>)(upgradeCommand => upgradeCommand.def == upgradeDef));
                         if (!disabledUpgrade && Widgets.ButtonInvisible(upgradeItemRect) && !this.AlreadyUpgradedOnPawn(upgradeDef))
@@ -749,14 +749,14 @@ namespace Androids
             foreach (Trait allTrait in this.newAndroid.story.traits.allTraits)
             {
                 Trait trait = allTrait;
-                this.allTraits.RemoveAll((Predicate<Trait>)(aTrait => aTrait.def == trait.def));
-                this.allTraits.RemoveAll((Predicate<Trait>)(aTrait => trait.def.conflictingTraits.Contains(aTrait.def)));
+                this.allTraits.RemoveAll(aTrait => aTrait.def == trait.def);
+                this.allTraits.RemoveAll(aTrait => trait.def.conflictingTraits.Contains(aTrait.def));
             }
-            FloatMenuUtility.MakeMenu<Trait>((IEnumerable<Trait>)this.allTraits, (Func<Trait, string>)(labelTrait => this.originalTraits.Any<Trait>((Predicate<Trait>)(originalTrait => originalTrait.def == labelTrait.def && originalTrait.Degree == labelTrait.Degree)) ? (string)"AndroidCustomizationOriginalTraitFloatMenu".Translate((NamedArgument)labelTrait.LabelCap) : labelTrait.LabelCap), (Func<Trait, Action>)(theTrait => (Action)(() =>
+            FloatMenuUtility.MakeMenu<Trait>(allTraits, labelTrait => this.originalTraits.Any<Trait>(originalTrait => originalTrait.def == labelTrait.def && originalTrait.Degree == labelTrait.Degree) ? (string)"AndroidCustomizationOriginalTraitFloatMenu".Translate((NamedArgument)labelTrait.LabelCap) : labelTrait.LabelCap, theTrait => () =>
      {
          this.replacedTrait = oldTrait;
          this.newTrait = theTrait;
-     })));
+     });
         }
 
         public void RefreshUpgrades()
@@ -803,7 +803,7 @@ namespace Androids
                             thingDef = upgradeCost.thingDef
                         });
                 }
-                source.AddRange((IEnumerable<ThingDef>)appliedUpgradeCommand.def.costsNotAffectedByBodySize);
+                source.AddRange(appliedUpgradeCommand.def.costsNotAffectedByBodySize);
                 this.finalExtraPrintingTimeCost += appliedUpgradeCommand.def.extraPrintingTime;
             }
             if (source.Count > 0)
@@ -826,20 +826,20 @@ namespace Androids
                 num4 += num3;
                 if (this._pawnTraits != null && this._pawnTraits.Contains(trait))
                     num4 -= num3;
-                if (this.originalTraits.Any<Trait>((Predicate<Trait>)(originalTrait => originalTrait.def == trait.def && originalTrait.Degree == trait.Degree)))
+                if (this.originalTraits.Any<Trait>(originalTrait => originalTrait.def == trait.def && originalTrait.Degree == trait.Degree))
                     num4 -= num3;
             }
             foreach (Trait originalTrait1 in this.originalTraits)
             {
                 Trait originalTrait = originalTrait1;
-                if ((this._pawnTraits == null || !this._pawnTraits.Contains(originalTrait)) && !this.newAndroid.story.traits.allTraits.Any<Trait>((Predicate<Trait>)(trait => originalTrait.def == trait.def && originalTrait.Degree == trait.Degree)))
+                if ((this._pawnTraits == null || !this._pawnTraits.Contains(originalTrait)) && !this.newAndroid.story.traits.allTraits.Any<Trait>(trait => originalTrait.def == trait.def && originalTrait.Degree == trait.Degree))
                     num4 += num3;
             }
             this.finalExtraPrintingTimeCost += num4;
             foreach (ThingOrderRequest thingOrderRequest in this.finalCalculatedPrintingCost)
             {
                 if (!source.Contains(thingOrderRequest.thingDef))
-                    thingOrderRequest.amount = (float)Math.Ceiling((double)thingOrderRequest.amount * (double)this.newAndroid.def.race.baseBodySize);
+                    thingOrderRequest.amount = (float)Math.Ceiling(thingOrderRequest.amount * (double)this.newAndroid.def.race.baseBodySize);
             }
         }
 
@@ -864,7 +864,7 @@ namespace Androids
                 skill.passion = Passion.None;
                 if (!skill.TotallyDisabled)
                 {
-                    float num2 = (float)num1 * 0.11f;
+                    float num2 = num1 * 0.11f;
                     float num3 = Rand.Value;
                     if ((double)num3 < (double)num2)
                         skill.passion = (double)num3 >= (double)num2 * 0.20000000298023224 ? Passion.Minor : Passion.Major;
@@ -875,8 +875,8 @@ namespace Androids
 
         private static int FinalLevelOfSkill(Pawn pawn, SkillDef sk)
         {
-            float x = !sk.usuallyDefinedInBackstories ? Rand.ByCurve(CustomizeAndroidWindow.LevelRandomCurve) : (float)Rand.RangeInclusive(0, 4);
-            foreach (BackstoryDef backstory in pawn.story.AllBackstories.Where<BackstoryDef>((Func<BackstoryDef, bool>)(bs => bs != null)))
+            float x = !sk.usuallyDefinedInBackstories ? Rand.ByCurve(CustomizeAndroidWindow.LevelRandomCurve) : Rand.RangeInclusive(0, 4);
+            foreach (BackstoryDef backstory in pawn.story.AllBackstories.Where<BackstoryDef>(bs => bs != null))
             {
                 foreach (SkillGain sg in backstory.skillGains)
                 {
@@ -991,13 +991,13 @@ namespace Androids
                 LifeStageAge lifeStageAge = pawn.RaceProps.lifeStageAges.Last<LifeStageAge>();
                 if (lifeStageAge != null)
                 {
-                    long num = (long)Math.Ceiling((double)lifeStageAge.minAge) * 3600000L;
+                    long num = (long)Math.Ceiling(lifeStageAge.minAge) * 3600000L;
                     pawn.ageTracker.AgeBiologicalTicks = num;
                     pawn.ageTracker.AgeChronologicalTicks = num;
                 }
                 else
                 {
-                    long num = (long)((double)pawn.RaceProps.lifeExpectancy * 3600000.0 * 0.20000000298023224);
+                    long num = (long)(pawn.RaceProps.lifeExpectancy * 3600000.0 * 0.20000000298023224);
                     pawn.ageTracker.AgeBiologicalTicks = num;
                     pawn.ageTracker.AgeChronologicalTicks = num;
                 }
@@ -1094,9 +1094,9 @@ namespace Androids
 
         public static void GenerateBioFromSource(Pawn pawn, Pawn sourcePawn)
         {
-            sourcePawn.Name = (Name)CustomizeAndroidWindow.CurPawnName(sourcePawn);
+            sourcePawn.Name = CustomizeAndroidWindow.CurPawnName(sourcePawn);
             NameTriple name = sourcePawn.Name as NameTriple;
-            pawn.Name = (Name)name;
+            pawn.Name = name;
         }
 
         private static NameTriple CurPawnName(Pawn pawn)

@@ -29,12 +29,12 @@ namespace Androids
                         {
                             if (comp2.PowerOn)
                             {
-                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), (Action)(() => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)(Thing)this.parent))));
+                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), () => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)parent)));
                                 yield break;
                             }
                             else
                             {
-                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailNoPower".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), (Action)null)
+                                yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailNoPower".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), null)
                                 {
                                     Disabled = true
                                 };
@@ -43,13 +43,13 @@ namespace Androids
                         }
                         else
                         {
-                            yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), () => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)(Thing)this.parent)));
+                            yield return new FloatMenuOption((string)"AndroidMachinelikeHibernate".Translate((NamedArgument)selPawn.Name.ToStringShort), () => selPawn.jobs.TryTakeOrderedJob(new Job(props.hibernationJob, (LocalTargetInfo)parent)));
                             yield break;
                         }
                     }
                     else
                     {
-                        yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailReserveOrReach".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), (Action)null)
+                        yield return new FloatMenuOption((string)"AndroidMachinelikeHibernateFailReserveOrReach".Translate((NamedArgument)selPawn.Name.ToStringShort, parent.LabelCap), null)
                         {
                             Disabled = true
                         };

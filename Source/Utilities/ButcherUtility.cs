@@ -16,7 +16,7 @@ namespace Androids
             float missingNaturalParts = pawn.health.hediffSet.GetCoverageOfNotMissingNaturalParts(pawn.RaceProps.body.corePart);
             foreach (ThingDefCountClass butcherProduct in pawn.def.butcherProducts)
             {
-                int val1 = (int)Math.Ceiling((double)butcherProduct.count * (double)missingNaturalParts);
+                int val1 = (int)Math.Ceiling(butcherProduct.count * (double)missingNaturalParts);
                 if (val1 > 0)
                 {
                     do

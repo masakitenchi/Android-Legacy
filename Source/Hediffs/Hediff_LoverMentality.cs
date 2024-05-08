@@ -26,7 +26,7 @@ namespace Androids
             base.Tick();
             if (this.loverToChase == null || !this.loverToChase.Dead && !this.loverToChase.Destroyed)
                 return;
-            this.SetNewLover((Pawn)null);
+            this.SetNewLover(null);
         }
 
         public void SetNewLover(Pawn newLover)

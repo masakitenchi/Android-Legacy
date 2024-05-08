@@ -12,7 +12,7 @@ namespace Androids
     {
         public static Rect GetRowRect(Rect inRect, float rowHeight, int row)
         {
-            float y = inRect.y + rowHeight * (float)row;
+            float y = inRect.y + rowHeight * row;
             return new Rect(inRect.x, y, inRect.width, rowHeight);
         }
     }

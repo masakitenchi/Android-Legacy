@@ -21,11 +21,11 @@ namespace Androids
             Pawn pawn = PawnGenerator.GeneratePawn(this.SpawnerProps.pawnKind);
             if (pawn == null)
                 return;
-            pawn.SetFaction(this.GetFaction(), (Pawn)null);
-            GenPlace.TryPlaceThing((Thing)pawn, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
+            pawn.SetFaction(this.GetFaction(), null);
+            GenPlace.TryPlaceThing(pawn, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
             if (!this.SpawnerProps.sendMessage)
                 return;
-            Messages.Message((string)"AndroidSpawnedPawnMessageText".Translate((NamedArgument)pawn.Name.ToStringFull), (LookTargets)new GlobalTargetInfo((Thing)pawn), MessageTypeDefOf.NeutralEvent);
+            Messages.Message((string)"AndroidSpawnedPawnMessageText".Translate((NamedArgument)pawn.Name.ToStringFull), (LookTargets)new GlobalTargetInfo(pawn), MessageTypeDefOf.NeutralEvent);
         }
 
         public override void DoEffect(Pawn usedBy)

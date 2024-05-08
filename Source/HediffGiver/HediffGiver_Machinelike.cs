@@ -21,7 +21,7 @@ namespace Androids
             }
             if (!(hediff is Hediff_Injury) || !(hediff is HediffWithComps hediffWithComps))
                 return false;
-            hediffWithComps.comps.RemoveAll((Predicate<HediffComp>)(hediffComp => hediffComp is HediffComp_Infecter));
+            hediffWithComps.comps.RemoveAll(hediffComp => hediffComp is HediffComp_Infecter);
             return true;
         }
     }

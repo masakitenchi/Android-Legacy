@@ -20,7 +20,7 @@ namespace Androids
             GenSpawn.Spawn(pawn, this.parent.Position, this.parent.Map);
             if (!this.SpawnerProps.sendMessage)
                 return;
-            Messages.Message((string)"AndroidSpawnedDroidMessageText".Translate((NamedArgument)pawn.Name.ToStringFull, (NamedArgument)usedBy.Name.ToStringFull), (LookTargets)new GlobalTargetInfo((Thing)pawn), MessageTypeDefOf.NeutralEvent);
+            Messages.Message((string)"AndroidSpawnedDroidMessageText".Translate((NamedArgument)pawn.Name.ToStringFull, (NamedArgument)usedBy.Name.ToStringFull), (LookTargets)new GlobalTargetInfo(pawn), MessageTypeDefOf.NeutralEvent);
         }
     }
 }

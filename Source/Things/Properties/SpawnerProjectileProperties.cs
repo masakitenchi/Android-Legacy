@@ -31,12 +31,12 @@ namespace Androids
         public LordJob CreateJobForLord(IntVec3 point)
         {
             LordJob instance;
-            if (((IEnumerable<ConstructorInfo>)this.lordJob.GetConstructors()).Any<ConstructorInfo>((Func<ConstructorInfo, bool>)(constructor =>
+            if (this.lordJob.GetConstructors().Any<ConstructorInfo>(constructor =>
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
-                return parameters != null && ((IEnumerable<ParameterInfo>)parameters).Count<ParameterInfo>() > 0 && parameters[0].ParameterType == typeof(IntVec3);
-            })))
-                instance = (LordJob)Activator.CreateInstance(this.lordJob, (object)point);
+                return parameters != null && parameters.Count<ParameterInfo>() > 0 && parameters[0].ParameterType == typeof(IntVec3);
+            }))
+                instance = (LordJob)Activator.CreateInstance(this.lordJob, point);
             else
                 instance = (LordJob)Activator.CreateInstance(this.lordJob);
             return instance;

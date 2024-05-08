@@ -18,7 +18,7 @@ namespace Androids
         {
             if (__instance.InnerPawn == null || !__instance.InnerPawn.def.HasModExtension<MechanicalPawnProperties>())
                 return;
-            __result = (Thought_Memory)null;
+            __result = null;
         }
     }
 }

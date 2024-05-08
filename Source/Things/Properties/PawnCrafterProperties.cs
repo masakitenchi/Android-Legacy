@@ -35,6 +35,6 @@ namespace Androids
         public bool customOrderProcessor;
         public bool customCraftingTime;
 
-        public float ResourceTicks() => (float)Math.Ceiling((double)this.ticksToCraft / (double)this.resourceTick);
+        public float ResourceTicks() => (float)Math.Ceiling(ticksToCraft / (double)this.resourceTick);
     }
 }

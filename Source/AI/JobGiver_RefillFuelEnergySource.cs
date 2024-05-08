@@ -18,7 +18,7 @@ namespace Androids
         {
             JobGiver_RefillFuelEnergySource fuelEnergySource = (JobGiver_RefillFuelEnergySource)base.DeepCopy(resolve);
             fuelEnergySource.refillJob = this.refillJob;
-            return (ThinkNode)fuelEnergySource;
+            return fuelEnergySource;
         }
 
         public override float GetPriority(Pawn pawn) => FuelUtility.FueledEnergySourceNeedRefilling(pawn) != null ? 10f : 0.0f;
@@ -26,18 +26,18 @@ namespace Androids
         protected override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.Downed)
-                return (Job)null;
+                return null;
             if (pawn.InBed())
-                return (Job)null;
+                return null;
             Thing thing = FuelUtility.FueledEnergySourceNeedRefilling(pawn);
             if (thing == null)
-                return (Job)null;
+                return null;
             EnergySource_Fueled comp = thing.TryGetComp<EnergySource_Fueled>();
             if (!comp.autoRefuel)
-                return (Job)null;
+                return null;
             Thing suitableFuelForPawn = FuelUtility.FindSuitableFuelForPawn(pawn, comp);
             if (suitableFuelForPawn == null)
-                return (Job)null;
+                return null;
             return new Job(this.refillJob, (LocalTargetInfo)thing, (LocalTargetInfo)suitableFuelForPawn)
             {
                 count = comp.CalculateFuelNeededToRefill(suitableFuelForPawn)

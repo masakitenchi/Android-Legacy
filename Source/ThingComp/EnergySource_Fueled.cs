@@ -33,12 +33,12 @@ namespace Androids
             ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault<ThingOrderRequest>((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
             if (thingOrderRequest == null)
                 return false;
-            int num = Math.Min((int)Math.Ceiling((double)this.MissingFuel / (double)thingOrderRequest.amount), fuel.stackCount);
+            int num = Math.Min((int)Math.Ceiling((double)this.MissingFuel / thingOrderRequest.amount), fuel.stackCount);
             if (num <= 0)
                 return false;
-            this.fuelAmountLoaded += (double)(int)Math.Ceiling((double)num * (double)thingOrderRequest.amount);
-            if (this.fuelAmountLoaded > (double)this.EnergyProps.maxFuelAmount)
-                this.fuelAmountLoaded = (double)this.EnergyProps.maxFuelAmount;
+            this.fuelAmountLoaded += (int)Math.Ceiling(num * (double)thingOrderRequest.amount);
+            if (this.fuelAmountLoaded > EnergyProps.maxFuelAmount)
+                this.fuelAmountLoaded = EnergyProps.maxFuelAmount;
             fuel.stackCount -= num;
             if (!doNotDestroy && fuel.stackCount <= 0)
                 fuel.Destroy();
@@ -48,7 +48,7 @@ namespace Androids
         public int CalculateFuelNeededToRefill(Thing fuel)
         {
             ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault<ThingOrderRequest>((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
-            return thingOrderRequest != null ? Math.Min((int)Math.Ceiling((double)this.MissingFuel / (double)thingOrderRequest.amount), fuel.stackCount) : -1;
+            return thingOrderRequest != null ? Math.Min((int)Math.Ceiling((double)this.MissingFuel / thingOrderRequest.amount), fuel.stackCount) : -1;
         }
 
         public override void PostExposeData()
@@ -157,7 +157,7 @@ namespace Androids
                 this.fuelAmountLoaded = 0.0;
             if (!targetPawn.IsCaravanMember() || (double)this.MissingFuelPercentage <= 0.800000011920929)
                 return;
-            Thing fuel1 = targetPawn.GetCaravan().Goods.FirstOrDefault<Thing>((Func<Thing, bool>)(fuelThing => this.EnergyProps.fuels.Any<ThingOrderRequest>((Predicate<ThingOrderRequest>)(req => req.thingDef == fuelThing.def))));
+            Thing fuel1 = targetPawn.GetCaravan().Goods.FirstOrDefault<Thing>(fuelThing => this.EnergyProps.fuels.Any<ThingOrderRequest>(req => req.thingDef == fuelThing.def));
             if (fuel1 == null)
                 return;
             int fuelNeededToRefill = this.CalculateFuelNeededToRefill(fuel1);

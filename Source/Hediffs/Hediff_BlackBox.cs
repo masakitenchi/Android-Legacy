@@ -16,7 +16,7 @@ namespace Androids
         {
             if (this.pawn.Corpse == null)
                 return;
-            GenExplosion.DoExplosion(this.pawn.Corpse.Position, this.pawn.Corpse.Map, 50f, RimWorld.DamageDefOf.Bomb, (Thing)null, 500, 15f, (SoundDef)null, (ThingDef)null, (ThingDef)null, (Thing)null, (ThingDef)null, 0.0f, 1, null, false, (ThingDef)null, 0.0f, 1, 0.0f, false, new float?(), (List<Thing>)null);
+            GenExplosion.DoExplosion(this.pawn.Corpse.Position, this.pawn.Corpse.Map, 50f, RimWorld.DamageDefOf.Bomb, null, 500, 15f, null, null, null, null, null, 0.0f, 1, null, false, null, 0.0f, 1, 0.0f, false, new float?(), null);
         }
 
         public IEnumerable<Gizmo> GetGizmosExtra()

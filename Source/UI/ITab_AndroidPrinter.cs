@@ -39,7 +39,7 @@ namespace Androids
             Widgets.Label(new Rect(rect) { height = 32f }, "AndroidTabTitle".Translate());
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.UpperLeft;
-            ThingFilter parentFilter = (ThingFilter)null;
+            ThingFilter parentFilter = null;
             if (storeSettingsParent.GetParentStoreSettings() != null)
                 parentFilter = storeSettingsParent.GetParentStoreSettings().filter;
             ThingFilterUI.DoThingFilterConfigWindow(new Rect(0.0f, 40f, rect.width, rect.height - 40f), this.state, storeSettings.filter, parentFilter, 8);

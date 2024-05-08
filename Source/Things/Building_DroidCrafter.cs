@@ -23,7 +23,7 @@ namespace Androids
         public override void InitiatePawnCrafting()
         {
             List<FloatMenuOption> options = new List<FloatMenuOption>();
-            foreach (DroidCraftingDef def in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy<DroidCraftingDef, int>((Func<DroidCraftingDef, int>)(def => def.orderID)))
+            foreach (DroidCraftingDef def in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy<DroidCraftingDef, int>(def => def.orderID))
             {
                 bool disabled = false;
                 if (def.requiredResearch != null && !def.requiredResearch.IsFinished)
@@ -41,7 +41,7 @@ namespace Androids
             }
             if (options.Count <= 0)
                 return;
-            Find.WindowStack.Add((Window)new FloatMenu(options));
+            Find.WindowStack.Add(new FloatMenu(options));
         }
 
         public void MakePawnAndInitCrafting(DroidCraftingDef def)
@@ -80,7 +80,7 @@ namespace Androids
                         for (int index = 0; index < 5; ++index)
                         {
                             position = this.Position;
-                            FleckMaker.ThrowMicroSparks(position.ToVector3() + new Vector3((float)Rand.Range(-1, 1), 0.0f, (float)Rand.Range(-1, 1)), this.Map);
+                            FleckMaker.ThrowMicroSparks(position.ToVector3() + new Vector3(Rand.Range(-1, 1), 0.0f, Rand.Range(-1, 1)), this.Map);
                         }
                         for (int index = 0; index < 3; ++index)
                         {
@@ -93,7 +93,7 @@ namespace Androids
                             SoundDef craftingSound = this.printerProperties.craftingSound;
                             if (craftingSound != null && craftingSound.sustain)
                             {
-                                SoundInfo info = SoundInfo.InMap((TargetInfo)(Thing)this, MaintenanceType.PerTick);
+                                SoundInfo info = SoundInfo.InMap((TargetInfo)this, MaintenanceType.PerTick);
                                 this.soundSustainer = craftingSound.TrySpawnSustainer(info);
                             }
                         }
@@ -121,7 +121,7 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", (object)this.ingredients, (object)this.inputSettings);
+            Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", ingredients, inputSettings);
             Scribe_Defs.Look<DroidCraftingDef>(ref this.lastDef, "lastDef");
             Scribe_Values.Look<bool>(ref this.repeatLastPawn, "repeatLastPawn");
         }
@@ -131,7 +131,7 @@ namespace Androids
             base.SpawnSetup(map, respawningAfterLoad);
             if (respawningAfterLoad)
                 return;
-            this.orderProcessor = new ThingOrderProcessor((ThingOwner)this.ingredients, this.inputSettings);
+            this.orderProcessor = new ThingOrderProcessor(ingredients, this.inputSettings);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

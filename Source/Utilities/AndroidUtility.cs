@@ -27,31 +27,31 @@ namespace Androids
                 Hediff hediff = hediff1;
                 if (hediff is Hediff_Injury hd && hd.IsPermanent())
                 {
-                    pawn.health.hediffSet.hediffs.Remove((Hediff)hd);
+                    pawn.health.hediffSet.hediffs.Remove(hd);
                     hd.PostRemoved();
-                    pawn.health.Notify_HediffChanged((Hediff)null);
+                    pawn.health.Notify_HediffChanged(null);
                 }
-                else if (pawn.def.race.hediffGiverSets.Any<HediffGiverSetDef>((Predicate<HediffGiverSetDef>)(setDef => setDef.hediffGivers.Any<HediffGiver>((Predicate<HediffGiver>)(hediffGiver =>
+                else if (pawn.def.race.hediffGiverSets.Any<HediffGiverSetDef>(setDef => setDef.hediffGivers.Any<HediffGiver>(hediffGiver =>
                 {
                     if (!(hediffGiver is HediffGiver_Birthday hediffGiverBirthday2) || hediffGiverBirthday2.hediff != hediff.def)
                         return false;
                     List<HediffStage> stages = hediffGiverBirthday2.hediff.stages;
-                    return stages != null && stages.Any<HediffStage>((Predicate<HediffStage>)(stage =>
+                    return stages != null && stages.Any<HediffStage>(stage =>
                     {
                         List<PawnCapacityModifier> capMods = stage.capMods;
-                        if ((capMods != null ? (capMods.Any<PawnCapacityModifier>((Predicate<PawnCapacityModifier>)(cap => (double)cap.offset < 0.0)) ? 1 : 0) : 0) == 0 && !stage.lifeThreatening && (double)stage.partEfficiencyOffset >= 0.0)
+                        if ((capMods != null ? (capMods.Any<PawnCapacityModifier>(cap => cap.offset < 0.0) ? 1 : 0) : 0) == 0 && !stage.lifeThreatening && stage.partEfficiencyOffset >= 0.0)
                         {
                             List<StatModifier> statOffsets = stage.statOffsets;
-                            if ((statOffsets != null ? (statOffsets.Any<StatModifier>((Predicate<StatModifier>)(stat => (double)stat.value < 0.0)) ? 1 : 0) : 0) == 0 && (double)stage.painOffset <= 0.0)
-                                return (double)stage.painFactor > 1.0;
+                            if ((statOffsets != null ? (statOffsets.Any<StatModifier>(stat => stat.value < 0.0) ? 1 : 0) : 0) == 0 && stage.painOffset <= 0.0)
+                                return stage.painFactor > 1.0;
                         }
                         return true;
-                    }));
-                })))))
+                    });
+                })))
                 {
                     pawn.health.hediffSet.hediffs.Remove(hediff);
                     hediff.PostRemoved();
-                    pawn.health.Notify_HediffChanged((Hediff)null);
+                    pawn.health.Notify_HediffChanged(null);
                 }
             }
         }

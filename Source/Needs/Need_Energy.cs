@@ -51,7 +51,7 @@ namespace Androids
                 this.threshPercents.Add(num * 0.5f);
                 this.threshPercents.Add(num * 0.2f);
                 for (int index = 0; index < (int)Math.Floor((double)this.MaxLevel); ++index)
-                    this.threshPercents.Add(num + num * (float)index);
+                    this.threshPercents.Add(num + num * index);
             }
             else
             {
@@ -94,16 +94,16 @@ namespace Androids
                         comp2.RechargeEnergyNeed(this.pawn);
                 }
             }
-            if (this.pawn.IsCaravanMember() && this.pawn.IsHashIntervalTick(250) && (double)this.CurLevelPercentage < (double)rechargePercentage)
+            if (this.pawn.IsCaravanMember() && this.pawn.IsHashIntervalTick(250) && (double)this.CurLevelPercentage < rechargePercentage)
             {
-                Thing thing1 = this.pawn.GetCaravan().Goods.FirstOrDefault<Thing>((Func<Thing, bool>)(thing =>
+                Thing thing1 = this.pawn.GetCaravan().Goods.FirstOrDefault<Thing>(thing =>
                 {
                     EnergySourceComp comp3 = thing.TryGetComp<EnergySourceComp>();
                     return comp3 != null && comp3.EnergyProps.isConsumable;
-                }));
+                });
                 if (thing1 != null)
                 {
-                    int count = Math.Min((int)Math.Ceiling(((double)this.MaxLevel - (double)this.CurLevel) / (double)thing1.TryGetComp<EnergySourceComp>().EnergyProps.energyWhenConsumed), thing1.stackCount);
+                    int count = Math.Min((int)Math.Ceiling(((double)this.MaxLevel - (double)this.CurLevel) / thing1.TryGetComp<EnergySourceComp>().EnergyProps.energyWhenConsumed), thing1.stackCount);
                     Thing thing2 = thing1.SplitOff(count);
                     thing2.TryGetComp<EnergySourceComp>().RechargeEnergyNeed(this.pawn);
                     thing2.Destroy();

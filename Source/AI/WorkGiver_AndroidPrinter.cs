@@ -51,7 +51,7 @@ namespace Androids
                     {
                         if (request.nutrition)
                         {
-                            int num = (int)Math.Ceiling((double)request.amount / (double)ingredient.def.ingestible.CachedNutrition);
+                            int num = (int)Math.Ceiling(request.amount / (double)ingredient.def.ingestible.CachedNutrition);
                             if (num > 0)
                                 return new Job(JobDefOf.ChJFillAndroidPrinter, (LocalTargetInfo)ingredient, (LocalTargetInfo)printerThing)
                                 {
@@ -66,7 +66,7 @@ namespace Androids
                     }
                 }
             }
-            return (Job)null;
+            return null;
         }
 
         private Thing FindIngredient(
@@ -75,9 +75,9 @@ namespace Androids
           ThingOrderRequest request)
         {
             if (request == null)
-                return (Thing)null;
+                return null;
             Predicate<Thing> extraPredicate = request.ExtraPredicate();
-            Predicate<Thing> validator = (Predicate<Thing>)(x => !x.IsForbidden(pawn) && pawn.CanReserve((LocalTargetInfo)x) && extraPredicate(x));
+            Predicate<Thing> validator = x => !x.IsForbidden(pawn) && pawn.CanReserve((LocalTargetInfo)x) && extraPredicate(x);
             return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, request.Request(), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: validator);
         }
     }

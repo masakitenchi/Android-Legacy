@@ -20,20 +20,20 @@ namespace Androids
         public override float GetPriority(Pawn pawn)
         {
             Need_Energy need = pawn.needs.TryGetNeed<Need_Energy>();
-            return need == null || (double)need.CurLevelPercentage >= (double)Need_Energy.rechargePercentage ? 0.0f : 11.5f;
+            return need == null || (double)need.CurLevelPercentage >= Need_Energy.rechargePercentage ? 0.0f : 11.5f;
         }
 
         protected override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.Downed)
-                return (Job)null;
+                return null;
             Need_Energy need = pawn.needs.TryGetNeed<Need_Energy>();
             if (need == null)
-                return (Job)null;
-            if ((double)need.CurLevelPercentage >= (double)Need_Energy.rechargePercentage)
-                return (Job)null;
+                return null;
+            if ((double)need.CurLevelPercentage >= Need_Energy.rechargePercentage)
+                return null;
             if (Find.TickManager.TicksGame < this.GetLastTryTick(pawn) + 2500)
-                return (Job)null;
+                return null;
             this.SetLastTryTick(pawn, Find.TickManager.TicksGame);
             Thing targetA = EnergyNeedUtility.ClosestPowerSource(pawn);
             if (targetA != null)
@@ -44,7 +44,7 @@ namespace Androids
                     IntVec3 position = targetA.Position;
                     if (position.Walkable(pawn.Map) && position.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(position)) && pawn.CanReach((LocalTargetInfo)position, PathEndMode.OnCell, Danger.Deadly))
                         return new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA);
-                    foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal((Thing)t).OrderByDescending<IntVec3, float>((Func<IntVec3, float>)(selector => selector.DistanceTo(pawn.Position))))
+                    foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending<IntVec3, float>(selector => selector.DistanceTo(pawn.Position)))
                     {
                         if (intVec3.Walkable(pawn.Map) && intVec3.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(intVec3)) && pawn.CanReach((LocalTargetInfo)intVec3, PathEndMode.OnCell, Danger.Deadly))
                             return new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA, (LocalTargetInfo)intVec3);
@@ -66,21 +66,21 @@ namespace Androids
                 }
             }
             Pawn_InventoryTracker inventory = pawn.inventory;
-            if (inventory != null && inventory.innerContainer.Any<Thing>((Func<Thing, bool>)(thing =>
+            if (inventory != null && inventory.innerContainer.Any<Thing>(thing =>
             {
                 EnergySourceComp comp = thing.TryGetComp<EnergySourceComp>();
                 return comp != null && comp.EnergyProps.isConsumable;
-            })))
+            }))
             {
-                Thing thing1 = inventory.innerContainer.FirstOrDefault<Thing>((Func<Thing, bool>)(thing =>
+                Thing thing1 = inventory.innerContainer.FirstOrDefault<Thing>(thing =>
                 {
                     EnergySourceComp comp = thing.TryGetComp<EnergySourceComp>();
                     return comp != null && comp.EnergyProps.isConsumable;
-                }));
+                });
                 if (thing1 != null)
                 {
                     EnergySourceComp comp = thing1.TryGetComp<EnergySourceComp>();
-                    int num = Math.Min((int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / (double)comp.EnergyProps.energyWhenConsumed), thing1.stackCount);
+                    int num = Math.Min((int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / comp.EnergyProps.energyWhenConsumed), thing1.stackCount);
                     if (num > 0)
                         return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(thing1))
                         {
@@ -88,13 +88,13 @@ namespace Androids
                         };
                 }
             }
-            Thing thing2 = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => thing.TryGetComp<EnergySourceComp>() != null && !thing.IsForbidden(pawn) && pawn.CanReserve(new LocalTargetInfo(thing)) && thing.Position.InAllowedArea(pawn) && pawn.CanReach(new LocalTargetInfo(thing), PathEndMode.OnCell, Danger.Deadly))));
+            Thing thing2 = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: thing => thing.TryGetComp<EnergySourceComp>() != null && !thing.IsForbidden(pawn) && pawn.CanReserve(new LocalTargetInfo(thing)) && thing.Position.InAllowedArea(pawn) && pawn.CanReach(new LocalTargetInfo(thing), PathEndMode.OnCell, Danger.Deadly));
             if (thing2 != null)
             {
                 EnergySourceComp comp = thing2.TryGetComp<EnergySourceComp>();
                 if (comp != null)
                 {
-                    int num = (int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / (double)comp.EnergyProps.energyWhenConsumed);
+                    int num = (int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / comp.EnergyProps.energyWhenConsumed);
                     if (num > 0)
                         return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(thing2))
                         {
@@ -102,7 +102,7 @@ namespace Androids
                         };
                 }
             }
-            return (Job)null;
+            return null;
         }
 
         private int GetLastTryTick(Pawn pawn)

@@ -19,7 +19,7 @@ namespace Androids
 
         private Building_AndroidPrinter Printer => (Building_AndroidPrinter)(Thing)this.job.GetTarget(TargetIndex.B);
 
-        public override string GetReport() => (string)"ReportHaulingTo".Translate((NamedArgument)(this.pawn.carryTracker.CarriedThing == null ? (Entity)this.TargetThingA : (Entity)this.pawn.carryTracker.CarriedThing).LabelCap, (NamedArgument)this.job.targetB.Thing.LabelShort);
+        public override string GetReport() => (string)"ReportHaulingTo".Translate((NamedArgument)(this.pawn.carryTracker.CarriedThing == null ? TargetThingA : (Entity)this.pawn.carryTracker.CarriedThing).LabelCap, (NamedArgument)this.job.targetB.Thing.LabelShort);
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {

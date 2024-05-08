@@ -20,7 +20,7 @@ namespace Androids
 
         public override bool HasJobOnThing(Pawn pawn, Thing thing, bool forced = false)
         {
-            if (pawn.Downed || (thing.IsForbidden(pawn) || !thing.Position.InAllowedArea(pawn)) && !pawn.CanReach(new LocalTargetInfo(thing), PathEndMode.ClosestTouch, Danger.Deadly) || HealthAIUtility.ShouldSeekMedicalRest(pawn) || !(thing is Pawn pawn1) || !pawn.CanReserve(new LocalTargetInfo((Thing)pawn1)))
+            if (pawn.Downed || (thing.IsForbidden(pawn) || !thing.Position.InAllowedArea(pawn)) && !pawn.CanReach(new LocalTargetInfo(thing), PathEndMode.ClosestTouch, Danger.Deadly) || HealthAIUtility.ShouldSeekMedicalRest(pawn) || !(thing is Pawn pawn1) || !pawn.CanReserve(new LocalTargetInfo(pawn1)))
                 return false;
             bool? nullable;
             if (pawn1 == null)
@@ -49,14 +49,14 @@ namespace Androids
             {
                 Need_Energy need = pawn1.needs.TryGetNeed<Need_Energy>();
                 EnergySourceComp comp = bestEnergySource.TryGetComp<EnergySourceComp>();
-                int num = Math.Min((int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / (double)comp.EnergyProps.energyWhenConsumed), bestEnergySource.stackCount);
+                int num = Math.Min((int)Math.Ceiling(((double)need.MaxLevel - (double)need.CurLevel) / comp.EnergyProps.energyWhenConsumed), bestEnergySource.stackCount);
                 if (num > 0)
-                    return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(bestEnergySource), new LocalTargetInfo((Thing)pawn1))
+                    return new Job(JobDefOf.ChJAndroidRechargeEnergyComp, new LocalTargetInfo(bestEnergySource), new LocalTargetInfo(pawn1))
                     {
                         count = num
                     };
             }
-            return (Job)null;
+            return null;
         }
 
         public Thing TryFindBestEnergySource(Pawn pawn)
@@ -75,15 +75,15 @@ namespace Androids
             Pawn_InventoryTracker inventory = pawn.inventory;
             if (inventory != null)
             {
-                Thing bestEnergySource = inventory.innerContainer.FirstOrDefault<Thing>((Func<Thing, bool>)(thing =>
+                Thing bestEnergySource = inventory.innerContainer.FirstOrDefault<Thing>(thing =>
                 {
                     EnergySourceComp comp = thing.TryGetComp<EnergySourceComp>();
                     return comp != null && comp.EnergyProps.isConsumable;
-                }));
+                });
                 if (bestEnergySource != null)
                     return bestEnergySource;
             }
-            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(searchThing => searchThing.TryGetComp<EnergySourceComp>() != null && !searchThing.IsForbidden(pawn) && pawn.CanReserve((LocalTargetInfo)searchThing) && searchThing.Position.InAllowedArea(pawn) && pawn.CanReach(new LocalTargetInfo(searchThing), PathEndMode.OnCell, Danger.Deadly))));
+            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: searchThing => searchThing.TryGetComp<EnergySourceComp>() != null && !searchThing.IsForbidden(pawn) && pawn.CanReserve((LocalTargetInfo)searchThing) && searchThing.Position.InAllowedArea(pawn) && pawn.CanReach(new LocalTargetInfo(searchThing), PathEndMode.OnCell, Danger.Deadly));
         }
     }
 }

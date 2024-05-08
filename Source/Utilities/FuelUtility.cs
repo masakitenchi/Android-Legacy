@@ -16,9 +16,9 @@ namespace Androids
     {
         public static readonly float autoRefillThreshhold = 0.8f;
 
-        public static Thing FindSuitableFuelForPawn(Pawn pawn, EnergySource_Fueled fuelEnergySourceComp) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => ValidFuelSource(fuelEnergySourceComp, thing))));
+        public static Thing FindSuitableFuelForPawn(Pawn pawn, EnergySource_Fueled fuelEnergySourceComp) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.OnCell, TraverseParms.For(pawn), validator: thing => ValidFuelSource(fuelEnergySourceComp, thing));
 
-        public static bool ValidFuelSource(EnergySource_Fueled fuelEnergySourceComp, Thing checkThing) => fuelEnergySourceComp.EnergyProps.fuels.Any<ThingOrderRequest>((Predicate<ThingOrderRequest>)(fuelType => fuelType.thingDef == checkThing.def));
+        public static bool ValidFuelSource(EnergySource_Fueled fuelEnergySourceComp, Thing checkThing) => fuelEnergySourceComp.EnergyProps.fuels.Any<ThingOrderRequest>(fuelType => fuelType.thingDef == checkThing.def);
 
         public static Thing FueledEnergySourceNeedRefilling(Pawn pawn)
         {
@@ -27,12 +27,12 @@ namespace Androids
                 Apparel apparel = pawn.apparel.WornApparel.FirstOrDefault<Apparel>((Func<Apparel, bool>)(ap =>
                 {
                     EnergySource_Fueled comp = ap.TryGetComp<EnergySource_Fueled>();
-                    return comp != null && (double)comp.MissingFuelPercentage > (double)autoRefillThreshhold;
+                    return comp != null && (double)comp.MissingFuelPercentage > autoRefillThreshhold;
                 }));
                 if (apparel != null)
-                    return (Thing)apparel;
+                    return apparel;
             }
-            return (Thing)null;
+            return null;
         }
     }
 }

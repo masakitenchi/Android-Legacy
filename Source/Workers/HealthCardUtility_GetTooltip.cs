@@ -27,7 +27,7 @@ namespace Androids
                 if (code.opcode == OpCodes.Callvirt && code.operand == (object)tipStringExtraGetter)
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Call, (object)labelHelper);
+                    yield return new CodeInstruction(OpCodes.Call, labelHelper);
                 }
             }
         }

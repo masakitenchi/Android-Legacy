@@ -15,7 +15,7 @@ namespace Androids
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
             if (pawn.def.HasModExtension<MechanicalPawnProperties>())
-                yield return (BodyPartRecord)null;
+                yield return null;
         }
 
         public override void ApplyOnPawn(

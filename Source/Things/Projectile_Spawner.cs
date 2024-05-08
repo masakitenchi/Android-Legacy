@@ -21,20 +21,20 @@ namespace Androids
 
         public virtual void DoSpawn(Thing hitThing)
         {
-            Pawn pawn = (Pawn)null;
+            Pawn pawn = null;
             if (this.SpawnerProps.pawnKind != null)
                 pawn = PawnGenerator.GeneratePawn(this.SpawnerProps.pawnKind);
             if (this.SpawnerProps.pawnThingDef != null)
                 pawn = (Pawn)ThingMaker.MakeThing(this.SpawnerProps.pawnThingDef);
             if (pawn == null)
                 return;
-            pawn.SetFaction(this.SpawnerProps.GetFaction(this.launcher), (Pawn)null);
+            pawn.SetFaction(this.SpawnerProps.GetFaction(this.launcher), null);
             if (this.SpawnerProps.forceAgeToZero)
             {
                 pawn.ageTracker.AgeBiologicalTicks = 0L;
                 pawn.ageTracker.AgeChronologicalTicks = 0L;
             }
-            GenPlace.TryPlaceThing((Thing)pawn, this.Position, this.Map, ThingPlaceMode.Near);
+            GenPlace.TryPlaceThing(pawn, this.Position, this.Map, ThingPlaceMode.Near);
             if (this.SpawnerProps.mentalStateUponSpawn != null)
                 pawn.mindState.mentalStateHandler.TryStartMentalState(this.SpawnerProps.mentalStateUponSpawn, forceWake: true);
             if (this.SpawnerProps.joinLordOnSpawn)
@@ -50,10 +50,10 @@ namespace Androids
 
         public Lord GetLord(Pawn forPawn)
         {
-            Lord lord = (Lord)null;
+            Lord lord = null;
             Faction faction = forPawn.Faction;
-            if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any<Pawn>((Predicate<Pawn>)(p => p != forPawn)))
-                lord = ((Pawn)GenClosest.ClosestThing_Global(forPawn.Position, (IEnumerable)forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction), this.SpawnerProps.lordJoinRadius, (Predicate<Thing>)(p => p != forPawn && ((Pawn)p).GetLord() != null))).GetLord();
+            if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any<Pawn>(p => p != forPawn))
+                lord = ((Pawn)GenClosest.ClosestThing_Global(forPawn.Position, forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction), this.SpawnerProps.lordJoinRadius, p => p != forPawn && ((Pawn)p).GetLord() != null)).GetLord();
             if (lord == null)
             {
                 LordJob jobForLord = this.SpawnerProps.CreateJobForLord(forPawn.Position);

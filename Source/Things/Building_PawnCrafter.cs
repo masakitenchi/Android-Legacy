@@ -30,7 +30,7 @@ namespace Androids
         public void Notify_SettingsChanged()
         {
         }
-        public float CraftingFinishedPercentage => this.printerProperties.customCraftingTime ? ((float)this.craftingTime - (float)this.craftingTicksLeft) / (float)this.craftingTime : ((float)this.printerProperties.ticksToCraft - (float)this.craftingTicksLeft) / (float)this.printerProperties.ticksToCraft;
+        public float CraftingFinishedPercentage => this.printerProperties.customCraftingTime ? (craftingTime - (float)this.craftingTicksLeft) / craftingTime : (printerProperties.ticksToCraft - (float)this.craftingTicksLeft) / printerProperties.ticksToCraft;
 
         public int CraftingTicks => this.printerProperties.customCraftingTime ? this.craftingTime : this.printerProperties.ticksToCraft;
 
@@ -40,7 +40,7 @@ namespace Androids
         {
         }
 
-        public ThingOwner GetDirectlyHeldThings() => (ThingOwner)this.ingredients;
+        public ThingOwner GetDirectlyHeldThings() => ingredients;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -49,16 +49,16 @@ namespace Androids
             this.flickableComp = this.GetComp<CompFlickable>();
             if (this.inputSettings == null)
             {
-                this.inputSettings = new StorageSettings((IStoreSettingsParent)this);
+                this.inputSettings = new StorageSettings(this);
                 if (this.def.building.defaultStorageSettings != null)
                     this.inputSettings.CopyFrom(this.def.building.defaultStorageSettings);
             }
             this.printerProperties = this.def.GetModExtension<PawnCrafterProperties>();
             if (!this.printerProperties.customOrderProcessor)
             {
-                this.orderProcessor = new ThingOrderProcessor((ThingOwner)this.ingredients, this.inputSettings);
+                this.orderProcessor = new ThingOrderProcessor(ingredients, this.inputSettings);
                 if (this.printerProperties != null)
-                    this.orderProcessor.requestedItems.AddRange((IEnumerable<ThingOrderRequest>)this.printerProperties.costList);
+                    this.orderProcessor.requestedItems.AddRange(printerProperties.costList);
             }
             this.AdjustPowerNeed();
         }
@@ -66,7 +66,7 @@ namespace Androids
         public override void PostMake()
         {
             base.PostMake();
-            this.inputSettings = new StorageSettings((IStoreSettingsParent)this);
+            this.inputSettings = new StorageSettings(this);
             if (this.def.building.defaultStorageSettings == null)
                 return;
             this.inputSettings.CopyFrom(this.def.building.defaultStorageSettings);
@@ -95,19 +95,19 @@ namespace Androids
         {
             List<Gizmo> gizmos = new List<Gizmo>(base.GetGizmos());
             if (this.pawnBeingCrafted != null)
-                gizmos.Insert(0, (Gizmo)new Gizmo_PrinterPawnInfo((IPawnCrafter)this));
+                gizmos.Insert(0, new Gizmo_PrinterPawnInfo(this));
             if (this.crafterStatus != CrafterStatus.Finished)
-                gizmos.Insert(0, (Gizmo)new Gizmo_TogglePrinting((IPawnCrafter)this));
+                gizmos.Insert(0, new Gizmo_TogglePrinting(this));
             if (DebugSettings.godMode && this.pawnBeingCrafted != null)
             {
                 List<Gizmo> gizmoList = gizmos;
                 Command_Action commandAction = new Command_Action();
                 commandAction.defaultLabel = "DEBUG: Finish crafting.";
                 commandAction.defaultDesc = "Finishes crafting the pawn.";
-                commandAction.action = (Action)(() => this.crafterStatus = CrafterStatus.Finished);
-                gizmoList.Insert(0, (Gizmo)commandAction);
+                commandAction.action = () => this.crafterStatus = CrafterStatus.Finished;
+                gizmoList.Insert(0, commandAction);
             }
-            return (IEnumerable<Gizmo>)gizmos;
+            return gizmos;
         }
 
         public virtual bool ReadyToCraft()
@@ -137,7 +137,7 @@ namespace Androids
             this.crafterStatus = CrafterStatus.Idle;
             if (this.pawnBeingCrafted != null)
                 this.pawnBeingCrafted.Destroy(DestroyMode.Vanish);
-            this.pawnBeingCrafted = (Pawn)null;
+            this.pawnBeingCrafted = null;
             this.ingredients.TryDropAll(this.InteractionCell, this.Map, ThingPlaceMode.Near);
         }
 
@@ -186,9 +186,9 @@ namespace Androids
                     else
                     {
                         int num = this.ingredients.TotalStackCountOfDef(requestedItem.thingDef);
-                        if ((double)num < (double)requestedItem.amount)
+                        if (num < (double)requestedItem.amount)
                         {
-                            stringBuilder.Append((string)(this.printerProperties.crafterMaterialNeedText.Translate((NamedArgument)(requestedItem.amount - (float)num), (NamedArgument)requestedItem.thingDef.LabelCap) + " "));
+                            stringBuilder.Append((string)(this.printerProperties.crafterMaterialNeedText.Translate((NamedArgument)(requestedItem.amount - num), (NamedArgument)requestedItem.thingDef.LabelCap) + " "));
                             flag = false;
                         }
                     }
@@ -236,20 +236,20 @@ namespace Androids
                             {
                                 if ((double)this.CountNutrition() > 0.0)
                                 {
-                                    Thing thing1 = this.ingredients.First<Thing>((Func<Thing, bool>)(thing => thing.def.IsIngestible));
+                                    Thing thing1 = this.ingredients.First<Thing>(thing => thing.def.IsIngestible);
                                     if (thing1 != null)
                                     {
-                                        int count = Math.Min((int)Math.Ceiling((double)thingOrderRequest.amount / ((double)this.CraftingTicks / (double)this.printerProperties.resourceTick)), thing1.stackCount);
-                                        Thing resultingThing = (Thing)null;
+                                        int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / (CraftingTicks / (double)this.printerProperties.resourceTick)), thing1.stackCount);
+                                        Thing resultingThing = null;
                                         if (thing1 is Corpse t)
                                         {
                                             if (t.IsDessicated())
                                             {
-                                                this.ingredients.TryDrop((Thing)t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing, (Action<Thing, int>)null, (Predicate<IntVec3>)null);
+                                                this.ingredients.TryDrop(t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing, null, null);
                                             }
                                             else
                                             {
-                                                this.ingredients.TryDrop((Thing)t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing, (Action<Thing, int>)null, (Predicate<IntVec3>)null);
+                                                this.ingredients.TryDrop(t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing, null, null);
                                                 t.InnerPawn?.equipment?.DropAllEquipment(this.InteractionCell, false);
                                                 t.InnerPawn?.apparel?.DropAll(this.InteractionCell, false, true);
                                                 thing1.Destroy();
@@ -260,12 +260,12 @@ namespace Androids
                                     }
                                 }
                             }
-                            else if (this.ingredients.Any<Thing>((Func<Thing, bool>)(thing => thing.def == thingOrderRequest.thingDef)))
+                            else if (this.ingredients.Any<Thing>(thing => thing.def == thingOrderRequest.thingDef))
                             {
-                                Thing thing2 = this.ingredients.First<Thing>((Func<Thing, bool>)(thing => thing.def == thingOrderRequest.thingDef));
+                                Thing thing2 = this.ingredients.First<Thing>(thing => thing.def == thingOrderRequest.thingDef);
                                 if (thing2 != null)
                                 {
-                                    int count = Math.Min((int)Math.Ceiling((double)thingOrderRequest.amount / ((double)this.CraftingTicks / (double)this.printerProperties.resourceTick)), thing2.stackCount);
+                                    int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / (CraftingTicks / (double)this.printerProperties.resourceTick)), thing2.stackCount);
                                     this.ingredients.Take(thing2, count).Destroy();
                                 }
                             }
@@ -283,13 +283,13 @@ namespace Androids
                         break;
                     this.ExtraCrafterTickAction();
                     this.ingredients.ClearAndDestroyContents();
-                    GenSpawn.Spawn((Thing)this.pawnBeingCrafted, this.InteractionCell, this.Map);
+                    GenSpawn.Spawn(pawnBeingCrafted, this.InteractionCell, this.Map);
                     if (this.printerProperties.hediffOnPawnCrafted != null && this.pawnBeingCrafted.health != null)
                         this.pawnBeingCrafted.health.AddHediff(this.printerProperties.hediffOnPawnCrafted);
                     if (this.printerProperties.thoughtOnPawnCrafted != null && this.pawnBeingCrafted?.needs?.mood != null)
                         this.pawnBeingCrafted.needs.mood.thoughts.memories.TryGainMemory(this.printerProperties.thoughtOnPawnCrafted);
-                    Find.LetterStack.ReceiveLetter((Letter)LetterMaker.MakeLetter(this.printerProperties.pawnCraftedLetterLabel.Translate((NamedArgument)this.pawnBeingCrafted.Name.ToStringShort), this.printerProperties.pawnCraftedLetterText.Translate((NamedArgument)this.pawnBeingCrafted.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)(Thing)this.pawnBeingCrafted));
-                    this.pawnBeingCrafted = (Pawn)null;
+                    Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(this.printerProperties.pawnCraftedLetterLabel.Translate((NamedArgument)this.pawnBeingCrafted.Name.ToStringShort), this.printerProperties.pawnCraftedLetterText.Translate((NamedArgument)this.pawnBeingCrafted.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawnBeingCrafted));
+                    this.pawnBeingCrafted = null;
                     this.crafterStatus = CrafterStatus.Idle;
                     this.FinishAction();
                     break;
@@ -323,7 +323,7 @@ namespace Androids
                 {
                     double num2 = (double)num1;
                     ThingDef def = ingredient.def;
-                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * (double)ingredient.stackCount;
+                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * ingredient.stackCount;
                     num1 = (float)(num2 + num3);
                 }
             }

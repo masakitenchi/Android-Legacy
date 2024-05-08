@@ -44,16 +44,16 @@ namespace Androids
             {
                 Command_Action commandAction1 = new Command_Action();
                 commandAction1.defaultLabel = "DEBUG: Set Energy to 100%";
-                commandAction1.action = (Action)(() => this.energyNeed.CurLevelPercentage = 1f);
-                yield return (Gizmo)commandAction1;
+                commandAction1.action = () => this.energyNeed.CurLevelPercentage = 1f;
+                yield return commandAction1;
                 Command_Action commandAction2 = new Command_Action();
                 commandAction2.defaultLabel = "DEBUG: Set Energy to 50%";
-                commandAction2.action = (Action)(() => this.energyNeed.CurLevelPercentage = 0.5f);
-                yield return (Gizmo)commandAction2;
+                commandAction2.action = () => this.energyNeed.CurLevelPercentage = 0.5f;
+                yield return commandAction2;
                 Command_Action commandAction3 = new Command_Action();
                 commandAction3.defaultLabel = "DEBUG: Set Energy to 20%";
-                commandAction3.action = (Action)(() => this.energyNeed.CurLevelPercentage = 0.2f);
-                yield return (Gizmo)commandAction3;
+                commandAction3.action = () => this.energyNeed.CurLevelPercentage = 0.2f;
+                yield return commandAction3;
             }
             Pawn pawn = energyTrackerComp.parent as Pawn;
             if (AndroidsModSettings.Instance.androidExplodesOnDeath && pawn != null && pawn.IsColonistPlayerControlled && pawn.def.HasModExtension<MechanicalPawnProperties>())
@@ -61,15 +61,15 @@ namespace Androids
                 Command_Action commandAction = new Command_Action();
                 commandAction.defaultLabel = (string)"AndroidGizmoSelfDetonationLabel".Translate();
                 commandAction.defaultDesc = (string)"AndroidGizmoSelfDetonationDescription".Translate();
-                commandAction.icon = (Texture)ContentFinder<Texture2D>.Get("UI/Commands/Detonate");
-                commandAction.action = (Action)(() =>
+                commandAction.icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate");
+                commandAction.action = () =>
                 {
                     if (AndroidsModSettings.Instance.droidDetonationConfirmation)
-                        Find.WindowStack.Add((Window)Dialog_MessageBox.CreateConfirmation("AndroidSelfDetonationConfirmationDialogText".Translate((NamedArgument)pawn.Name.ToStringFull), (Action)(() => HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjOverheating, 1.1f)), true, (string)"AndroidGizmoSelfDetonationLabel".Translate()));
+                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("AndroidSelfDetonationConfirmationDialogText".Translate((NamedArgument)pawn.Name.ToStringFull), () => HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjOverheating, 1.1f), true, (string)"AndroidGizmoSelfDetonationLabel".Translate()));
                     else
                         HealthUtility.AdjustSeverity(pawn, HediffDefOf.ChjOverheating, 1.1f);
-                });
-                yield return (Gizmo)commandAction;
+                };
+                yield return commandAction;
             }
         }
     }

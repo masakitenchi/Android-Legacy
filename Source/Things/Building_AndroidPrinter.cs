@@ -105,7 +105,7 @@ namespace Androids
         public bool IsUpgrade => this.GetDirectlyHeldThings().Any(x => x is Pawn);
         public CrafterStatus PrinterStatus => this.printerStatus;
         public PawnCrafterProperties PrinterProperties => this.def.GetModExtension<PawnCrafterProperties>();
-        public Pawn PawnInside => (Pawn)this.GetDirectlyHeldThings().Where<Thing>((Func<Thing, bool>)(p => p is Pawn)).FirstOrDefault<Thing>();
+        public Pawn PawnInside => (Pawn)this.GetDirectlyHeldThings().Where<Thing>(p => p is Pawn).FirstOrDefault<Thing>();
         public bool ReadyToPrint => this.printerStatus == CrafterStatus.Filling && this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings()) == null;
         #endregion
         public void Notify_SettingsChanged()
@@ -118,7 +118,7 @@ namespace Androids
             this.flickableComp = this.GetComp<CompFlickable>();
             if (this.inputSettings == null)
             {
-                this.inputSettings = new StorageSettings((IStoreSettingsParent)this);
+                this.inputSettings = new StorageSettings(this);
                 if (this.def.building.defaultStorageSettings != null)
                     this.inputSettings.CopyFrom(this.def.building.defaultStorageSettings);
             }
@@ -136,12 +136,12 @@ namespace Androids
                     this.orderProcessor.requestedItems.Add(new ThingOrderRequest()
                     {
                         thingDef = RimWorld.ThingDefOf.Plasteel,
-                        amount = (float)requestPlasteel
+                        amount = requestPlasteel
                     });
                     this.orderProcessor.requestedItems.Add(new ThingOrderRequest()
                     {
                         thingDef = RimWorld.ThingDefOf.ComponentIndustrial,
-                        amount = (float)requestComponents
+                        amount = requestComponents
                     });
                 }
                 else
@@ -177,7 +177,7 @@ namespace Androids
                 Scribe_Deep.Look(ref this.clonedPawnToPrint, "clonedPawnToPrint");
             }
             Scribe_Deep.Look<StorageSettings>(ref this.inputSettings, "inputSettings");
-            Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", (object)this.ingredients, (object)this.inputSettings);
+            Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", ingredients, inputSettings);
             Scribe_Values.Look<int>(ref this.extraTimeCost, "extraTimeCost");
             Scribe_Collections.Look(ref this.upgradesToApply, "upgradesToApply", LookMode.Def);
             /*
@@ -229,18 +229,18 @@ namespace Androids
             stringBuilder.AppendLine();
             stringBuilder.AppendLine((string)this.printerProperties.crafterStatusText.Translate((NamedArgument)(this.printerProperties.crafterStatusEnumText + ((int)this.printerStatus).ToString()).Translate()));
             if (this.printerStatus == CrafterStatus.Crafting)
-                stringBuilder.AppendLine((string)this.printerProperties.crafterProgressText.Translate((NamedArgument)(((float)(this.printerProperties.ticksToCraft + this.extraTimeCost) - (float)this.printingTicksLeft) / (float)(this.printerProperties.ticksToCraft + this.extraTimeCost)).ToStringPercent()));
+                stringBuilder.AppendLine((string)this.printerProperties.crafterProgressText.Translate((NamedArgument)((this.printerProperties.ticksToCraft + this.extraTimeCost - (float)this.printingTicksLeft) / (this.printerProperties.ticksToCraft + this.extraTimeCost)).ToStringPercent()));
             if (this.printerStatus == CrafterStatus.Filling)
             {
                 bool needsFulfilled = true;
-                stringBuilder.Append(this.FormatIngredientCosts(out needsFulfilled, (IEnumerable<ThingOrderRequest>)this.orderProcessor.requestedItems));
+                stringBuilder.Append(this.FormatIngredientCosts(out needsFulfilled, orderProcessor.requestedItems));
                 if (!needsFulfilled)
                     stringBuilder.AppendLine();
             }
             this.ingredients = this.GetDirectlyHeldThings();
             if (this.ingredients.Count > 0)
                 stringBuilder.Append((string)(this.printerProperties.crafterMaterialsText.Translate() + " "));
-            foreach (Thing thing in this.ingredients.Where<Thing>((Func<Thing, bool>)(i => !(i is Pawn))))
+            foreach (Thing thing in this.ingredients.Where<Thing>(i => !(i is Pawn)))
                 stringBuilder.Append(thing.LabelCap + "; ");
             return stringBuilder.ToString().TrimEndNewlines();
         }
@@ -275,9 +275,9 @@ namespace Androids
                     int num = this.ingredients.TotalStackCountOfDef(requestedItem.thingDef);
                     if (deductCosts)
                     {
-                        if ((double)num < (double)requestedItem.amount)
+                        if (num < (double)requestedItem.amount)
                         {
-                            stringBuilder.Append((string)(this.printerProperties.crafterMaterialNeedText.Translate((NamedArgument)(requestedItem.amount - (float)num), (NamedArgument)requestedItem.thingDef.LabelCap) + " "));
+                            stringBuilder.Append((string)(this.printerProperties.crafterMaterialNeedText.Translate((NamedArgument)(requestedItem.amount - num), (NamedArgument)requestedItem.thingDef.LabelCap) + " "));
                             needsFulfilled = false;
                         }
                     }
@@ -289,7 +289,7 @@ namespace Androids
         }
 
 
-        public void InitiatePawnCrafting() => Find.WindowStack.Add((Window)new CustomizeAndroidWindow(this));
+        public void InitiatePawnCrafting() => Find.WindowStack.Add(new CustomizeAndroidWindow(this));
 
         public void StartPrinting()
         {
@@ -312,7 +312,7 @@ namespace Androids
             if (this.pawnToPrint != null && this.clonedPawnToPrint == null) //De novo printing
             {
                 this.pawnToPrint.Destroy(DestroyMode.Vanish);
-                this.pawnToPrint = (Pawn)null;
+                this.pawnToPrint = null;
             }
             else
                 CustomizeAndroidWindow.PawnUpdate(this.pawnToPrint, this.clonedPawnToPrint);
@@ -360,7 +360,7 @@ namespace Androids
                         for (int index = 0; index < 3; ++index)
                         {
                             position = this.Position;
-                            FleckMaker.ThrowMicroSparks(position.ToVector3() + new Vector3((float)Rand.Range(-1, 1), 0.0f, (float)Rand.Range(-1, 1)), this.Map);
+                            FleckMaker.ThrowMicroSparks(position.ToVector3() + new Vector3(Rand.Range(-1, 1), 0.0f, Rand.Range(-1, 1)), this.Map);
                         }
                     }
                     if (this.soundSustainer == null || this.soundSustainer.Ended)
@@ -368,7 +368,7 @@ namespace Androids
                         SoundDef craftingSound = this.printerProperties.craftingSound;
                         if (craftingSound != null && craftingSound.sustain)
                         {
-                            SoundInfo info = SoundInfo.InMap((TargetInfo)(Thing)this, MaintenanceType.PerTick);
+                            SoundInfo info = SoundInfo.InMap((TargetInfo)this, MaintenanceType.PerTick);
                             this.soundSustainer = craftingSound.TrySpawnSustainer(info);
                         }
                     }
@@ -385,20 +385,20 @@ namespace Androids
                             {
                                 if ((double)this.CountNutrition() > 0.0)
                                 {
-                                    Thing thing1 = this.ingredients.First<Thing>((Func<Thing, bool>)(thing => thing.def.IsIngestible));
+                                    Thing thing1 = this.ingredients.First<Thing>(thing => thing.def.IsIngestible);
                                     if (thing1 != null)
                                     {
-                                        int count = Math.Min((int)Math.Ceiling((double)thingOrderRequest.amount / ((double)(this.printerProperties.ticksToCraft + this.extraTimeCost) / (double)this.printerProperties.resourceTick)), thing1.stackCount);
-                                        Thing resultingThing = (Thing)null;
+                                        int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / ((this.printerProperties.ticksToCraft + this.extraTimeCost) / (double)this.printerProperties.resourceTick)), thing1.stackCount);
+                                        Thing resultingThing = null;
                                         if (thing1 is Corpse t)
                                         {
                                             if (t.IsDessicated())
                                             {
-                                                this.ingredients.TryDrop((Thing)t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing);
+                                                this.ingredients.TryDrop(t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing);
                                             }
                                             else
                                             {
-                                                this.ingredients.TryDrop((Thing)t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing);
+                                                this.ingredients.TryDrop(t, this.InteractionCell, this.Map, ThingPlaceMode.Near, 1, out resultingThing);
                                                 t.InnerPawn?.equipment?.DropAllEquipment(this.InteractionCell, false);
                                                 t.InnerPawn?.apparel?.DropAll(this.InteractionCell, false, true);
                                                 thing1.Destroy();
@@ -409,12 +409,12 @@ namespace Androids
                                     }
                                 }
                             }
-                            else if (this.ingredients.Any<Thing>((Func<Thing, bool>)(thing => !(thing is Pawn) && thing.def == thingOrderRequest.thingDef)))
+                            else if (this.ingredients.Any<Thing>(thing => !(thing is Pawn) && thing.def == thingOrderRequest.thingDef))
                             {
-                                Thing thing2 = this.ingredients.First<Thing>((Func<Thing, bool>)(thing => thing.def == thingOrderRequest.thingDef));
+                                Thing thing2 = this.ingredients.First<Thing>(thing => thing.def == thingOrderRequest.thingDef);
                                 if (thing2 != null)
                                 {
-                                    int count = Math.Min((int)Math.Ceiling((double)thingOrderRequest.amount / ((double)(this.printerProperties.ticksToCraft + this.extraTimeCost) / (double)this.printerProperties.resourceTick)), thing2.stackCount);
+                                    int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / ((this.printerProperties.ticksToCraft + this.extraTimeCost) / (double)this.printerProperties.resourceTick)), thing2.stackCount);
                                     this.ingredients.Take(thing2, count).Destroy();
                                 }
                             }
@@ -435,14 +435,14 @@ namespace Androids
                         Pawn pawn = (Pawn)directlyHeldThings.FirstOrDefault(p => p is Pawn);
                         ApplyUpgrades(pawn);
                         //this.needsSaved = false;
-                        foreach (Thing thing in (IEnumerable<Thing>)directlyHeldThings)
+                        foreach (Thing thing in directlyHeldThings)
                         {
                             if (thing is not Pawn)
                                 thing.Destroy();
                         }
                         pawn.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
                         pawn.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
-                        Find.LetterStack.ReceiveLetter((Letter)LetterMaker.MakeLetter("AndroidUpgradedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidUpgradedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)(Thing)this.pawnToPrint));
+                        Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter("AndroidUpgradedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidUpgradedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawnToPrint));
                         this.pawnToPrint = null;
                         this.clonedPawnToPrint = null;
                         this.printerStatus = CrafterStatus.Idle;
@@ -460,10 +460,10 @@ namespace Androids
                     this.innerContainer.ClearAndDestroyContents();
                     FilthMaker.TryMakeFilth(this.InteractionCell, this.Map, RimWorld.ThingDefOf.Filth_Slime, 5, FilthSourceFlags.None);
                     ApplyUpgrades(this.pawnToPrint);
-                    GenSpawn.Spawn((Thing)this.pawnToPrint, this.InteractionCell, this.Map);
+                    GenSpawn.Spawn(pawnToPrint, this.InteractionCell, this.Map);
                     this.pawnToPrint.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
                     this.pawnToPrint.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
-                    Find.LetterStack.ReceiveLetter((Letter)LetterMaker.MakeLetter("AndroidPrintedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidPrintedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)(Thing)this.pawnToPrint));
+                    Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter("AndroidPrintedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidPrintedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawnToPrint));
                     this.pawnToPrint = null;
                     this.printerStatus = CrafterStatus.Idle;
                     this.extraTimeCost = 0;
@@ -496,7 +496,7 @@ namespace Androids
         {
             this.ingredients = this.GetDirectlyHeldThings();
             float num1 = 0.0f;
-            foreach (Thing ingredient in (IEnumerable<Thing>)this.ingredients)
+            foreach (Thing ingredient in ingredients)
             {
                 if (ingredient is Corpse corpse)
                 {
@@ -507,7 +507,7 @@ namespace Androids
                 {
                     double num2 = (double)num1;
                     ThingDef def = ingredient.def;
-                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * (double)ingredient.stackCount;
+                    double num3 = (def != null ? (double)def.ingestible.CachedNutrition : 0.05000000074505806) * ingredient.stackCount;
                     num1 = (float)(num2 + num3);
                 }
             }

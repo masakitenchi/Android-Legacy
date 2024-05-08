@@ -17,7 +17,7 @@ namespace Androids
         {
             HediffSet hediffSet = pawn.health.hediffSet;
             Hediff firstHediffOfDef = hediffSet.GetFirstHediffOfDef(this.contributingHediff);
-            if ((firstHediffOfDef == null ? 0 : ((double)firstHediffOfDef.Severity >= (double)this.startToOverheatAt ? 1 : 0)) != 0)
+            if ((firstHediffOfDef == null ? 0 : ((double)firstHediffOfDef.Severity >= startToOverheatAt ? 1 : 0)) != 0)
                 HealthUtility.AdjustSeverity(pawn, this.hediff, hediffSet.BleedRateTotal * 0.005f);
             else
                 HealthUtility.AdjustSeverity(pawn, this.hediff, -0.0125f);

@@ -15,7 +15,7 @@ namespace Androids
 {
     public static class EnergyNeedUtility
     {
-        public static Thing ClosestPowerSource(Pawn pawn) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.BuildingArtificial), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: ((Predicate<Thing>)(thing => BestClosestPowerSource(pawn, thing))));
+        public static Thing ClosestPowerSource(Pawn pawn) => GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.BuildingArtificial), PathEndMode.ClosestTouch, TraverseParms.For(pawn), validator: thing => BestClosestPowerSource(pawn, thing));
 
         public static bool BestClosestPowerSource(Pawn pawn, Thing thing)
         {
@@ -37,7 +37,7 @@ label_4:
             IntVec3 position = thing.Position;
             if (position.Walkable(pawn.Map) && position.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(position)) && pawn.CanReach((LocalTargetInfo)position, PathEndMode.OnCell, Danger.Deadly))
                 return true;
-            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal((Thing)t).OrderByDescending<IntVec3, float>((Func<IntVec3, float>)(selector => selector.DistanceTo(pawn.Position))))
+            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending<IntVec3, float>(selector => selector.DistanceTo(pawn.Position)))
             {
                 if (intVec3.Walkable(pawn.Map) && intVec3.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(intVec3)) && pawn.CanReach((LocalTargetInfo)intVec3, PathEndMode.ClosestTouch, Danger.Deadly))
                     return true;

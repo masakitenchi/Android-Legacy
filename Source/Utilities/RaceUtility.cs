@@ -29,12 +29,12 @@ namespace Androids
                     foreach (ThingDef_AlienRace allDef in DefDatabase<ThingDef_AlienRace>.AllDefs)
                     {
                         ThingDef_AlienRace alienDef = allDef;
-                        PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault<PawnKindDef>((Func<PawnKindDef, bool>)(def => def.race == alienDef));
+                        PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault<PawnKindDef>(def => def.race == alienDef);
                         if (pawnKindDef != null)
                             alienRaceKindsint.Add(pawnKindDef);
                     }
-                    alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.defName == "Human"));
-                    alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race.HasModExtension<MechanicalPawnProperties>()));
+                    alienRaceKindsint.RemoveAll(def => def.race.defName == "Human");
+                    alienRaceKindsint.RemoveAll(def => def.race.HasModExtension<MechanicalPawnProperties>());
                     foreach (Def allDef in DefDatabase<ThingDef>.AllDefs)
                     {
                         PawnCrafterProperties modExtension = allDef.GetModExtension<PawnCrafterProperties>();
@@ -43,7 +43,7 @@ namespace Androids
                             foreach (ThingDef disabledRace in modExtension.disabledRaces)
                             {
                                 ThingDef raceDef = disabledRace;
-                                alienRaceKindsint.RemoveAll((Predicate<PawnKindDef>)(def => def.race == raceDef));
+                                alienRaceKindsint.RemoveAll(def => def.race == raceDef);
                             }
                         }
                     }
@@ -51,7 +51,7 @@ namespace Androids
                         alienRacesFoundint = true;
                     alienRaceKindSearchDoneint = true;
                 }
-                return (IEnumerable<PawnKindDef>)alienRaceKindsint;
+                return alienRaceKindsint;
             }
         }
 

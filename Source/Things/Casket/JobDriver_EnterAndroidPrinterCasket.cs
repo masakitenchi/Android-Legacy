@@ -24,22 +24,22 @@ namespace Androids
             toil.WithProgressBarToilDelay(TargetIndex.A);
             yield return toil;
             Toil enter = new Toil();
-            enter.initAction = (Action)(() =>
+            enter.initAction = () =>
             {
                 Pawn actor = enter.actor;
                 Building_AndroidPrinter pod = (Building_AndroidPrinter)actor.CurJob.targetA.Thing;
-                Action confirmedAct = (Action)(() =>
+                Action confirmedAct = () =>
                 {
                     actor.DeSpawnOrDeselect(DestroyMode.Vanish);
-                    pod.TryAcceptThing((Thing)actor, true);
-                });
+                    pod.TryAcceptThing(actor, true);
+                };
                 if (pod.def.building.isPlayerEjectable)
                     confirmedAct();
                 else if (this.Map.mapPawns.FreeColonistsSpawnedOrInPlayerEjectablePodsCount <= 1)
-                    Find.WindowStack.Add((Window)Dialog_MessageBox.CreateConfirmation("CasketWarning".Translate(actor.Named("PAWN")).AdjustedFor(actor), confirmedAct));
+                    Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("CasketWarning".Translate(actor.Named("PAWN")).AdjustedFor(actor), confirmedAct));
                 else
                     confirmedAct();
-            });
+            };
             enter.defaultCompleteMode = ToilCompleteMode.Instant;
             yield return enter;
         }

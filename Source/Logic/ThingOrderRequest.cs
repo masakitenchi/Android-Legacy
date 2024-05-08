@@ -28,12 +28,12 @@ namespace Androids
         public Predicate<Thing> ExtraPredicate()
         {
             if (!this.nutrition)
-                return (Predicate<Thing>)(thing => true);
-            return this.thingFilter == null ? (Predicate<Thing>)(thing =>
+                return thing => true;
+            return this.thingFilter == null ? (thing =>
             {
                 ThingDef def = thing.def;
                 return (def != null ? (!def.ingestible.IsMeal ? 1 : 0) : 0) != 0 && thing.def.IsNutritionGivingIngestible;
-            }) : (Predicate<Thing>)(thing => this.thingFilter.Allows(thing) && thing.def.IsNutritionGivingIngestible && (!(thing is Corpse t) || !t.IsDessicated()));
+            }) : (thing => this.thingFilter.Allows(thing) && thing.def.IsNutritionGivingIngestible && (!(thing is Corpse t) || !t.IsDessicated()));
         }
 
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
@@ -47,7 +47,7 @@ namespace Androids
                 if (xmlRoot.Name.ToLower() == "nutrition")
                     this.nutrition = true;
                 else
-                    DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef((object)this, "thingDef", xmlRoot.Name);
+                    DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "thingDef", xmlRoot.Name);
                 this.amount = (float)ParseHelper.FromString(xmlRoot.FirstChild.Value, typeof(float));
             }
         }

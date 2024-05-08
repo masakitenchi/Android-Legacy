@@ -26,7 +26,7 @@ namespace Androids
         public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth, GizmoRenderParms parms)
         {
             Rect overRect = new Rect(topLeft.x, topLeft.y, this.GetWidth(maxWidth), 75f);
-            Find.WindowStack.ImmediateWindow(984689, overRect, WindowLayer.GameUI, (Action)(() =>
+            Find.WindowStack.ImmediateWindow(984689, overRect, WindowLayer.GameUI, () =>
             {
                 Rect rect1;
                 Rect rect2 = (rect1 = overRect.AtZero().ContractedBy(6f)) with
@@ -45,7 +45,7 @@ namespace Androids
                 Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect3, this.fueledEnergySource.fuelAmountLoaded.ToString("F0") + " / " + this.fueledEnergySource.EnergyProps.maxFuelAmount.ToString("F0"));
                 Text.Anchor = TextAnchor.UpperLeft;
-            }));
+            });
             return new GizmoResult(GizmoState.Clear);
         }
     }

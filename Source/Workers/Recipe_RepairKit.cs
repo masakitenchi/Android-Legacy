@@ -17,11 +17,11 @@ namespace Androids
         {
             if (pawn.def.HasModExtension<MechanicalPawnProperties>() || pawn.def.HasModExtension<AndroidPawnProperties>())
             {
-                if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0 || (double)pawn.health.summaryHealth.SummaryHealthPercent < 1.0 || pawn.health.hediffSet.GetMissingPartsCommonAncestors().Count > 0 || pawn.health.hediffSet.hediffs.Any<Hediff>((Predicate<Hediff>)(hediff => hediff.def.HasModExtension<MechanicalHediffProperties>() && hediff.CurStage.becomeVisible)))
-                    yield return (BodyPartRecord)null;
+                if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0 || (double)pawn.health.summaryHealth.SummaryHealthPercent < 1.0 || pawn.health.hediffSet.GetMissingPartsCommonAncestors().Count > 0 || pawn.health.hediffSet.hediffs.Any<Hediff>(hediff => hediff.def.HasModExtension<MechanicalHediffProperties>() && hediff.CurStage.becomeVisible))
+                    yield return null;
             }
             else if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0)
-                yield return (BodyPartRecord)null;
+                yield return null;
         }
 
         public override void ApplyOnPawn(

@@ -18,13 +18,13 @@ namespace Androids
         public override string ExplanationPart(StatRequest req)
         {
             if (!(req.Thing is Pawn thing))
-                return (string)null;
+                return null;
             IEnumerable<Hediff> relevantHediffs = this.GetRelevantHediffs(thing);
             if (relevantHediffs == null)
-                return (string)null;
+                return null;
             List<Hediff> hediffList = new List<Hediff>(relevantHediffs);
             if (hediffList.Count == 0)
-                return (string)null;
+                return null;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine((string)"AndroidMarketValueStatPartLabel".Translate());
             foreach (Hediff hediff in hediffList)
@@ -72,12 +72,12 @@ namespace Androids
             return (float)Math.Ceiling((double)a);
         }
 
-        private IEnumerable<Hediff> GetRelevantHediffs(Pawn pawn) => pawn.health.hediffSet.hediffs.Where<Hediff>((Func<Hediff, bool>)(hediff =>
+        private IEnumerable<Hediff> GetRelevantHediffs(Pawn pawn) => pawn.health.hediffSet.hediffs.Where<Hediff>(hediff =>
         {
             AndroidUpgradeHediffProperties modExtension = hediff.def.GetModExtension<AndroidUpgradeHediffProperties>();
             if (modExtension == null || modExtension.def.costList.Count <= 0)
                 return false;
             return modExtension.def.costList.Count != 1 || !modExtension.def.costList[0].nutrition;
-        }));
+        });
     }
 }

@@ -57,7 +57,7 @@ namespace Androids
                 if (compPowerBattery != null)
                 {
                     compPowerBattery.DrawPower(PowerNetEnergyDrainedPerTick);
-                    energyNeed.CurLevel += energyNeed.MaxLevel / (float)MaxTicksSpentCharging;
+                    energyNeed.CurLevel += energyNeed.MaxLevel / MaxTicksSpentCharging;
                 }
                 ticksSpentCharging++;
             };

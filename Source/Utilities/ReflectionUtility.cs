@@ -14,15 +14,15 @@ namespace Androids
         public static object CloneObjectShallowly(this object sourceObject)
         {
             if (sourceObject == null)
-                return (object)null;
+                return null;
             Type type = sourceObject.GetType();
             if (type.IsAbstract)
-                return (object)null;
+                return null;
             if (type.IsPrimitive || type.IsValueType || type.IsArray || type == typeof(string))
                 return sourceObject;
             object instance = Activator.CreateInstance(type);
             if (instance == null)
-                return (object)null;
+                return null;
             foreach (FieldInfo field in type.GetFields())
             {
                 if (!field.IsLiteral)

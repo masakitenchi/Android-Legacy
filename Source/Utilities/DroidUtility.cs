@@ -35,12 +35,12 @@ namespace Androids
           List<SkillRequirement> skills = null,
           int defaultSkillLevel = 6)
         {
-            Map map = (Map)null;
+            Map map = null;
             if (tile > -1)
                 map = Current.Game?.FindMap(tile);
             Pawn pawnBeingCrafted = (Pawn)ThingMaker.MakeThing(pawnKindDef.race);
             if (pawnBeingCrafted == null)
-                return (Pawn)null;
+                return null;
             pawnBeingCrafted.kindDef = pawnKindDef;
             if (faction != null)
                 pawnBeingCrafted.SetFactionDirect(faction);
@@ -109,7 +109,7 @@ namespace Androids
                     {
                         SkillDef skillDef = defsListForReading[index];
                         SkillRecord skill = pawnBeingCrafted.skills.GetSkill(skillDef);
-                        SkillRequirement skillRequirement = skills.First<SkillRequirement>((Func<SkillRequirement, bool>)(sr => sr.skill == skillDef));
+                        SkillRequirement skillRequirement = skills.First<SkillRequirement>(sr => sr.skill == skillDef);
                         skill.Level = skillRequirement == null ? defaultSkillLevel : skillRequirement.minLevel;
                         skill.passion = Passion.None;
                     }
@@ -119,18 +119,18 @@ namespace Androids
                 pawnBeingCrafted.workSettings.EnableAndInitialize();
             if (map != null && faction.IsPlayer)
             {
-                IEnumerable<Name> source = map.mapPawns.FreeColonists.Select<Pawn, Name>((Func<Pawn, Name>)(pawn => pawn.Name));
+                IEnumerable<Name> source = map.mapPawns.FreeColonists.Select<Pawn, Name>(pawn => pawn.Name);
                 if (source != null)
                 {
-                    int num4 = source.Count<Name>((Func<Name, bool>)(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower())));
+                    int num4 = source.Count<Name>(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower()));
                     string nickName = (string)(pawnKindDef.race.LabelCap + " ") + num4.ToString();
-                    pawnBeingCrafted.Name = (Name)MakeDroidName(nickName);
+                    pawnBeingCrafted.Name = MakeDroidName(nickName);
                 }
                 else
-                    pawnBeingCrafted.Name = (Name)MakeDroidName((string)null);
+                    pawnBeingCrafted.Name = MakeDroidName(null);
             }
             else
-                pawnBeingCrafted.Name = (Name)MakeDroidName((string)null);
+                pawnBeingCrafted.Name = MakeDroidName(null);
             return pawnBeingCrafted;
         }
 
@@ -175,7 +175,7 @@ namespace Androids
                             return 70f;
                     }
                 }
-                Log.Error("Unknown hair likelihood for " + (object)hair + " with " + (object)pawn);
+                Log.Error("Unknown hair likelihood for " + hair + " with " + pawn);
                 num = 0.0f;
             }
             return num;
@@ -198,7 +198,7 @@ namespace Androids
 
         public static NameTriple MakeDroidName(string nickName)
         {
-            string str = string.Format("D-{0:X}-{1:X}", (object)Rand.Range(0, 256), (object)Rand.Range(0, 256));
+            string str = string.Format("D-{0:X}-{1:X}", Rand.Range(0, 256), Rand.Range(0, 256));
             return nickName == null ? new NameTriple(str, str, "Droid") : new NameTriple(str, nickName, "Droid");
         }
 
@@ -209,13 +209,13 @@ namespace Androids
             if (medicine != null && medicine.Destroyed)
             {
                 Log.Warning("Tried to use destroyed repair kit.");
-                medicine = (Thing)null;
+                medicine = null;
             }
             GetOptimalHediffsToTendWithSingleTreatment(patient, medicine != null, tmpHediffsToTend);
             for (int index = 0; index < tmpHediffsToTend.Count; ++index)
             {
                 if (medicine == null)
-                    tmpHediffsToTend[index].Tended(0.1f, (float)index);
+                    tmpHediffsToTend[index].Tended(0.1f, index);
                 else
                     patient.health.RemoveHediff(tmpHediffsToTend[index]);
             }
@@ -259,7 +259,7 @@ namespace Androids
             tmpHediffs.Clear();
             if (tendableHediffsInTendPriorityOrder != null)
             {
-                tmpHediffs.AddRange((IEnumerable<Hediff>)tendableHediffsInTendPriorityOrder);
+                tmpHediffs.AddRange(tendableHediffsInTendPriorityOrder);
             }
             else
             {
@@ -295,7 +295,7 @@ namespace Androids
                         if ((double)severity1 + (double)severity2 <= 20.0)
                         {
                             severity1 += severity2;
-                            outHediffsToTend.Add((Hediff)tmpHediff2);
+                            outHediffsToTend.Add(tmpHediff2);
                         }
                     }
                 }

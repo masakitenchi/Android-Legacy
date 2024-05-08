@@ -25,7 +25,7 @@ namespace Androids
                 if (!pawn.def.HasModExtension<MechanicalPawnProperties>() || !pawn.IsAndroid())
                     pawnList.Add(pawn);
             }
-            __result = (IEnumerable<Pawn>)pawnList;
+            __result = pawnList;
         }
     }
 }
