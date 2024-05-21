@@ -32,23 +32,15 @@ namespace Androids.Integration
             float rowHeight = 24f;
             Rect ininRect = new Rect(inRect);
             ininRect.width /= 2f;
-            Rect rowRect = UIHelper.GetRowRect(ininRect, rowHeight, row);
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsEyeGlow".Translate(), ref AndroidsModSettings.Instance.androidEyeGlow);
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsExplodeOnDeath".Translate(), ref AndroidsModSettings.Instance.androidExplodesOnDeath);
-            row++;
-            Widgets.TextFieldNumericLabeled(rowRect, "AndroidSettingsExplosionRadius".Translate(), ref AndroidsModSettings.Instance.androidExplosionRadius, ref explosionRadiusBuffer, 1.25f, GenRadial.MaxRadialPatternRadius);
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsDroidCompatibilityMode".Translate(), ref AndroidsModSettings.Instance.droidCompatibilityMode);
-            TooltipHandler.TipRegion(rowRect, "AndroidSettingsDroidCompatibilityModeTooltip".Translate());
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsDroidDetonationDialog".Translate(), ref AndroidsModSettings.Instance.droidDetonationConfirmation);
-            TooltipHandler.TipRegion(rowRect, "AndroidSettingsDroidDetonationDialogTooltip".Translate());
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsDroidWearDown".Translate(), ref AndroidsModSettings.Instance.droidWearDown);
-            row++;
-            Widgets.CheckboxLabeled(rowRect, "AndroidSettingsDroidWearDownQuadrum".Translate(), ref AndroidsModSettings.Instance.droidWearDownQuadrum);
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsEyeGlow".Translate(), ref AndroidsModSettings.Instance.androidEyeGlow);
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsExplodeOnDeath".Translate(), ref AndroidsModSettings.Instance.androidExplodesOnDeath);
+            Widgets.TextFieldNumericLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsExplosionRadius".Translate(), ref AndroidsModSettings.Instance.androidExplosionRadius, ref explosionRadiusBuffer, 1.25f, GenRadial.MaxRadialPatternRadius);
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidCompatibilityMode".Translate(), ref AndroidsModSettings.Instance.droidCompatibilityMode);
+            TooltipHandler.TipRegion(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidCompatibilityModeTooltip".Translate());
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidDetonationDialog".Translate(), ref AndroidsModSettings.Instance.droidDetonationConfirmation);
+            TooltipHandler.TipRegion(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidDetonationDialogTooltip".Translate());
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidWearDown".Translate(), ref AndroidsModSettings.Instance.droidWearDown);
+            Widgets.CheckboxLabeled(UIHelper.GetRowRect(ininRect, rowHeight, row), "AndroidSettingsDroidWearDownQuadrum".Translate(), ref AndroidsModSettings.Instance.droidWearDownQuadrum);
 
         }
     }
