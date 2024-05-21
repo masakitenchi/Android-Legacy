@@ -36,5 +36,6 @@
     <Compile Remove="GameComponent\UpgradeTracker.cs" />
     <Compile Remove="Workers\ExtraMath.cs" />
     <Compile Remove="Workers\PotentialVictims_Patch.cs" />
+    <Compile Remove="libs\**" />
   </ItemGroup>
 </Project>
