@@ -707,44 +707,8 @@ namespace Androids
             }
             if (this.newAndroid.def is ThingDef_AlienRace def1)
             {
-                List<Trait> disallowedTraits = def1.alienRace?.generalSettings?.disallowedTraits?.Where(x => x.chance == 0f).Select(x => new Trait(x.defName, x.degree)).ToList();
+                List<Trait> disallowedTraits = def1.alienRace?.generalSettings?.disallowedTraits?.Where(x => x.chance == 0f).Select(x => new Trait(x.entry.def, x.entry.degree)).ToList();
                 this.allTraits.RemoveAll(x =>  disallowedTraits.Exists(y => y.def == x.def && y.Degree == x.Degree));
-                /*List<TraitDef> traitDefList1;
-                if (def1 == null)
-                {
-                    traitDefList1 = (List<TraitDef>)null;
-                }
-                else
-                {
-                    ThingDef_AlienRace.AlienSettings alienRace = def1.alienRace;
-                    if (alienRace == null)
-                    {
-                        traitDefList1 = (List<TraitDef>)null;
-                    }
-                    else
-                    {
-                        GeneralSettings generalSettings = alienRace.generalSettings;
-                        if (generalSettings == null)
-                        {
-                            traitDefList1 = (List<TraitDef>)null;
-                        }
-                        else
-                        {
-                            List<AlienChanceEntry<TraitDef>> disallowedTraits = generalSettings.disallowedTraits;
-                            //I couldn't fully understand this atm, so I'll just fix the code issue atm. Only 0% chance in disallowedTraits are disabled
-                            traitDefList1 = disallowedTraits != null ? disallowedTraits.Where(x => x.chance == 0f).Select(trait => trait.defName).ToList<TraitDef>() : null;
-                        }
-                    }
-                }
-                List<TraitDef> traitDefList2 = traitDefList1;
-                if (traitDefList2 != null)
-                {
-                    foreach (TraitDef traitDef in traitDefList2)
-                    {
-                        TraitDef trait = traitDef;
-                        this.allTraits.RemoveAll((Predicate<Trait>)(thisTrait => trait.defName == thisTrait.def.defName));
-                    }
-                }*/
             }
             foreach (Trait allTrait in this.newAndroid.story.traits.allTraits)
             {
