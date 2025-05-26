@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using System.Collections.Generic;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobDriver_RechargeEnergyFromConsumable : JobDriver
@@ -21,8 +17,8 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref this.isUsedFromInventory, "isUsedFromInventory");
-            Scribe_Values.Look<bool>(ref this.thingIsSplitOff, "thingIsSplitOff");
+            Scribe_Values.Look(ref this.isUsedFromInventory, "isUsedFromInventory");
+            Scribe_Values.Look(ref this.thingIsSplitOff, "thingIsSplitOff");
         }
 
         public override void Notify_Starting()
@@ -58,7 +54,7 @@ namespace Androids
             return targetThingA.ParentHolder is Pawn_CarryTracker || targetThingA.ParentHolder is Pawn_InventoryTracker;
         }
 
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedNullOrForbidden(TargetIndex.A);
             if (!TargetB.IsValid)

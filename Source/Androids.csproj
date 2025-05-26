@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RuntimeIdentifiers>win;linux</RuntimeIdentifiers>
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <OutputPath>..\Assemblies</OutputPath>
     <Deterministic>true</Deterministic>
     <Version>1.5</Version>
@@ -18,19 +18,20 @@
       <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\AlienRaces\$(Version)\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="VanillaPsycastsExpanded">
+    <!--     <Reference Include="VanillaPsycastsExpanded">
       <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\Mods\Vanilla Psycasts Expanded\$(Version)\Assemblies\VanillaPsycastsExpanded.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="VFECore">
+    </Reference> -->
+    <!--     <Reference Include="VFECore">
       <HintPath>D:\SteamLibrary\steamapps\workshop\content\294100\2023507013\$(Version)\Assemblies\VFECore.dll</HintPath>
       <Private>False</Private>
-    </Reference>
+    </Reference> -->
+    <Publicize Include="Assembly-CSharp" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer" Version="2.2.1" />
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(Version).*"/>
-    <PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime"/>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(Version).*" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="GameComponent\UpgradeTracker.cs" />

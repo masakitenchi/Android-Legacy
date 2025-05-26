@@ -4,11 +4,7 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System.Collections.Generic;
 using System.Diagnostics;
-using Verse;
-using Verse.AI;
 
 namespace Androids
 {
@@ -31,7 +27,7 @@ namespace Androids
         }
 
         [DebuggerHidden]
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.FailOnDestroyedNullOrForbidden(TargetIndex.B);

@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using System.Collections.Generic;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobDriver_RefillFuelEnergySource : JobDriver
@@ -22,7 +18,7 @@ namespace Androids
             return true;
         }
 
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedNullOrForbidden(FuelIndex);
             yield return Toils_Reserve.Reserve(FuelIndex);

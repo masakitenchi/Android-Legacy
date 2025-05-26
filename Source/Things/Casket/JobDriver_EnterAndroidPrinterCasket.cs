@@ -4,23 +4,17 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using System;
-using System.Collections.Generic;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobDriver_EnterAndroidPrinterCasket : JobDriver
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed) => this.pawn.Reserve(this.job.targetA, this.job, errorOnFailed: errorOnFailed);
-
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
-            this.FailOnDespawnedOrNull<JobDriver_EnterAndroidPrinterCasket>(TargetIndex.A);
+            this.FailOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
             Toil toil = Toils_General.Wait(500);
-            toil.FailOnCannotTouch<Toil>(TargetIndex.A, PathEndMode.InteractionCell);
+            toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);
             toil.WithProgressBarToilDelay(TargetIndex.A);
             yield return toil;
             Toil enter = new Toil();

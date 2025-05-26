@@ -1,7 +1,4 @@
-﻿using RimWorld;
-using Verse;
-
-namespace Androids
+﻿namespace Androids
 {
     [DefOf]
     public static class AndroidBodyPartDefOf

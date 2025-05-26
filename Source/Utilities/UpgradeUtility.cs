@@ -1,7 +1,4 @@
-﻿using Verse;
-
-
-namespace Androids
+﻿namespace Androids
 {
     public static class UpgradeUtility
     {

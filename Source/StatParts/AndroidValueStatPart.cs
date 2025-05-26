@@ -4,12 +4,7 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Verse;
 
 namespace Androids
 {
@@ -72,7 +67,7 @@ namespace Androids
             return (float)Math.Ceiling((double)a);
         }
 
-        private IEnumerable<Hediff> GetRelevantHediffs(Pawn pawn) => pawn.health.hediffSet.hediffs.Where<Hediff>(hediff =>
+        private IEnumerable<Hediff> GetRelevantHediffs(Pawn pawn) => pawn.health.hediffSet.hediffs.Where(hediff =>
         {
             AndroidUpgradeHediffProperties modExtension = hediff.def.GetModExtension<AndroidUpgradeHediffProperties>();
             if (modExtension == null || modExtension.def.costList.Count <= 0)

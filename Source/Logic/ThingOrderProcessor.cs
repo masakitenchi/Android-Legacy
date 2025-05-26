@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System.Collections.Generic;
-using Verse;
-
 namespace Androids
 {
     public class ThingOrderProcessor : IExposable
@@ -74,6 +70,6 @@ namespace Androids
             return num1;
         }
 
-        public void ExposeData() => Scribe_Collections.Look<ThingOrderRequest>(ref this.requestedItems, "requestedItems", LookMode.Deep);
+        public void ExposeData() => Scribe_Collections.Look(ref this.requestedItems, "requestedItems", LookMode.Deep);
     }
 }

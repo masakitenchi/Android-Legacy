@@ -5,13 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using RimWorld;
-using RimWorld.Planet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Verse;
 
 namespace Androids
 {
@@ -96,7 +89,7 @@ namespace Androids
             }
             if (this.pawn.IsCaravanMember() && this.pawn.IsHashIntervalTick(250) && (double)this.CurLevelPercentage < rechargePercentage)
             {
-                Thing thing1 = this.pawn.GetCaravan().Goods.FirstOrDefault<Thing>(thing =>
+                Thing thing1 = this.pawn.GetCaravan().Goods.FirstOrDefault(thing =>
                 {
                     EnergySourceComp comp3 = thing.TryGetComp<EnergySourceComp>();
                     return comp3 != null && comp3.EnergyProps.isConsumable;

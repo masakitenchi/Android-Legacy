@@ -4,11 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using Verse;
-
 namespace Androids
 {
     public class Recipe_RepairKit : RecipeWorker
@@ -17,7 +12,7 @@ namespace Androids
         {
             if (pawn.def.HasModExtension<MechanicalPawnProperties>() || pawn.def.HasModExtension<AndroidPawnProperties>())
             {
-                if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0 || (double)pawn.health.summaryHealth.SummaryHealthPercent < 1.0 || pawn.health.hediffSet.GetMissingPartsCommonAncestors().Count > 0 || pawn.health.hediffSet.hediffs.Any<Hediff>(hediff => hediff.def.HasModExtension<MechanicalHediffProperties>() && hediff.CurStage.becomeVisible))
+                if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0 || (double)pawn.health.summaryHealth.SummaryHealthPercent < 1.0 || pawn.health.hediffSet.GetMissingPartsCommonAncestors().Count > 0 || pawn.health.hediffSet.hediffs.Any(hediff => hediff.def.HasModExtension<MechanicalHediffProperties>() && hediff.CurStage.becomeVisible))
                     yield return null;
             }
             else if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0)

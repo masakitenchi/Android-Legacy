@@ -5,56 +5,47 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
 
 namespace Androids
 {
     public static class RaceUtility
     {
-        private static List<PawnKindDef> alienRaceKindsint = new List<PawnKindDef>();
-        private static bool alienRaceKindSearchDoneint = false;
-        private static bool alienRacesFoundint = false;
+        private static bool cached = false;
+        private static readonly HashSet<PawnKindDef> alienRaceKindsint = new ();
+        public static bool AlienRacesExist => alienRaceKindsint.Count > 0;
+        public static bool IsAndroid(this Pawn pawn) => pawn.def == ThingDefOf.ChjAndroid || pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike);
 
-        public static bool AlienRacesExist => alienRacesFoundint;
-
-        public static IEnumerable<PawnKindDef> AlienRaceKinds
+        public static IEnumerable<PawnKindDef> AvailableRacesForPrinter
         {
             get
             {
-                if (!alienRaceKindSearchDoneint)
+                if (!cached)
                 {
                     foreach (ThingDef_AlienRace allDef in DefDatabase<ThingDef_AlienRace>.AllDefs)
                     {
-                        ThingDef_AlienRace alienDef = allDef;
-                        PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault<PawnKindDef>(def => def.race == alienDef);
+                        PawnKindDef pawnKindDef = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault(def => def.race == allDef);
                         if (pawnKindDef != null)
                             alienRaceKindsint.Add(pawnKindDef);
                     }
-                    alienRaceKindsint.RemoveAll(def => def.race.defName == "Human");
-                    alienRaceKindsint.RemoveAll(def => def.race.HasModExtension<MechanicalPawnProperties>());
-                    foreach (Def allDef in DefDatabase<ThingDef>.AllDefs)
+                    alienRaceKindsint.RemoveWhere(def => def.race.defName == "Human");
+                    alienRaceKindsint.RemoveWhere(def => def.race.HasModExtension<MechanicalPawnProperties>());
+                    foreach (ThingDef allDef in DefDatabase<ThingDef>.AllDefs.Where(x => x.HasModExtension<PawnCrafterProperties>()))
                     {
-                        PawnCrafterProperties modExtension = allDef.GetModExtension<PawnCrafterProperties>();
-                        if (modExtension != null)
+                        PawnCrafterProperties properties = allDef.GetModExtension<PawnCrafterProperties>();
+                        if (properties != null && properties.pawnKind != null)
                         {
-                            foreach (ThingDef disabledRace in modExtension.disabledRaces)
+                            PawnKindDef pawnKindDef = properties.pawnKind;
+                            if (pawnKindDef != null)
                             {
-                                ThingDef raceDef = disabledRace;
-                                alienRaceKindsint.RemoveAll(def => def.race == raceDef);
+                                alienRaceKindsint.Add(pawnKindDef);
                             }
                         }
                     }
-                    if (alienRaceKindsint.Count > 1)
-                        alienRacesFoundint = true;
-                    alienRaceKindSearchDoneint = true;
+                    cached = true;
                 }
                 return alienRaceKindsint;
             }
         }
 
-        public static bool IsAndroid(this Pawn pawn) => pawn.def == ThingDefOf.ChjAndroid || pawn.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidLike);
     }
 }

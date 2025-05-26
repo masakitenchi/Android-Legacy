@@ -4,7 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using Verse;
 using Verse.AI.Group;
 
 namespace Androids
@@ -16,7 +15,7 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<float>(ref this.energyTracked, "energyTracked");
+            Scribe_Values.Look(ref this.energyTracked, "energyTracked");
         }
 
         public override void Tick()

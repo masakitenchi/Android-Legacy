@@ -4,12 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Verse;
 using Verse.AI.Group;
 
 namespace Androids
@@ -24,17 +18,17 @@ namespace Androids
         public bool forceAgeToZero;
         public MentalStateDef mentalStateUponSpawn;
         public bool joinLordOnSpawn;
-        public System.Type lordJob = typeof(LordJob_DefendPoint);
+        public Type lordJob = typeof(LordJob_DefendPoint);
         public float lordJoinRadius = 99999f;
         public bool joinSameLordFromProjectile = true;
 
         public LordJob CreateJobForLord(IntVec3 point)
         {
             LordJob instance;
-            if (this.lordJob.GetConstructors().Any<ConstructorInfo>(constructor =>
+            if (this.lordJob.GetConstructors().Any(constructor =>
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
-                return parameters != null && parameters.Count<ParameterInfo>() > 0 && parameters[0].ParameterType == typeof(IntVec3);
+                return parameters != null && parameters.Count() > 0 && parameters[0].ParameterType == typeof(IntVec3);
             }))
                 instance = (LordJob)Activator.CreateInstance(this.lordJob, point);
             else

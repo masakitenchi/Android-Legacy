@@ -4,11 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
 using Verse.Sound;
 
 namespace Androids
@@ -109,7 +104,7 @@ namespace Androids
                     {
                         SkillDef skillDef = defsListForReading[index];
                         SkillRecord skill = pawnBeingCrafted.skills.GetSkill(skillDef);
-                        SkillRequirement skillRequirement = skills.First<SkillRequirement>(sr => sr.skill == skillDef);
+                        SkillRequirement skillRequirement = skills.First(sr => sr.skill == skillDef);
                         skill.Level = skillRequirement == null ? defaultSkillLevel : skillRequirement.minLevel;
                         skill.passion = Passion.None;
                     }
@@ -119,10 +114,10 @@ namespace Androids
                 pawnBeingCrafted.workSettings.EnableAndInitialize();
             if (map != null && faction.IsPlayer)
             {
-                IEnumerable<Name> source = map.mapPawns.FreeColonists.Select<Pawn, Name>(pawn => pawn.Name);
+                IEnumerable<Name> source = map.mapPawns.FreeColonists.Select(pawn => pawn.Name);
                 if (source != null)
                 {
-                    int num4 = source.Count<Name>(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower()));
+                    int num4 = source.Count(name => name.ToStringShort.ToLower().StartsWith(pawnKindDef.race.label.ToLower()));
                     string nickName = (string)(pawnKindDef.race.LabelCap + " ") + num4.ToString();
                     pawnBeingCrafted.Name = MakeDroidName(nickName);
                 }
@@ -271,7 +266,7 @@ namespace Androids
                 }
                 TendUtility.SortByTendPriority(tmpHediffs);
             }
-            if (!tmpHediffs.Any<Hediff>())
+            if (!tmpHediffs.Any())
                 return;
             Hediff tmpHediff1 = tmpHediffs[0];
             outHediffsToTend.Add(tmpHediff1);

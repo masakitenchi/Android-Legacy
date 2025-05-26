@@ -4,11 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System.Collections.Generic;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobDriver_Hibernate : JobDriver
@@ -27,7 +22,7 @@ namespace Androids
 
         public override RandomSocialMode DesiredSocialMode() => RandomSocialMode.Off;
 
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             powerTrader = Target.TryGetComp<CompPowerTrader>();
             this.FailOnDestroyedNullOrForbidden(TargetIndex.A);

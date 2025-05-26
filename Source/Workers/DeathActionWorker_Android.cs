@@ -5,7 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using Verse;
 using Verse.AI.Group;
 
 namespace Androids

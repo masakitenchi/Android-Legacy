@@ -4,13 +4,10 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using Verse;
-
 namespace Androids
 {
     public class ThoughtWorker_DroidAlways : ThoughtWorker
     {
-        protected override ThoughtState CurrentStateInternal(Pawn p) => p.def.HasModExtension<MechanicalPawnProperties>() || p.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidUpgrade_DroneCore) ? ThoughtState.ActiveAtStage(0) : ThoughtState.Inactive;
+        public override ThoughtState CurrentStateInternal(Pawn p) => p.def.HasModExtension<MechanicalPawnProperties>() || p.health.hediffSet.HasHediff(HediffDefOf.ChjAndroidUpgrade_DroneCore) ? ThoughtState.ActiveAtStage(0) : ThoughtState.Inactive;
     }
 }

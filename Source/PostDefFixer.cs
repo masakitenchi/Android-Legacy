@@ -5,11 +5,7 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Verse;
 
 namespace Androids
 {
@@ -37,11 +33,11 @@ namespace Androids
                 (x => x.IsApparel &&
                 x.apparel.bodyPartGroups != null &&
                 x.apparel.bodyPartGroups.Count == 1 &&
-                x.apparel.bodyPartGroups.First<BodyPartGroupDef>().defName == "Waist" &&
+                x.apparel.bodyPartGroups.First().defName == "Waist" &&
                 x.apparel.layers != null &&
                 x.apparel.layers.Count == 1 &&
-                x.apparel.layers.First<ApparelLayerDef>().defName == "Belt" &&
-                !whiteApparelList.Any<ThingDef>(i => i.defName == x.defName)))
+                x.apparel.layers.First().defName == "Belt" &&
+                !whiteApparelList.Any(i => i.defName == x.defName)))
             {
                 sb.AppendLine($" - {allDef.defName}");
                 whiteApparelList.Add(allDef);

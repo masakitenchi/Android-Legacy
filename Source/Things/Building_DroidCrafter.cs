@@ -4,12 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Verse;
 using Verse.Sound;
 
 namespace Androids
@@ -23,7 +17,7 @@ namespace Androids
         public override void InitiatePawnCrafting()
         {
             List<FloatMenuOption> options = new List<FloatMenuOption>();
-            foreach (DroidCraftingDef def in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy<DroidCraftingDef, int>(def => def.orderID))
+            foreach (DroidCraftingDef def in (IEnumerable<DroidCraftingDef>)DefDatabase<DroidCraftingDef>.AllDefs.OrderBy(def => def.orderID))
             {
                 bool disabled = false;
                 if (def.requiredResearch != null && !def.requiredResearch.IsFinished)
@@ -121,9 +115,9 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look<ThingOrderProcessor>(ref this.orderProcessor, "orderProcessor", ingredients, inputSettings);
-            Scribe_Defs.Look<DroidCraftingDef>(ref this.lastDef, "lastDef");
-            Scribe_Values.Look<bool>(ref this.repeatLastPawn, "repeatLastPawn");
+            Scribe_Deep.Look(ref this.orderProcessor, "orderProcessor", ingredients, inputSettings);
+            Scribe_Defs.Look(ref this.lastDef, "lastDef");
+            Scribe_Values.Look(ref this.repeatLastPawn, "repeatLastPawn");
         }
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)

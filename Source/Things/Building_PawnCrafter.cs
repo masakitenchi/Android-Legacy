@@ -4,12 +4,7 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Verse;
 
 namespace Androids
 {
@@ -75,13 +70,13 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look<ThingOwner<Thing>>(ref this.ingredients, "ingredients");
-            Scribe_Values.Look<CrafterStatus>(ref this.crafterStatus, "crafterStatus");
-            Scribe_Values.Look<int>(ref this.craftingTicksLeft, "craftingTicksLeft");
-            Scribe_Values.Look<int>(ref this.nextResourceTick, "nextResourceTick");
-            Scribe_Deep.Look<Pawn>(ref this.pawnBeingCrafted, "pawnBeingCrafted");
-            Scribe_Deep.Look<StorageSettings>(ref this.inputSettings, "inputSettings");
-            Scribe_Values.Look<int>(ref this.craftingTime, "craftingTime");
+            Scribe_Deep.Look(ref this.ingredients, "ingredients");
+            Scribe_Values.Look(ref this.crafterStatus, "crafterStatus");
+            Scribe_Values.Look(ref this.craftingTicksLeft, "craftingTicksLeft");
+            Scribe_Values.Look(ref this.nextResourceTick, "nextResourceTick");
+            Scribe_Deep.Look(ref this.pawnBeingCrafted, "pawnBeingCrafted");
+            Scribe_Deep.Look(ref this.inputSettings, "inputSettings");
+            Scribe_Values.Look(ref this.craftingTime, "craftingTime");
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
@@ -114,7 +109,7 @@ namespace Androids
         {
             IEnumerable<ThingOrderRequest> source = this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings());
             bool flag = source == null;
-            if (source != null && source.Count<ThingOrderRequest>() == 0)
+            if (source != null && source.Count() == 0)
                 flag = true;
             return this.crafterStatus == CrafterStatus.Filling & flag;
         }
@@ -215,7 +210,7 @@ namespace Androids
                     this.ExtraCrafterTickAction();
                     IEnumerable<ThingOrderRequest> source = this.orderProcessor.PendingRequests(this.GetDirectlyHeldThings());
                     bool flag = source == null;
-                    if (source != null && source.Count<ThingOrderRequest>() == 0)
+                    if (source != null && source.Count() == 0)
                         flag = true;
                     if (!flag)
                         break;
@@ -236,7 +231,7 @@ namespace Androids
                             {
                                 if ((double)this.CountNutrition() > 0.0)
                                 {
-                                    Thing thing1 = this.ingredients.First<Thing>(thing => thing.def.IsIngestible);
+                                    Thing thing1 = this.ingredients.First(thing => thing.def.IsIngestible);
                                     if (thing1 != null)
                                     {
                                         int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / (CraftingTicks / (double)this.printerProperties.resourceTick)), thing1.stackCount);
@@ -260,9 +255,9 @@ namespace Androids
                                     }
                                 }
                             }
-                            else if (this.ingredients.Any<Thing>(thing => thing.def == thingOrderRequest.thingDef))
+                            else if (this.ingredients.Any(thing => thing.def == thingOrderRequest.thingDef))
                             {
-                                Thing thing2 = this.ingredients.First<Thing>(thing => thing.def == thingOrderRequest.thingDef);
+                                Thing thing2 = this.ingredients.First(thing => thing.def == thingOrderRequest.thingDef);
                                 if (thing2 != null)
                                 {
                                     int count = Math.Min((int)Math.Ceiling(thingOrderRequest.amount / (CraftingTicks / (double)this.printerProperties.resourceTick)), thing2.stackCount);

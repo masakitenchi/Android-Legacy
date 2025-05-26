@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace Androids
+﻿namespace Androids
 {
     internal class AbilityModExtension : DefModExtension
     {

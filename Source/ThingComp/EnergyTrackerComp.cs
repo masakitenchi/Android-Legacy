@@ -5,10 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Verse;
 
 namespace Androids
 {
@@ -35,7 +31,7 @@ namespace Androids
             this.energy = this.energyNeed.CurLevel;
         }
 
-        public override void PostExposeData() => Scribe_Values.Look<float>(ref this.energy, "energy");
+        public override void PostExposeData() => Scribe_Values.Look(ref this.energy, "energy");
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {

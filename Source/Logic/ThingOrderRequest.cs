@@ -4,10 +4,7 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
 using System.Xml;
-using Verse;
 
 namespace Androids
 {
@@ -48,15 +45,15 @@ namespace Androids
                     this.nutrition = true;
                 else
                     DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "thingDef", xmlRoot.Name);
-                this.amount = (float)ParseHelper.FromString(xmlRoot.FirstChild.Value, typeof(float));
+                this.amount = ParseHelper.ParseFloat(xmlRoot.FirstChild.Value);
             }
         }
 
         public void ExposeData()
         {
-            Scribe_Defs.Look<ThingDef>(ref this.thingDef, "thingDef");
-            Scribe_Values.Look<bool>(ref this.nutrition, "nutrition");
-            Scribe_Values.Look<float>(ref this.amount, "amount");
+            Scribe_Defs.Look(ref this.thingDef, "thingDef");
+            Scribe_Values.Look(ref this.nutrition, "nutrition");
+            Scribe_Values.Look(ref this.amount, "amount");
         }
     }
 }

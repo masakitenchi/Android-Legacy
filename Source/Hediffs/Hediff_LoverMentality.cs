@@ -4,11 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System.Collections.Generic;
-using UnityEngine;
-using Verse;
-
 namespace Androids
 {
     public class Hediff_LoverMentality : HediffWithComps, IExtraGizmos
@@ -18,7 +13,7 @@ namespace Androids
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look<Pawn>(ref this.loverToChase, "loverToChase");
+            Scribe_References.Look(ref this.loverToChase, "loverToChase");
         }
 
         public override void Tick()

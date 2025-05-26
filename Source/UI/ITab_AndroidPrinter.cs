@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using UnityEngine;
-using Verse;
-
 namespace Androids
 {
     public class ITab_AndroidPrinter : ITab
@@ -27,8 +23,7 @@ namespace Androids
             this.state = new ThingFilterUI.UIState();
             this.state.scrollPosition = new Vector2();
         }
-
-        protected override void FillTab()
+        public override void FillTab()
         {
             IStoreSettingsParent storeSettingsParent = this.SelStoreSettingsParent;
             StorageSettings storeSettings = storeSettingsParent.GetStoreSettings();

@@ -4,13 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public static class EnergyNeedUtility
@@ -37,7 +30,7 @@ label_4:
             IntVec3 position = thing.Position;
             if (position.Walkable(pawn.Map) && position.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(position)) && pawn.CanReach((LocalTargetInfo)position, PathEndMode.OnCell, Danger.Deadly))
                 return true;
-            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending<IntVec3, float>(selector => selector.DistanceTo(pawn.Position)))
+            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending(selector => selector.DistanceTo(pawn.Position)))
             {
                 if (intVec3.Walkable(pawn.Map) && intVec3.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(intVec3)) && pawn.CanReach((LocalTargetInfo)intVec3, PathEndMode.ClosestTouch, Danger.Deadly))
                     return true;

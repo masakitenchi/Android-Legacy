@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobGiver_RefillFuelEnergySource : ThinkNode_JobGiver
@@ -23,7 +19,7 @@ namespace Androids
 
         public override float GetPriority(Pawn pawn) => FuelUtility.FueledEnergySourceNeedRefilling(pawn) != null ? 10f : 0.0f;
 
-        protected override Job TryGiveJob(Pawn pawn)
+        public override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.Downed)
                 return null;

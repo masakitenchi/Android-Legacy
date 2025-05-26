@@ -4,14 +4,11 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using UnityEngine;
-using Verse;
-
 namespace Androids.Integration
 {
     public class Androids : Mod
     {
-        public static Integration.Androids Instance;
+        public static Androids Instance;
         private string explosionRadiusBuffer = "3.5";
 
         public Androids(ModContentPack content)

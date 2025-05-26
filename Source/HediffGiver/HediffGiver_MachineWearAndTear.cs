@@ -5,9 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using Androids.Integration;
-using RimWorld;
-using System.Linq;
-using Verse;
 
 namespace Androids
 {
@@ -16,12 +13,14 @@ namespace Androids
         public float potencyToIncreasePerDay = 1f;
         public float chanceToContract = 0.5f;
 
-        public float PotencyPerTick => this.potencyToIncreasePerDay * CheckInterval;
+        public float SeverityIncrement => this.potencyToIncreasePerDay * CheckIntervalMultiplier;
 
         // One quadrum = 15 days = 900k ticks
         // One day = 60000 ticks
 
         public int CheckInterval => AndroidsModSettings.Instance.droidWearDownQuadrum ? GenDate.TicksPerQuadrum : GenDate.TicksPerDay;
+
+        public int CheckIntervalMultiplier => AndroidsModSettings.Instance.droidWearDownQuadrum ? 15 : 1;
 
         public override void OnIntervalPassed(Pawn pawn, Hediff cause)
         {
@@ -35,16 +34,16 @@ namespace Androids
                 {
                     //Log.Message($"Affecting {part.def.defName}");
                     Hediff hediff1 = pawn.health.hediffSet.hediffs.FirstOrDefault(partHediff => partHediff.Part == part && partHediff.def == this.hediff);
-                    if (hediff1 == null)
+                    if (Rand.Chance(this.chanceToContract))
                     {
-                        if (Rand.Chance(this.chanceToContract))
+                        if (hediff1 == null)
                         {
                             Hediff hediff2 = HediffMaker.MakeHediff(this.hediff, pawn, part);
                             pawn.health.AddHediff(hediff2);
                         }
+                        else
+                        { hediff1.Severity += this.SeverityIncrement; }
                     }
-                    else
-                        hediff1.Severity += this.PotencyPerTick;
                 }
             }
         }

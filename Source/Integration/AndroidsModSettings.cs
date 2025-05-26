@@ -4,8 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using Verse;
-
 namespace Androids.Integration
 {
     public class AndroidsModSettings : ModSettings
@@ -23,13 +21,13 @@ namespace Androids.Integration
 
         public override void ExposeData()
         {
-            Scribe_Values.Look<bool>(ref this.androidEyeGlow, "androidEyeGlow", true);
-            Scribe_Values.Look<bool>(ref this.androidExplodesOnDeath, "androidExplodesOnDeath");
-            Scribe_Values.Look<float>(ref this.androidExplosionRadius, "androidExplosionRadius", 1.5f);
-            Scribe_Values.Look<bool>(ref this.droidCompatibilityMode, "droidCompatibilityMode");
-            Scribe_Values.Look<bool>(ref this.droidDetonationConfirmation, "droidDetonationConfirmation", true);
-            Scribe_Values.Look<bool>(ref this.droidWearDown, "droidWearDown", true);
-            Scribe_Values.Look<bool>(ref this.droidWearDownQuadrum, "droidWearDownQuadrum", true);
+            Scribe_Values.Look(ref this.androidEyeGlow, "androidEyeGlow", true);
+            Scribe_Values.Look(ref this.androidExplodesOnDeath, "androidExplodesOnDeath");
+            Scribe_Values.Look(ref this.androidExplosionRadius, "androidExplosionRadius", 1.5f);
+            Scribe_Values.Look(ref this.droidCompatibilityMode, "droidCompatibilityMode");
+            Scribe_Values.Look(ref this.droidDetonationConfirmation, "droidDetonationConfirmation", true);
+            Scribe_Values.Look(ref this.droidWearDown, "droidWearDown", true);
+            Scribe_Values.Look(ref this.droidWearDownQuadrum, "droidWearDownQuadrum", true);
         }
     }
 }

@@ -4,15 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using RimWorld.Planet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class EnergySource_Fueled : EnergySourceComp, IExtraDisplayStats
@@ -30,7 +21,7 @@ namespace Androids
         {
             if (fuel.stackCount <= 0)
                 return false;
-            ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault<ThingOrderRequest>((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
+            ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
             if (thingOrderRequest == null)
                 return false;
             int num = Math.Min((int)Math.Ceiling((double)this.MissingFuel / thingOrderRequest.amount), fuel.stackCount);
@@ -47,15 +38,15 @@ namespace Androids
 
         public int CalculateFuelNeededToRefill(Thing fuel)
         {
-            ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault<ThingOrderRequest>((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
+            ThingOrderRequest thingOrderRequest = this.EnergyProps.fuels.FirstOrDefault((Func<ThingOrderRequest, bool>)(req => req.thingDef == fuel.def));
             return thingOrderRequest != null ? Math.Min((int)Math.Ceiling((double)this.MissingFuel / thingOrderRequest.amount), fuel.stackCount) : -1;
         }
 
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look<double>(ref this.fuelAmountLoaded, "fuelAmountLoaded");
-            Scribe_Values.Look<bool>(ref this.autoRefuel, "autoRefuel");
+            Scribe_Values.Look(ref this.fuelAmountLoaded, "fuelAmountLoaded");
+            Scribe_Values.Look(ref this.autoRefuel, "autoRefuel");
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
@@ -157,7 +148,7 @@ namespace Androids
                 this.fuelAmountLoaded = 0.0;
             if (!targetPawn.IsCaravanMember() || (double)this.MissingFuelPercentage <= 0.800000011920929)
                 return;
-            Thing fuel1 = targetPawn.GetCaravan().Goods.FirstOrDefault<Thing>(fuelThing => this.EnergyProps.fuels.Any<ThingOrderRequest>(req => req.thingDef == fuelThing.def));
+            Thing fuel1 = targetPawn.GetCaravan().Goods.FirstOrDefault(fuelThing => this.EnergyProps.fuels.Any(req => req.thingDef == fuelThing.def));
             if (fuel1 == null)
                 return;
             int fuelNeededToRefill = this.CalculateFuelNeededToRefill(fuel1);

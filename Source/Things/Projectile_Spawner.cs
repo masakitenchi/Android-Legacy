@@ -4,10 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections;
-using Verse;
 using Verse.AI.Group;
 using Verse.Sound;
 
@@ -52,7 +48,7 @@ namespace Androids
         {
             Lord lord = null;
             Faction faction = forPawn.Faction;
-            if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any<Pawn>(p => p != forPawn))
+            if (forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction).Any(p => p != forPawn))
                 lord = ((Pawn)GenClosest.ClosestThing_Global(forPawn.Position, forPawn.Map.mapPawns.SpawnedPawnsInFaction(faction), this.SpawnerProps.lordJoinRadius, p => p != forPawn && ((Pawn)p).GetLord() != null)).GetLord();
             if (lord == null)
             {

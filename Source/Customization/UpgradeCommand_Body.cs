@@ -5,8 +5,6 @@
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
 using AlienRace;
-using RimWorld;
-using Verse;
 
 namespace Androids
 {

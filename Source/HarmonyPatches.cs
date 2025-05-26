@@ -25,7 +25,6 @@ namespace Androids
     {
         public static FieldInfo int_Pawn_NeedsTracker_GetPawn;
         public static FieldInfo int_PawnRenderer_GetPawn;
-        public static FieldInfo int_Need_Food_Starving_GetPawn;
         public static FieldInfo int_ConditionalPercentageNeed_need;
         public static FieldInfo int_Pawn_HealthTracker_GetPawn;
         public static FieldInfo int_Pawn_InteractionsTracker_GetPawn;
@@ -42,7 +41,7 @@ namespace Androids
             try
             {
                 str = "Pawn_NeedsTracker.ShouldHaveNeed";
-                System.Type type1 = typeof(Pawn_NeedsTracker);
+				Type type1 = typeof(Pawn_NeedsTracker);
                 int_Pawn_NeedsTracker_GetPawn = type1.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch(type1.GetMethod("ShouldHaveNeed", BindingFlags.Instance | BindingFlags.NonPublic), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_NeedsTracker_ShouldHaveNeed")));
                 /* str = "PawnRenderer.RenderPawnInternal";
@@ -58,26 +57,25 @@ namespace Androids
           typeof (PawnRenderFlags)
                 }, (ParameterModifier[])null), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PawnRenderer_RenderPawnInternal"))); */
                 str = "Need_Food.Starving";
-                System.Type type3 = typeof(Need_Food);
-                int_Need_Food_Starving_GetPawn = type3.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
-                MethodInfo getMethod = AccessTools.Property(type3, "Starving")?.GetGetMethod();
+				Type type3 = typeof(Need_Food);
+                MethodInfo getMethod = AccessTools.PropertyGetter(typeof(Need_Food), "Starving");
                 harmony.Patch(getMethod, postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Need_Food_Starving_Get")));
                 str = "HealthUtility.AdjustSeverity";
-                System.Type type4 = typeof(HealthUtility);
+				Type type4 = typeof(HealthUtility);
                 harmony.Patch(type4.GetMethod("AdjustSeverity"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_HealthUtility_AdjustSeverity")));
                 str = "ThinkNode_ConditionalNeedPercentageAbove.Satisfied";
-                System.Type type5 = typeof(ThinkNode_ConditionalNeedPercentageAbove);
+				Type type5 = typeof(ThinkNode_ConditionalNeedPercentageAbove);
                 int_ConditionalPercentageNeed_need = type5.GetField("need", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch(type5.GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_ThinkNode_ConditionalNeedPercentageAbove_Satisfied")));
                 str = "Pawn_HealthTracker.DropBloodFilth";
-                System.Type type6 = typeof(Pawn_HealthTracker);
+				Type type6 = typeof(Pawn_HealthTracker);
                 harmony.Patch(type6.GetMethod("DropBloodFilth"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_HealthTracker_DropBloodFilth")));
                 str = "Pawn_HealthTracker.HealthTick";
-                System.Type type7 = typeof(Pawn_HealthTracker);
+				Type type7 = typeof(Pawn_HealthTracker);
                 harmony.Patch(type7.GetMethod("HealthTick"), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_HealthTracker_HealthTick")));
                 str = "Pawn_HealthTracker.AddHediff";
-                System.Type type8 = typeof(Pawn_HealthTracker);
-                harmony.Patch(type8.GetMethod("AddHediff", new System.Type[4]
+				Type type8 = typeof(Pawn_HealthTracker);
+                harmony.Patch(type8.GetMethod("AddHediff", new Type[4]
                 {
           typeof (Hediff),
           typeof (BodyPartRecord),
@@ -85,20 +83,20 @@ namespace Androids
           typeof (DamageWorker.DamageResult)
                 }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_HealthTracker_AddHediff")));
                 str = "SkillRecord.Interval";
-                System.Type type9 = typeof(SkillRecord);
+				Type type9 = typeof(SkillRecord);
                 harmony.Patch(type9.GetMethod("Interval"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_SkillRecord_Interval")));
                 str = "Pawn.GetGizmos";
-                System.Type type10 = typeof(Pawn);
+				Type type10 = typeof(Pawn);
                 harmony.Patch(type10.GetMethod("GetGizmos"), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Pawn_GetGizmos")));
                 str = "HealthAIUtility.FindBestMedicine";
-                System.Type type11 = typeof(HealthAIUtility);
+				Type type11 = typeof(HealthAIUtility);
                 harmony.Patch(type11.GetMethod("FindBestMedicine"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_HealthAIUtility_FindBestMedicine")));
                 str = "Toils_Tend.FinalizeTend";
-                System.Type type12 = typeof(Toils_Tend);
+				Type type12 = typeof(Toils_Tend);
                 harmony.Patch(type12.GetMethod("FinalizeTend"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Toils_Tend_FinalizeTend")));
                 str = "DaysWorthOfFoodCalculator.ApproxDaysWorthOfFood";
-                System.Type type13 = typeof(DaysWorthOfFoodCalculator);
-                System.Type[] types = new System.Type[9]
+				Type type13 = typeof(DaysWorthOfFoodCalculator);
+				Type[] types = new Type[9]
                 {
           typeof (List<Pawn>),
           typeof (List<ThingDefCount>),
@@ -112,86 +110,86 @@ namespace Androids
                 };
                 harmony.Patch(type13.GetMethod("ApproxDaysWorthOfFood", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod, Type.DefaultBinder, types, null), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_DaysWorthOfFoodCalculator_ApproxDaysWorthOfFood")));
                 str = "GatheringsUtility.ShouldPawnKeepPartying";
-                System.Type type14 = typeof(GatheringsUtility);
+				Type type14 = typeof(GatheringsUtility);
                 harmony.Patch(type14.GetMethod("ShouldGuestKeepAttendingGathering"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PartyUtility_ShouldPawnKeepAttending")));
                 str = "GatheringsUtility.EnoughPotentialGuestsToStartGathering";
-                System.Type type15 = typeof(GatheringsUtility);
+				Type type15 = typeof(GatheringsUtility);
                 harmony.Patch(type15.GetMethod("EnoughPotentialGuestsToStartGathering"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PartyUtility_EnoughPotentialGuestsToStartGathering")));
                 str = "ThoughtWorker_NeedFood.CurrentStateInternal";
-                System.Type type16 = typeof(ThoughtWorker_NeedFood);
+				Type type16 = typeof(ThoughtWorker_NeedFood);
                 harmony.Patch(type16.GetMethod("CurrentStateInternal", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_ThoughtWorker_NeedFood_CurrentStateInternal")));
                 str = "PawnGenerator.TryGenerateNewPawnInternal";
-                System.Type type17 = typeof(PawnGenerator);
+				Type type17 = typeof(PawnGenerator);
                 harmony.Patch(AccessTools.Method(type17, "TryGenerateNewPawnInternal"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PawnGenerator_TryGenerateNewPawnInternal")), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_PawnGenerator_TryGenerateNewPawnInternal_Post")));
                 str = "FoodUtility.WillIngestStackCountOf";
-                System.Type type18 = typeof(FoodUtility);
+				Type type18 = typeof(FoodUtility);
                 harmony.Patch(type18.GetMethod("WillIngestStackCountOf"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_WillIngestStackCountOf")));
                 str = "RecordWorker_TimeInBedForMedicalReasons.ShouldMeasureTimeNow";
-                System.Type type19 = typeof(RecordWorker_TimeInBedForMedicalReasons);
+				Type type19 = typeof(RecordWorker_TimeInBedForMedicalReasons);
                 harmony.Patch(type19.GetMethod("ShouldMeasureTimeNow"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_ShouldMeasureTimeNow")));
                 str = "InteractionUtility.CanInitiateInteraction";
-                System.Type type20 = typeof(InteractionUtility);
+				Type type20 = typeof(InteractionUtility);
                 harmony.Patch(type20.GetMethod("CanInitiateInteraction"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanInitiateInteraction")));
                 str = "Pawn_HealthTracker.ShouldBeDeadFromRequiredCapacity";
-                System.Type type21 = typeof(Pawn_HealthTracker);
+				Type type21 = typeof(Pawn_HealthTracker);
                 int_Pawn_HealthTracker_GetPawn = type21.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch(type21.GetMethod("ShouldBeDeadFromRequiredCapacity"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_ShouldBeDeadFromRequiredCapacity")));
                 str = "HediffSet.CalculatePain";
-                System.Type type22 = typeof(HediffSet);
+				Type type22 = typeof(HediffSet);
                 harmony.Patch(type22.GetMethod("CalculatePain", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CalculatePain")));
                 str = "RestUtility.TimetablePreventsLayDown";
-                System.Type type23 = typeof(RestUtility);
+				Type type23 = typeof(RestUtility);
                 harmony.Patch(type23.GetMethod("TimetablePreventsLayDown"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_TimetablePreventsLayDown")));
                 str = "GatheringsUtility.ShouldGuestKeepAttendingGathering";
-                System.Type type24 = typeof(GatheringsUtility);
+				Type type24 = typeof(GatheringsUtility);
                 harmony.Patch(type24.GetMethod("ShouldGuestKeepAttendingGathering"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_ShouldGuestKeepAttendingGathering")));
                 str = "JobGiver_EatInGatheringArea.TryGiveJob";
-                System.Type type25 = typeof(JobGiver_EatInGatheringArea);
+				Type type25 = typeof(JobGiver_EatInGatheringArea);
                 harmony.Patch(type25.GetMethod("TryGiveJob", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_EatInPartyAreaTryGiveJob")));
                 str = "JobGiver_GetJoy.TryGiveJob";
-                System.Type type26 = typeof(JobGiver_GetJoy);
+				Type type26 = typeof(JobGiver_GetJoy);
                 harmony.Patch(type26.GetMethod("TryGiveJob", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_GetJoyTryGiveJob")));
                 str = "Pawn_InteractionsTracker.SocialFightChance && InteractionsTrackerTick && CanInteractNowWith";
-                System.Type type27 = typeof(Pawn_InteractionsTracker);
+				Type type27 = typeof(Pawn_InteractionsTracker);
                 int_Pawn_InteractionsTracker_GetPawn = type27.GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
                 harmony.Patch(type27.GetMethod("SocialFightChance"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_SocialFightChance")));
                 harmony.Patch(type27.GetMethod("InteractionsTrackerTick"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_InteractionsTrackerTick")));
                 harmony.Patch(type27.GetMethod("CanInteractNowWith"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanInteractNowWith")));
                 str = "InteractionUtility.CanInitiateInteraction && CanReceiveInteraction";
-                System.Type type28 = typeof(InteractionUtility);
+				Type type28 = typeof(InteractionUtility);
                 harmony.Patch(type28.GetMethod("CanInitiateInteraction"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanDoInteraction")));
                 harmony.Patch(type28.GetMethod("CanReceiveInteraction"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_CanDoInteraction")));
                 str = "PawnDiedOrDownedThoughtsUtility.AppendThoughts_ForHumanlike";
-                System.Type type29 = typeof(PawnDiedOrDownedThoughtsUtility);
+				Type type29 = typeof(PawnDiedOrDownedThoughtsUtility);
                 harmony.Patch(type29.GetMethod("AppendThoughts_ForHumanlike", BindingFlags.Static | BindingFlags.NonPublic), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_AppendThoughts_ForHumanlike")));
                 str = "InspirationHandler.InspirationHandlerTick";
-                System.Type type30 = typeof(InspirationHandler);
+				Type type30 = typeof(InspirationHandler);
                 harmony.Patch(type30.GetMethod("InspirationHandlerTick"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_InspirationHandlerTick")));
                 str = "JobDriver_Vomit.MakeNewToils";
-                System.Type type31 = typeof(JobDriver_Vomit);
+				Type type31 = typeof(JobDriver_Vomit);
                 harmony.Patch(type31.GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_VomitJob")));
                 str = "Alert_Boredom.GetReport";
-                System.Type type32 = typeof(Alert_Boredom);
-                harmony.Patch(AccessTools.Method(type32, "GetReport"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_Boredom_GetReport")));
+                /* System.Type type32 = typeof(Alert_Boredom);
+                harmony.Patch(AccessTools.Method(type32, "GetReport"), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CompatPatch_Boredom_GetReport"))); */
                 str = "Caravan.NightResting";
-                System.Type type33 = typeof(Caravan);
+				Type type33 = typeof(Caravan);
                 harmony.Patch(AccessTools.Property(type33, "NightResting").GetGetMethod(), new HarmonyMethod(typeof(HarmonyPatches).GetMethod("Patch_Caravan_NightResting")));
                 str = "CompUseEffect_InstallImplantMechlink.CanBeUsedBy";
-                System.Type type34 = typeof(CompUseEffect_InstallImplantMechlink);
+				Type type34 = typeof(CompUseEffect_InstallImplantMechlink);
                 harmony.Patch(AccessTools.Method(type34, "CanBeUsedBy"), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallMechLinkPostfix")));
                 str = "CompUseEffect_InstallImplantMechlink.DoEffect";
-                System.Type type35 = typeof(CompUseEffect_InstallImplant);
+				Type type35 = typeof(CompUseEffect_InstallImplant);
                 harmony.Patch(AccessTools.Method(type35, "DoEffect"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("DoEffectPrefix")));
-                System.Type type36 = typeof(BodyDef);
+				Type type36 = typeof(BodyDef);
                 harmony.Patch(AccessTools.Method(type36, "GetPartsWithDef"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("GetPartsPrefix")));
                 str = "CompAbilityEffect_BloodfeederBite.Valid";
-                System.Type type37 = typeof(CompAbilityEffect_BloodfeederBite);
+				Type type37 = typeof(CompAbilityEffect_BloodfeederBite);
                 harmony.Patch(AccessTools.Method(type37, "Valid", new Type[] {
                     typeof(LocalTargetInfo),
                         typeof(bool)
                 }), postfix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ValidPostfix")));
                 str = "ThoughtWorker_LookChangeDesired.CurrentStateInternal";
-                System.Type type39 = typeof(ThoughtWorker_LookChangeDesired);
+				Type type39 = typeof(ThoughtWorker_LookChangeDesired);
                 harmony.Patch(AccessTools.Method(type39, "CurrentStateInternal"), prefix: new HarmonyMethod(typeof(HarmonyPatches), "Patch_ThoughtWorker_LookChangeDesired"));
                 str = "Pawn_StyleTracker.CanDesireLookChange_getter";
                 Type type40 = typeof(Pawn_StyleTracker);
@@ -199,10 +197,10 @@ namespace Androids
                 Type type41 = typeof(ITab_Pawn_Visitor);
                 str = "ITab_Pawn_Visitor+<>c__DisplayClass8_0.<DoPrisonerTab>g__CanUsePrisonerInteractionMode|0";
                 harmony.Patch(AccessTools.FirstMethod(AccessTools.Inner(type41, "<>c__DisplayClass8_0"), x => x.Name.Contains("CanUsePrisonerInteractionMode")), prefix: new HarmonyMethod(typeof(HarmonyPatches), "CanUsePrisonerInteractionMode_Prefix"));
-                System.Type xenogerm = typeof(Xenogerm);
+				Type xenogerm = typeof(Xenogerm);
                 harmony.Patch(AccessTools.Method(xenogerm, "GetFloatMenuOptions"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallXenoGerm_Prefix")));
                 str = "Xenogerm_GetFloatMenuOptions_CanInstallXenoGerm_Prefix";
-                System.Type xenogerm3 = typeof(Xenogerm);
+				Type xenogerm3 = typeof(Xenogerm);
                 harmony.Patch(AccessTools.Method(xenogerm, "GetGizmos"), prefix: new HarmonyMethod(typeof(HarmonyPatches).GetMethod("CanInstallXenoGerm_Gizmo_Prefix")));
                 str = "Xenogerm_GetGizmos_CanInstallXenoGerm_Prefix";
             }
@@ -215,7 +213,7 @@ namespace Androids
 
         public static bool Patch_Caravan_NightResting(ref bool __result, ref Caravan __instance)
         {
-            if (__instance.pawns.InnerListForReading.Any<Pawn>(pawn => !pawn.def.HasModExtension<MechanicalPawnProperties>()))
+            if (__instance.pawns.InnerListForReading.Any(pawn => !pawn.def.HasModExtension<MechanicalPawnProperties>()))
                 return true;
             __result = false;
             return false;
@@ -250,7 +248,7 @@ namespace Androids
                 }
             }
             if (!flag && Rand.Chance(0.1f))
-                UpgradeMaker.Make(DefDatabase<AndroidUpgradeDef>.AllDefs.RandomElement<AndroidUpgradeDef>()).Apply(__result);
+                UpgradeMaker.Make(DefDatabase<AndroidUpgradeDef>.AllDefs.RandomElement()).Apply(__result);
         }
 
         public static bool Patch_PawnUtility_HumanFilthChancePerCell(float __result, ThingDef def)
@@ -277,13 +275,13 @@ namespace Androids
           GatheringDef gatheringDef,
           ref IntVec3? gatherSpot)
         {
-            if (!map.mapPawns.FreeColonistsSpawned.Any<Pawn>(p =>
+            if (!map.mapPawns.FreeColonistsSpawned.Any(p =>
             {
                 MechanicalPawnProperties modExtension = p.def.GetModExtension<MechanicalPawnProperties>();
                 return modExtension != null && !modExtension.canSocialize;
             }))
                 return true;
-            int num1 = Mathf.Clamp(Mathf.RoundToInt(map.mapPawns.FreeColonistsSpawned.Count<Pawn>(p =>
+            int num1 = Mathf.Clamp(Mathf.RoundToInt(map.mapPawns.FreeColonistsSpawned.Count(p =>
             {
                 MechanicalPawnProperties modExtension = p.def.GetModExtension<MechanicalPawnProperties>();
                 return modExtension == null || modExtension.canSocialize;
@@ -402,7 +400,7 @@ namespace Androids
                 Thing thing = actor.CurJob.targetB.Thing;
                 float num = !patient.RaceProps.Animal ? 500f : 175f;
                 float tendXpGainFactor = RimWorld.ThingDefOf.MedicineIndustrial.MedicineTendXpGainFactor;
-                actor.skills.Learn(SkillDefOf.Crafting, num * tendXpGainFactor);
+                actor.skills?.Learn(SkillDefOf.Crafting, num * tendXpGainFactor);
                 DroidUtility.DoTend(actor, patient, thing);
                 if (thing != null && thing.Destroyed)
                     actor.CurJob.SetTarget(TargetIndex.B, LocalTargetInfo.Invalid);
@@ -439,19 +437,19 @@ namespace Androids
                     Thing targetA = EnergyNeedUtility.ClosestPowerSource(__instance);
                     if (targetA == null)
                         return;
-                    Verse.AI.Job job = null;
+					Job job = null;
                     Building t = targetA as Building;
                     if (targetA != null && t != null && t.PowerComp != null && (double)t.PowerComp.PowerNet.CurrentStoredEnergy() > 50.0)
                     {
                         IntVec3 position = targetA.Position;
                         if (position.Walkable(__instance.Map) && position.InAllowedArea(__instance) && __instance.CanReserve(new LocalTargetInfo(position)) && __instance.CanReach((LocalTargetInfo)position, PathEndMode.OnCell, Danger.Deadly))
-                            job = new Verse.AI.Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA);
+                            job = new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA);
                         if (job == null)
                         {
-                            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending<IntVec3, float>(selector => selector.DistanceTo(__instance.Position)))
+                            foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending(selector => selector.DistanceTo(__instance.Position)))
                             {
                                 if (intVec3.Walkable(__instance.Map) && intVec3.InAllowedArea(__instance) && __instance.CanReserve(new LocalTargetInfo(intVec3)) && __instance.CanReach((LocalTargetInfo)intVec3, PathEndMode.OnCell, Danger.Deadly))
-                                    job = new Verse.AI.Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA, (LocalTargetInfo)intVec3);
+                                    job = new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA, (LocalTargetInfo)intVec3);
                             }
                         }
                     }
@@ -526,7 +524,7 @@ namespace Androids
         {
             IEnumerable<Pawn> __result1 = null;
             CompatPatch_BoredPawns(ref __result1);
-            __result = AlertReport.CulpritsAre(__result1.ToList<Pawn>());
+            __result = AlertReport.CulpritsAre(__result1.ToList());
             return false;
         }
 
@@ -631,7 +629,7 @@ namespace Androids
 
         public static bool CompatPatch_GetJoyTryGiveJob(
           ref JobGiver_EatInGatheringArea __instance,
-          ref Verse.AI.Job __result,
+          ref Job __result,
           ref Pawn pawn)
         {
             if (!pawn.def.HasModExtension<MechanicalPawnProperties>())
@@ -642,7 +640,7 @@ namespace Androids
 
         public static bool CompatPatch_EatInPartyAreaTryGiveJob(
           ref JobGiver_EatInGatheringArea __instance,
-          ref Verse.AI.Job __result,
+          ref Job __result,
           ref Pawn pawn)
         {
             if (!pawn.def.HasModExtension<MechanicalPawnProperties>())
@@ -725,13 +723,8 @@ namespace Androids
         }
 
         public static Pawn Pawn_HealthTracker_GetPawn(Pawn_HealthTracker instance) => (Pawn)int_Pawn_HealthTracker_GetPawn.GetValue(instance);
-
         public static Pawn Pawn_InteractionsTracker_GetPawn(Pawn_InteractionsTracker instance) => (Pawn)int_Pawn_InteractionsTracker_GetPawn.GetValue(instance);
-
         public static Pawn Pawn_NeedsTracker_GetPawn(Pawn_NeedsTracker instance) => (Pawn)int_Pawn_NeedsTracker_GetPawn.GetValue(instance);
-
-        public static Pawn Need_Food_Starving_GetPawn(Need_Food instance) => (Pawn)int_Need_Food_Starving_GetPawn.GetValue(instance);
-
         public static Pawn PawnRenderer_GetPawn_GetPawn(PawnRenderer instance) => (Pawn)int_PawnRenderer_GetPawn.GetValue(instance);
 
         public static NeedDef ThinkNode_ConditionalNeedPercentageAbove_GetNeed(
@@ -815,9 +808,9 @@ namespace Androids
             }
         } */
 
-        public static void Patch_Need_Food_Starving_Get(ref Need_Food __instance, ref bool __result)
+        public static void Patch_Need_Food_Starving_Get(Need_Food __instance, ref bool __result)
         {
-            Pawn pawn = Need_Food_Starving_GetPawn(__instance);
+            Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
             if (pawn == null || !pawn.IsAndroid())
                 return;
             __result = false;
@@ -876,7 +869,7 @@ namespace Androids
         {
             if (!user.IsAndroid())
                 return true;
-            BodyPartRecord part = user.RaceProps.body.GetPartsWithDef(AndroidBodyPartDefOf.ArtificialAndroidBrain).FirstOrFallback<BodyPartRecord>();
+            BodyPartRecord part = user.RaceProps.body.GetPartsWithDef(AndroidBodyPartDefOf.ArtificialAndroidBrain).FirstOrFallback();
             if (part == null)
                 return false;
             Hediff firstHediffOfDef = user.health.hediffSet.GetFirstHediffOfDef(__instance.Props.hediffDef);
@@ -937,7 +930,7 @@ namespace Androids
         #endregion Biotech
 
         #region VPE
-        public static IEnumerable<CodeInstruction> GetGizmoTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        /* public static IEnumerable<CodeInstruction> GetGizmoTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             //File.WriteAllLines("E:\\before.txt",instructions.Select(x=>x.ToString()));
             List<CodeInstruction> instructions1 = instructions.ToList();
@@ -959,7 +952,7 @@ namespace Androids
             });
             //File.WriteAllLines("E:\\after.txt", instructions1.Select(x => x.ToString()));
             return instructions1;
-        }
+        } */
         /*return x.def == VPE_DefOf.Finger;
 	        IL_0000: ldarg.1
 	        IL_0001: ldfld class ['Assembly-CSharp']Verse.BodyPartDef ['Assembly-CSharp']Verse.BodyPartRecord::def
@@ -967,7 +960,7 @@ namespace Androids
 	        IL_000b: ceq
 	        IL_000d: ret
         */
-        public static IEnumerable<CodeInstruction> CastTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        /* public static IEnumerable<CodeInstruction> CastTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             //File.WriteAllLines("E:\\beforecast.txt", instructions.Select(x => x.ToString()));
             List<CodeInstruction> instructions1 = instructions.ToList();
@@ -989,7 +982,7 @@ namespace Androids
             });
             //File.WriteAllLines("E:\\aftercast.txt", instructions1.Select(x => x.ToString()));
             return instructions1;
-        }
+        } */
         #endregion VPE
     }
 }

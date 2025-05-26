@@ -4,13 +4,10 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using HarmonyLib;
-using Verse;
-
 namespace Androids
 {
     [HarmonyPatch(typeof(Pawn_HealthTracker), "AddHediff")]
-    [HarmonyPatch(new System.Type[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult) })]
+    [HarmonyPatch(new Type[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult) })]
     public class AddHediff_PatchPrefix
     {
         [HarmonyPrefix]

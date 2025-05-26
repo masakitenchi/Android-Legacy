@@ -4,13 +4,6 @@
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
 // Assembly location: E:\CACHE\Androids-1.3hsk.dll
 
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
-using Verse.AI;
-
 namespace Androids
 {
     public class JobGiver_GetEnergy : ThinkNode_JobGiver
@@ -23,7 +16,7 @@ namespace Androids
             return need == null || (double)need.CurLevelPercentage >= Need_Energy.rechargePercentage ? 0.0f : 11.5f;
         }
 
-        protected override Job TryGiveJob(Pawn pawn)
+        public override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.Downed)
                 return null;
@@ -44,7 +37,7 @@ namespace Androids
                     IntVec3 position = targetA.Position;
                     if (position.Walkable(pawn.Map) && position.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(position)) && pawn.CanReach((LocalTargetInfo)position, PathEndMode.OnCell, Danger.Deadly))
                         return new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA);
-                    foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending<IntVec3, float>(selector => selector.DistanceTo(pawn.Position)))
+                    foreach (IntVec3 intVec3 in (IEnumerable<IntVec3>)GenAdj.CellsAdjacentCardinal(t).OrderByDescending(selector => selector.DistanceTo(pawn.Position)))
                     {
                         if (intVec3.Walkable(pawn.Map) && intVec3.InAllowedArea(pawn) && pawn.CanReserve(new LocalTargetInfo(intVec3)) && pawn.CanReach((LocalTargetInfo)intVec3, PathEndMode.OnCell, Danger.Deadly))
                             return new Job(JobDefOf.ChJAndroidRecharge, (LocalTargetInfo)targetA, (LocalTargetInfo)intVec3);
@@ -66,13 +59,13 @@ namespace Androids
                 }
             }
             Pawn_InventoryTracker inventory = pawn.inventory;
-            if (inventory != null && inventory.innerContainer.Any<Thing>(thing =>
+            if (inventory != null && inventory.innerContainer.Any(thing =>
             {
                 EnergySourceComp comp = thing.TryGetComp<EnergySourceComp>();
                 return comp != null && comp.EnergyProps.isConsumable;
             }))
             {
-                Thing thing1 = inventory.innerContainer.FirstOrDefault<Thing>(thing =>
+                Thing thing1 = inventory.innerContainer.FirstOrDefault(thing =>
                 {
                     EnergySourceComp comp = thing.TryGetComp<EnergySourceComp>();
                     return comp != null && comp.EnergyProps.isConsumable;
