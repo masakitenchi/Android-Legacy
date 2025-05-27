@@ -8,7 +8,7 @@ namespace Androids
 {
     public class Recipe_RepairKit : RecipeWorker
     {
-        public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
+        /* public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
             if (pawn.def.HasModExtension<MechanicalPawnProperties>() || pawn.def.HasModExtension<AndroidPawnProperties>())
             {
@@ -17,7 +17,7 @@ namespace Androids
             }
             else if ((double)pawn.health.hediffSet.BleedRateTotal > 0.0)
                 yield return null;
-        }
+        } */
 
         public override void ApplyOnPawn(
           Pawn pawn,

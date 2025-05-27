@@ -419,6 +419,7 @@
 			<li>AdministerMechSerumHealer</li>
 			<li>ChJAndroidRepairKit</li>
 			<li>ChJAndroidShutDownDroid</li>
+			<li MayRequire="Ludeon.RimWorld.Anomaly">SurgicalInspection</li>
 		</recipes>
 		<butcherProducts>
 			<RobotParts>8</RobotParts>
@@ -503,7 +504,7 @@
 					<li>ShieldBone</li>
 					<li>Buckler</li>
 					<li>MedievalShield</li>
-					<li>BallisticShield</li>
+					<li>CE_Apparel_BallisticShield</li>
 					<li>CE_Apparel_TacVest</li>
 					<li>CE_Apparel_Backpack</li>
 					<li>CE_Apparel_TribalBackpack</li>

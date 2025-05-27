@@ -394,14 +394,14 @@ namespace Androids
                });
                 if (hairs != null)
                     FloatMenuUtility.MakeMenu(hairs, hairDef => (string)hairDef.LabelCap, hairDef => () =>
-                {
-                    this.newAndroid.story.hairDef = hairDef;
-                    this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
-                    PortraitsCache.SetDirty(this.newAndroid);
-                    PortraitsCache.PortraitsCacheUpdate();
-                    this.RefreshUpgrades();
-                    this.RefreshCosts();
-                });
+                    {
+                        this.newAndroid.story.hairDef = hairDef;
+                        this.newAndroid.Drawer.renderer.SetAllGraphicsDirty();
+                        PortraitsCache.SetDirty(this.newAndroid);
+                        PortraitsCache.PortraitsCacheUpdate();
+                        this.RefreshUpgrades();
+                        this.RefreshCosts();
+                    });
             }
             return outRect.yMax;
         }
@@ -521,7 +521,8 @@ namespace Androids
             string childStory = this.newAndroid.story.Childhood == null ? (string)("AndroidCustomizationFirstIdentity".Translate() + " " + "AndroidNone".Translate()) : (string)("AndroidCustomizationFirstIdentity".Translate() + " " + this.newAndroid.story.Childhood.TitleCapFor(this.newAndroid.gender));
             if (Widgets.ButtonText(outRect.TopHalf(), childStory))
                 FloatMenuUtility.MakeMenu(
-                    DefDatabase<BackstoryDef>.AllDefsListForReading.Where(backstory => (backstory.spawnCategories.Any(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any(subCategory => subCategory == category)) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Childhood),
+                    DefDatabase<BackstoryDef>.AllDefsListForReading.Where(backstory =>
+                    (backstory.spawnCategories.Any(category => this.currentPawnKindDef.backstoryCategories != null && this.currentPawnKindDef.backstoryCategories.Any(subCategory => subCategory == category)) || backstory.spawnCategories.Contains("ChjAndroid")) && backstory.slot == BackstorySlot.Childhood),
                     backstory => backstory.TitleCapFor(this.newAndroid.gender),
                     backstory => () => this.newChildhoodBackstory = backstory);
             if (this.newAndroid.story.Childhood != null)
@@ -727,7 +728,8 @@ namespace Androids
                     //(upgrade.requiredResearch != null && upgrade.requiredResearch.IsFinished)
                     //Checks applied upgrades that disables this upgrade
                     bool disabledUpgrade = upgradeDef.requiredResearch == null ?
-                        this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any(group => upgradeDef.exclusivityGroups.Contains(group))) : !upgradeDef.requiredResearch.IsFinished || this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any(group => upgradeDef.exclusivityGroups.Contains(group)));
+                        this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any(group => upgradeDef.exclusivityGroups.Contains(group))) :
+                        !upgradeDef.requiredResearch.IsFinished || this.appliedUpgradeCommands.Any(appUpgrade => appUpgrade.def != upgradeDef && appUpgrade.def.exclusivityGroups.Any(group => upgradeDef.exclusivityGroups.Contains(group)));
 
                     //Checks upgrades to disable when this upgrade is applied
                     if (this.AlreadyUpgradedOnPawn(upgradeDef))
@@ -789,7 +791,7 @@ namespace Androids
             Widgets.EndScrollView();
         }
 
-        public void PickTraitMenu(Trait oldTrait)
+        private void PickTraitMenu(Trait oldTrait)
         {
             this.allTraits.Clear();
             foreach (TraitDef def in DefDatabase<TraitDef>.AllDefsListForReading)
@@ -1001,7 +1003,6 @@ namespace Androids
             }
             PawnComponentsUtility.CreateInitialComponents(pawn);
             HarmonyPatches.bypassGenerationOfUpgrades = false;
-
             pawn?.equipment.DestroyAllEquipment();
             pawn?.inventory.DestroyAll();
             pawn?.apparel.DestroyAll();

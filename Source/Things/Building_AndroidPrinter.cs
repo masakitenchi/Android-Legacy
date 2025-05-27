@@ -434,34 +434,24 @@ namespace Androids
                     break;
                 case CrafterStatus.Finished:
                     //Upgrade
+                    Pawn pawn;
                     if (IsUpgrade)
                     {
-                        ThingOwner directlyHeldThings = this.GetDirectlyHeldThings();
-                        Pawn pawn = (Pawn)directlyHeldThings.FirstOrDefault(p => p is Pawn);
-                        ApplyUpgrades(pawn);
-                        foreach (Thing thing in directlyHeldThings)
-                        {
-                            if (thing is not Pawn)
-                                thing.Destroy();
-                        }
-                        pawn.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
-                        pawn.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
-                        Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter("AndroidUpgradedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidUpgradedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawnToPrint));
-                        this.pawnToPrint = null;
-                        this.printerStatus = CrafterStatus.Idle;
-                        this.extraTimeCost = 0;
-                        this.orderProcessor.requestedItems.Clear();
-                        break;
+                        pawn = this.GetDirectlyHeldThings().FirstOrDefault(x => x is Pawn) as Pawn;
+                        
                     }
-                    if (this.pawnToPrint == null)
+                    else if (this.pawnToPrint != null)
+                        pawn = this.pawnToPrint;
+                    else
                         break;
                     this.innerContainer.ClearAndDestroyContents();
                     FilthMaker.TryMakeFilth(this.InteractionCell, this.Map, RimWorld.ThingDefOf.Filth_Slime, 5, FilthSourceFlags.None);
-                    ApplyUpgrades(this.pawnToPrint);
-                    GenSpawn.Spawn(pawnToPrint, this.InteractionCell, this.Map);
-                    this.pawnToPrint.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
-                    this.pawnToPrint.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
-                    Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter("AndroidPrintedLetterLabel".Translate((NamedArgument)this.pawnToPrint.Name.ToStringShort), "AndroidPrintedLetterDescription".Translate((NamedArgument)this.pawnToPrint.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawnToPrint));
+                    ApplyUpgrades(pawn);
+                    pawn.health.AddHediff(RimWorld.HediffDefOf.CryptosleepSickness);
+                    pawn.needs.mood.thoughts.memories.TryGainMemory(NeedsDefOf.ChJAndroidSpawned);
+                    Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter("AndroidPrintedLetterLabel".Translate((NamedArgument)pawn.Name.ToStringShort), "AndroidPrintedLetterDescription".Translate((NamedArgument)pawn.Name.ToStringFull), LetterDefOf.PositiveEvent, (LookTargets)pawn));
+                    GenSpawn.Spawn(pawn, this.InteractionCell, this.Map);
+                    this.GetDirectlyHeldThings().ClearAndDestroyContents();
                     this.pawnToPrint = null;
                     this.printerStatus = CrafterStatus.Idle;
                     this.extraTimeCost = 0;
