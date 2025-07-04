@@ -35,7 +35,7 @@ namespace Androids
                         if (properties != null && properties.pawnKind != null)
                         {
                             PawnKindDef pawnKindDef = properties.pawnKind;
-                            if (pawnKindDef != null)
+                            if (pawnKindDef != null && !alienRaceKindsint.Contains(pawnKindDef))
                             {
                                 alienRaceKindsint.Add(pawnKindDef);
                             }
