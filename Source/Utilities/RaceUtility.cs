@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: Androids.RaceUtility
 // Assembly: Androids, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 60A64EA7-F267-4623-A880-9FF7EC14F1A0
@@ -39,6 +39,11 @@ namespace Androids
                             {
                                 alienRaceKindsint.Add(pawnKindDef);
                             }
+                        }
+                        foreach (ThingDef disabledRace in properties.disabledRaces)
+                        {
+                            ThingDef raceDef = disabledRace;
+                            alienRaceKindsint.RemoveWhere((def => def.race == raceDef));
                         }
                     }
                     cached = true;
